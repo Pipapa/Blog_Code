@@ -1,0 +1,92 @@
+/*主页面设置*/
+*{
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+}
+
+body {
+    background:#63b47a;
+    font-family:Arial;
+    font-size:12px;
+}
+
+/*form表单输入设置*/
+.form-box{
+    width:350px;
+    margin: 150px auto;
+    padding: 30px 50px 50px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background:#fff;
+    box-shadow:15px 15px 0px rgba(0,0,0,.1);
+}
+
+.form-box input[type="text"],
+.form-box input[type="password"]{
+    background:#EAE6E1;
+    border:0;
+    font-weight:bold;
+    padding:10px;
+    padding-left: 30px;
+    border-radius:3px;
+    width:100%;
+    margin:5px 0;
+    outline:medium none;
+    color:#838383;
+}
+
+.form-box input[type="submit"]{
+    display:block;
+    padding:10px;
+    background:#50BFA4;
+    border:0;
+    border-radius:3px;
+    font-weight:bold;
+    width:100%;
+    color:#fff;
+    cursor:pointer;
+    margin-top: 15px;
+}
+
+input[type="submit"]:hover{
+    background:#58CCB0;
+}
+
+/*图标设置*/
+.circle{
+    border-radius:50%;
+    height: 100px;
+    width: 100px;
+    margin: auto;
+    clear: both;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.icon{
+    position: absolute;
+    height: 25px;
+    width: 25px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 2px;
+}
+
+/*连接*/
+.link {
+    text-decoration: none;
+    color: #C6C6C6;
+    font-size: 12px;
+}
+.link:hover {
+    text-decoration: underline;
+    color: #8C918F;
+}
+
+/*字体*/
+a[class="label"]{
+    text-decoration: none;
+    font-size: 12px;
+    color: #686565;
+    margin-bottom: 20px;
+}

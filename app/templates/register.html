@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>注册</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="statics/css/login.css">
+    <link rel="stylesheet" href="statics/css/animate.css">
+    <script src="statics/js/register.js"></script>
+</head>
+<body>
+    <div class="form-box">
+        <img src="statics/images/icon.png" class="circle" />
+        
+        <a class="label">用户名</a>
+        <div class="form-group" id="username_box">
+            <img src="statics/images/icon_user.png" class="icon"/>
+            <input type="text" id="username" placeholder="Username" />
+        </div>
+        
+        <a class="label">邮箱</a>
+        <div class="form-group" id="email_box">
+            <img src="statics/images/icon_email.png" class="icon"/>
+            <input type="text" id="email" placeholder="Email" />
+        </div>
+
+        <a class="label">密码</a>
+        <div class="form-group" id="password_box">
+            <img src="statics/images/icon_password.png" class="icon"/>
+            <input type="password" id="password"  placeholder="Password" />
+        </div>
+
+        
+        <a class="label">重复密码</a>
+        <div class="form-group" id="password_confirm_box">
+            <img src="statics/images/icon_password_confirm.png" class="icon"/>
+            <input type="password" id="password_confirm"  placeholder="Confirm Your Password" />
+        </div>
+
+        <input type="submit" value="注册" onclick="check_form()"/>
+    </div>
+</body>
+</html>

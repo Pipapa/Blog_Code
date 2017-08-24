@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="statics/css/login.css">
+    <link rel="stylesheet" href="statics/css/animate.css">
+    <script src="statics/js/login.js"></script>
+</head>
+<body>
+    <div class="form-box">
+        <img class="circle" src="statics/images/icon.png" />
+
+        <div class="form-group" id="username_box">
+            <img src="statics/images/icon_user.png" class="icon" id="icon_username" />
+            <input type="text" id="username" placeholder="Username" onclick="clear_box(['username','password'])"/>
+        </div>
+
+        <div class="form-group" id="password_box">
+            <img src="statics/images/icon_password.png" class="icon" id="icon_password" onmousedown="show_password()" onmouseup="hidden_password()" onmousemove="hidden_password()"/>
+            <input type="password" id="password"  placeholder="Password" onclick="clear_box(['username','password'])"/>
+        </div>
+
+        <a href="" class="link" style="margin-top:5px;margin-bottom:20px;float:right;">Lost your password?</a>
+        <input type="submit" value="登录" onclick="check_form()"/>
+        <a href="" class="link" style="margin-top:10px;float:right;">Sign Up?</a>
+    </div>
+</body>
+</html>
