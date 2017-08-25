@@ -16,7 +16,9 @@ def create_app(config):
     db.init_app(app)
     login_manager.init_app(app)
     # 蓝图
-    from .user.views import user as user_blueprint
+    from .user import user as user_blueprint
     app.register_blueprint(user_blueprint)
+    from .api import api as api_blueprint
+    app.register_blueprint(api_blueprint)
 
     return app

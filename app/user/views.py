@@ -1,8 +1,19 @@
-from flask import Blueprint,render_template,jsonify,request,redirect,url_for
+from flask import Blueprint,render_template,jsonify,request,redirect,url_for,request
 
 from . import user
 from .. import db
 from ..models import User
+
+# 文章/主页面
+@user.route('/articles')
+@user.route('/articles/<int:article_id>')
+def articles_index(article_id=None):
+    if article_id:
+        return str(article_id)
+    else:
+        page = request.args.get('page','')
+        print(page)
+        return 'index'
 
 # 登录界面
 @user.route('/login',methods=['POST','GET'])
@@ -38,7 +49,7 @@ def register():
 # 主界面
 @user.route('/')
 def index():
-    return render_template('index.html')
+    return redirect(url_for('user.articles_index'))
 
 # 404
 @user.errorhandler(404)
