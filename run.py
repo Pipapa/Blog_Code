@@ -6,8 +6,8 @@ app = create_app(Config)
 migrate = Migrate(app,db)
 
 def init_db():
-    from app.models import User,Category,Tag,Article
+    from app.models import User,Category,Tag,Article,Category
     db.create_all(app=create_app(Config))
-
+    
 if __name__ == '__main__':
     app.run()

@@ -43,16 +43,47 @@ class User(db.Model,UserMixin):
                 return True
         return False
 
+
 # 为tag和article建立many-to-many关系
-tag_relationship = db.Table('tag_relationship',
+Tag_relationship = db.Table('tag_relationship',
     db.Column('tag_id',db.Integer,db.ForeignKey('tags.id')),
     db.Column('article_id',db.Integer,db.ForeignKey('articles.id'))
 )
 # 为comment和article建立many-to-many关系
-comment_relationship = db.Table('comment_relationship',
+Comment_relationship = db.Table('comment_relationship',
     db.Column('article_id',db.Integer,db.ForeignKey('articles.id')),
     db.Column('comment_id',db.Integer,db.ForeignKey('comments.id'))
 )
+# Category文章类别
+class Category(db.Model):
+    __tablename__ = 'categories'
+    id = db.Column(db.Integer,primary_key=True)
+    name = db.Column(db.String(64),unique=True,index=True)
+    num_of_articles = db.Column(db.Integer,default=0)
+    articles = db.relationship('Article',backref='categorys',
+                                lazy='dynamic')
+
+    def __init__(self,name,num_of_articles=0):
+        self.name = name
+        self.num_of_articles = num_of_articles
+
+# Tag标签
+class Tag(db.Model):
+    __tablename__ = 'tags'
+    id = db.Column(db.Integer,primary_key=True)
+    name = db.Column(db.String(64),unique=True,index=True)
+
+    def __init__(self,name):
+        self.name = name
+
+# 评论类
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer,primary_key=True)
+    username = db.Column(db.String(16))
+    email = db.Column(db.String(32))
+    content = db.Column(db.Text)
+    
 # 文章类
 class Article(db.Model):
     __tablename__ = 'articles'
@@ -64,56 +95,32 @@ class Article(db.Model):
     num_of_view = db.Column(db.Integer,default=0)
     # 连接其他表单
     category_id = db.Column(db.Integer,db.ForeignKey('categories.id'))
-    tags = db.relationship('Tag',secondary=tag_relationship,
+    tags = db.relationship('Tag',secondary=Tag_relationship,
                             backref=db.backref('articles',lazy='dynamic'))
-    comments = db.relationship('Comment',secondary=comment_relationship,
+    comments = db.relationship('Comment',secondary=Comment_relationship,
                             backref=db.backref('articles',lazy='dynamic'))
-    
-    def __init__(self,title,content,category,tag,num_of_view=0):
+
+    def __init__(self,title,content,category=None,tags=None,num_of_view=0):
         self.title = title
         self.content = content
-        self.num_of_view = 0
-        # 分类
-        # 标签
+        self.public_time = self.update_time = datetime.utcnow()
+        self.num_of_view = num_of_view
 
-    # 更新文章
-    def update_article(self,title=None,content=None):
-        article = Article.query.get(self.id)
-        # 修改
-        if title is not None:
-            self.title = title
-        if content is not None:
-            self.content = content
-        # 保存
-        self.update_time = datetime.utcnow()
-        db.session.add(article)
-        db.session.commit()
+        # 添加类型
+        if category is not None:
+            category_ = Category.query.filter_by(name=category).first()
+            if category_ is None:
+                category_ = Category(name=category)
+                db.session.add(category_)
+                db.session.commit()
+            self.category_id = category_.id
 
-
-# Category文章类别
-class Category(db.Model):
-    __tablename__ = 'categories'
-    id = db.Column(db.Integer,primary_key=True)
-    name = db.Column(db.String(64),unique=True,index=True)
-    num_of_articles = db.Column(db.Integer,default=0)
-    articles = db.relationship('Article',backref='categorys',
-                                lazy='dynamic')
-
-    def __init__(self,name,num_of_articles):
-        self.name = name
-        self.num_of_articles = 0
-
-# Tag标签
-class Tag(db.Model):
-    __tablename__ = 'tags'
-    id = db.Column(db.Integer,primary_key=True)
-    name = db.Column(db.String(64),unique=True,index=True)
-
-# 评论类
-class Comment(db.Model):
-    __tablename__ = 'comments'
-    id = db.Column(db.Integer,primary_key=True)
-    username = db.Column(db.String(16))
-    email = db.Column(db.String(32))
-    content = db.Column(db.Text)
-
+        # 添加标签
+        if tags is not None:
+            for tag in tags:
+                tag_ = Tag.query.filter_by(name=tag).first()
+                if tag_ is None:
+                    tag_ = Tag(name=tag)
+                    db.session.add(tag_)
+                    db.session.commit()
+                self.tags.append(tag_)

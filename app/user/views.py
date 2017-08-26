@@ -2,13 +2,15 @@ from flask import Blueprint,render_template,jsonify,request,redirect,url_for,req
 
 from . import user
 from .. import db
-from ..models import User
+from ..models import User,Article,Category,Tag,Comment
 
 # 文章/主页面
 @user.route('/articles')
 @user.route('/articles/<int:article_id>')
 def articles_index(article_id=None):
     if article_id:
+        for each in Article.query.get(1).tags:
+            print(each.name)
         return str(article_id)
     else:
         page = request.args.get('page','')
