@@ -82,8 +82,14 @@ class Comment(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String(16))
     email = db.Column(db.String(32))
+    public_time = db.Column(db.DateTime)
     content = db.Column(db.Text)
-    
+
+    def __init__(self,username,email,content):
+        self.username=username
+        self.email=email
+        self.content=content
+        self.public_time=datetime.utcnow()    
 # 文章类
 class Article(db.Model):
     __tablename__ = 'articles'
@@ -124,3 +130,41 @@ class Article(db.Model):
                     db.session.add(tag_)
                     db.session.commit()
                 self.tags.append(tag_)
+
+    # 获取category
+    def get_category(self):
+        if self.category_id:
+            return Category.query.get(self.category_id).name
+        else:
+            return None
+    
+    # 获取tag
+    def get_tags(self):
+        tags = []
+        for tag in self.tags:
+            tags.append(tag.name)
+        return ','.join(tags)
+
+    # 获取comment
+    def get_comments(self):
+        comments = {}
+        floor = 1
+        for comment in self.comments:
+            content = {}
+            content['username'] = comment.username
+            content['content'] = comment.content
+            content['public_time'] = comment.public_time
+            comments[str(floor)]=content
+            floor=floor+1
+        return comments
+
+    # 获取属性
+    def get_info(self):
+        info={}
+        info['title'] = self.title
+        info['content'] = self.content
+        info['tags'] = self.get_tags()
+        info['category'] = self.get_category()
+        info['public_time'] = self.public_time
+        info['update_time'] = self.update_time
+        info['comments'] = self.get_comments()
