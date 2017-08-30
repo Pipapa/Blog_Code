@@ -4,9 +4,6 @@ from . import api
 from .. import db
 from ..models import User,Article,Category,Tag,Comment
 
-@api.route('/api')
-def api_test():
-    return 'true'
 # 不需要登录api 
 @api.route('/api/article.list')
 def get_articles():
@@ -62,10 +59,6 @@ def query_articles():
             jsonObj['status'] = 'OK'
             content = {}
             content['title'] = article.title
-            content['content'] = article.content
-            jsonObj['content'] = content
-            jsonObj['public_time'] = article.public_time.strftime('%B %d %Y - %H:%M:%S')
-            jsonObj['update_time'] = article.update_time.strftime('%B %d %Y - %H:%M:%S')
-            jsonObj['comments']=article.get_comments()
+            jsonObj['info']=article.get_info()
             return jsonify(jsonObj)
     return jsonify(jsonObj)

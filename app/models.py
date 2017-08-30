@@ -168,3 +168,4 @@ class Article(db.Model):
         info['public_time'] = self.public_time
         info['update_time'] = self.update_time
         info['comments'] = self.get_comments()
+        return info
