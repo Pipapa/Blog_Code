@@ -15,7 +15,7 @@ def articles_index(article_id=None):
     else:
         page = request.args.get('page','')
         print(page)
-        return 'index'
+        return render_template('index.html')
 
 # 登录界面
 @user.route('/login',methods=['POST','GET'])

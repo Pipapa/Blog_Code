@@ -4,17 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="{{ url_for('.static',filename='js/react.min.js') }}"></script>
+    <title>Pipapa</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./statics/css/base.css">
+    <script src="./statics/js/article.js"></script>
 </head>
+
 <body>
-    <h2>主页面</h2>
-    <div id="example"></div>
-    <script type="text/babel">
-        ReactDOM.render(
-            <h1>Hello,World</h1>,
-            document.getElementById('example')
-        );
-    </script>
+    <div class="wrap">
+
+        <div class="menu">
+            <h2>Pipapa</h2>
+            <a href="#" class=right><i class="fa fa-search" aria-hidden="true"></i> 搜索</a>
+            <a href="#"><i class="fa fa-home" aria-hidden="true"></i> 主页</a>
+        </div>
+
+        <div class="sidebar">
+
+            <div class="widget" id='me'>
+                <p>Welcome To My Blog</p>
+            </div>
+
+            <div class="widget">
+                <h3 class="title"><i class="fa fa-tags" aria-hidden="true"></i> 标签</h3>
+                <div class="tags">
+                    <a href="#">CSS</a>
+                    <a href="#">Javascript</a>
+                    <a href="#">Java</a>
+                    <a href="#">C/C++</a>
+                    <a href="#">Algotithm</a>
+                    <a href="#">Python</a>
+                    <a href="#">Linux</a>
+                </div>
+            </div>
+
+            <div class="widget">
+                <h3 class="title"><i class="fa fa-th-list" aria-hidden="true"></i> 分类</h3>
+                <div class="categories">
+                    <a href="#"><i class="fa fa-folder-o" aria-hidden="true"></i> CSS</a>
+                    
+                </div>
+            </div>
+
+        </div>
+
+        <div class="blog" id="blog">
+            
+        </div>
+
+    </div> 
 </body>
 </html>

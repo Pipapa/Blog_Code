@@ -35,6 +35,7 @@ def get_articles():
             info={}
             info['title']=article.title
             info['url']=url_for('user.articles_index',article_id=article.id)
+            info['num_of_view']=article.num_of_view
             info['public_time']=article.public_time.strftime('%B %d %Y - %H:%M:%S')
             info['update_time']=article.update_time.strftime('%B %d %Y - %H:%M:%S')
             info['category']=article.get_category()
@@ -62,3 +63,5 @@ def query_articles():
             jsonObj['info']=article.get_info()
             return jsonify(jsonObj)
     return jsonify(jsonObj)
+
+# category
