@@ -5,53 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipapa</title>
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/octicons/3.5.0/octicons.min.css">
     <link rel="stylesheet" href="./statics/css/base.css">
-    <script src="./statics/js/article.js"></script>
+    <script src="./statics/js/index.js"></script>
 </head>
 
 <body>
-    <div class="wrap">
-
-        <div class="menu">
-            <h2>Pipapa</h2>
-            <a href="#" class=right><i class="fa fa-search" aria-hidden="true"></i> 搜索</a>
-            <a href="#"><i class="fa fa-home" aria-hidden="true"></i> 主页</a>
-        </div>
-
-        <div class="sidebar">
-
-            <div class="widget" id='me'>
-                <p>Welcome To My Blog</p>
-            </div>
-
-            <div class="widget">
-                <h3 class="title"><i class="fa fa-tags" aria-hidden="true"></i> 标签</h3>
-                <div class="tags">
-                    <a href="#">CSS</a>
-                    <a href="#">Javascript</a>
-                    <a href="#">Java</a>
-                    <a href="#">C/C++</a>
-                    <a href="#">Algotithm</a>
-                    <a href="#">Python</a>
-                    <a href="#">Linux</a>
+    
+    <header>
+        <nav class="navbar navbar-tiffany rectangle" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Pipapa</a>
                 </div>
-            </div>
-
-            <div class="widget">
-                <h3 class="title"><i class="fa fa-th-list" aria-hidden="true"></i> 分类</h3>
-                <div class="categories">
-                    <a href="#"><i class="fa fa-folder-o" aria-hidden="true"></i> CSS</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                        <a href="#" class="word-keep"><span class="octicon octicon-book"></span></span>&nbsp;&nbsp;Blog</a>
+                        </li>
                     
+                        <li>
+                            <a href="#" class="word-keep"><span class="octicon octicon-list-unordered"></span>&nbsp;&nbsp;Category</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="word-keep"><span class="octicon octicon-tag"></span>&nbsp;&nbsp;Tag</a>
+                        </li>
+
+                        <li>
+                            <a href="#stq=" class="search-button"><span class="octicon octicon-search"></span>&nbsp;&nbsp;Search</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </nav>
+    </header> 
 
+    <div class="main">
+        <div class="container">
+            <div class="row index">
+                <div class="col-md-9">
+                    <div>
+                        <section class="category-slice" post-cate="All" id="article">
+                            <!-- 这里插入文章 -->
+                        </section>
+                    </div>
+                </div>
+
+                <!-- 侧边栏 -->
+                <div class="col-md-3">
+                    <div class="wrap">
+                        
+                        <div class="side">
+                            <div>
+                                <i class="octicon octicon-book" ></i>&nbsp;Recent Posts
+                            </div>
+                            <ul class="content-ul" recent="">
+                                <!-- 添加recent post -->
+                                <li>
+                                    <a href="">这是一个最近的文章</a>
+                                </li>
+                                <li>
+                                    <a href="">这是一个最近的文章</a>
+                                </li>
+                                <li>
+                                    <a href="">这是一个最近的文章,但是我的标题非常的长啊啊啊啊啊</a>
+                                </li>
+                            </ul>
+                        </div>
+                    
+                        <div class="side ">
+                            <div>
+                                <i class="octicon octicon-list-unordered"></i>&nbsp;Categories
+                            </div>
+                            <ul class="content-ul" cate="">
+                                <!-- 添加category -->
+                                <li>
+                                    <a href="#" class="categories-list-item">
+                                        <span class="name">
+                                            Interview
+                                        </span>
+                                        <span class="badge">1</span>
+                                    </a>
+                                </li>
+                                <li>
+                                        <a href="#" class="categories-list-item">
+                                            <span class="name">
+                                                Interview
+                                            </span>
+                                            <span class="badge">1</span>
+                                        </a>
+                                    </li>
+                            </ul>
+                        </div>
+                                <!-- 其他div框放到这里 -->
+                        <div class="side">
+                            <div>
+                                <i class="octicon octicon-tag"></i>&nbsp;Tags
+                            </div>
+                            <div class="tags-cloud">
+                                <!-- 添加Tags -->
+                                <a href="/tag/#jekyll" style="font-size: 10.5pt; color: #888;">jekyll</a>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="blog" id="blog">
-            
-        </div>
 
-    </div> 
+
 </body>
 </html>

@@ -133,17 +133,17 @@ class Article(db.Model):
 
     # 获取category
     def get_category(self):
+        categories = []
         if self.category_id:
-            return Category.query.get(self.category_id).name
-        else:
-            return None
+            categories.append(Category.query.get(self.category_id).name)
+        return categories
     
     # 获取tag
     def get_tags(self):
         tags = []
         for tag in self.tags:
             tags.append(tag.name)
-        return ','.join(tags)
+        return tags
 
     # 获取comment
     def get_comments(self):
@@ -162,10 +162,11 @@ class Article(db.Model):
     def get_info(self):
         info={}
         info['title'] = self.title
-        info['content'] = self.content
         info['tags'] = self.get_tags()
         info['category'] = self.get_category()
-        info['public_time'] = self.public_time
-        info['update_time'] = self.update_time
-        info['comments'] = self.get_comments()
+        info['public_time'] = self.public_time.strftime("%Y-%-m-%d")
+        info['update_time'] = self.update_time.strftime("%Y-%-m-%d")
+        info['num_of_view'] = self.num_of_view
         return info
+
+    # 获取详情

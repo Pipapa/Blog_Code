@@ -32,20 +32,13 @@ def get_articles():
         jsonObj['status']='OK'
         jsonObj['num_of_articles']=len(articles)
         for article in articles:
-            info={}
-            info['title']=article.title
-            info['url']=url_for('user.articles_index',article_id=article.id)
-            info['num_of_view']=article.num_of_view
-            info['public_time']=article.public_time.strftime('%B %d %Y - %H:%M:%S')
-            info['update_time']=article.update_time.strftime('%B %d %Y - %H:%M:%S')
-            info['category']=article.get_category()
-            info['tags']=article.get_tags()
-            jsonObj[str(article.id)]=info
+            jsonObj[str(article.id)]=article.get_info()
         return jsonify(jsonObj)
 
     return jsonify(jsonObj)
 
-@api.route('/api/article.info')
+# TODO重写
+@api.route('/api/article')
 def query_articles():
     # 查询id
     jsonObj = {'status':'False'}
