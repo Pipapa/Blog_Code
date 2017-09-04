@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>编辑</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <form method="POST" action="/api/article">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="标题" name="title">
+                <input type="text" class="form-control" placeholder="概述" name="summary">
+                <textarea class="form-control" rows="3" placeholder="内容" name="content"></textarea> 
+                <input type="submit">
+            </div>
+        </from>
+    </div>
+    
+</body>
+</html>

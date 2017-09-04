@@ -4,21 +4,10 @@ from . import user
 from .. import db
 from ..models import User,Article,Category,Tag,Comment
 
-# 文章/主页面
-@user.route('/article')
-@user.route('/article/<int:article_id>')
-def articles_index(article_id=None):
-    if article_id:
-        for each in Article.query.get(1).tags:
-            print(each.name)
-        return str(article_id)
-    else:
-        page = request.args.get('page','')
-        print(page)
-        return render_template('index.html')
-
-# 登录界面
-@user.route('/login',methods=['POST','GET'])
+@user.route('/')                                                        # 主界面,跳转到文章
+def index():
+    return redirect(url_for('user.article_index'))
+@user.route('/admin/login',methods=['POST','GET'])                      # 登录
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -28,9 +17,7 @@ def login():
             redirect(url_for('user.index'))
            
     return render_template('login.html')
-
-# 注册界面
-@user.route('/register',methods=['POST','GET'])
+@user.route('/register',methods=['POST','GET'])                         # 注册
 def register():
     if request.method == 'POST':
         # 添加用户
@@ -47,11 +34,27 @@ def register():
             db.session.commit()
 
     return render_template('register.html')
+@user.route('/article')                                                 # 文章/主页面
+@user.route('/article/<int:article_id>')
+def article_index(article_id=None):
+    if article_id is not None:
+        return render_template('article.html')
+    else:
+        return render_template('index.html')
 
-# 主界面
-@user.route('/')
-def index():
-    return redirect(url_for('user.articles_index'))
+@user.route('/tag')                                                     # 标签
+@user.route('/tag/<string:tag>')
+def tag_index(tag=None):
+    return render_template('tag.html')
+@user.route('/category')                                                # 分类
+@user.route('/category/<string:category>')
+def category_index(category=None):
+    return render_template('category.html')
+
+@user.route('/admin/writer')                                            # 编辑文章
+def writer_admin():
+    return render_template('writer.html')
+
 
 # 404
 @user.errorhandler(404)

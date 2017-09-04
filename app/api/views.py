@@ -4,10 +4,20 @@ from . import api
 from .. import db
 from ..models import User,Article,Category,Tag,Comment
 
+@api.route('/api/test')
+def test():
+    return 'ok'
+
 # 不需要登录api 
-@api.route('/api/article.list')
+@api.route('/api/article.all')                                   # TODO获取全站统计
+def get_statistic():
+    jsonObj = {}
+    jsonObj['num_of_article'] = Article.query.count()
+    return jsonify(jsonObj)
+
+@api.route('/api/article.list')                                  # 获取文章列表
 def get_articles():
-    jsonObj = {'status':'False'}
+    jsonObj = {'status':'0'}
 
     category = request.args.get('category')
     tag = request.args.get('tag')
@@ -29,7 +39,7 @@ def get_articles():
 
     # 输出article
     if len(articles) != 0: 
-        jsonObj['status']='OK'
+        jsonObj['status']='1'
         jsonObj['num_of_articles']=len(articles)
         for article in articles:
             jsonObj[str(article.id)]=article.get_info()
@@ -37,24 +47,20 @@ def get_articles():
 
     return jsonify(jsonObj)
 
-# TODO重写
-@api.route('/api/article')
+@api.route('/api/article',methods=['POST','GET'])                # 获取文章详情/POST修改,添加文章
 def query_articles():
     # 查询id
     jsonObj = {'status':'False'}
-
     id = request.args.get('id')
-
     if id is not None:
         article = Article.query.get(id)
         if article is None:
             return jsonify(jsonObj)
         else:
-            jsonObj['status'] = 'OK'
-            content = {}
-            content['title'] = article.title
-            jsonObj['info']=article.get_info()
+            article.add_view()
+            jsonObj['status'] = '1'
+            jsonObj['detail'] = article.get_detail()
             return jsonify(jsonObj)
+    # POST方式
+    
     return jsonify(jsonObj)
-
-# category
