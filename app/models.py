@@ -174,6 +174,8 @@ class Article(db.Model):                                                # 文章
    
     def get_info(self):                                 # 获取属性
         info={}
+        info['id'] = self.id
+        info['url'] = '/article/' + str(self.id)
         info['title'] = self.title
         info['tags'] = self.get_tag()
         info['category'] = self.get_category()
