@@ -1,8 +1,8 @@
 from flask import Blueprint,render_template,jsonify,request,redirect,url_for,request
 
 from . import user
-from .. import db
-from ..models import User,Article,Category,Tag,Comment
+from ... import db
+from ...models import User,Article,Category,Tag,Comment
 
 @user.route('/')                                                        # 主界面,跳转到文章
 def index():

@@ -139,25 +139,27 @@ class Article(db.Model):                                                # 文章
     
     def add_view(self):                                 # 增加浏览量
         self.num_of_view += 1
+        db.session.commit()
     def add_comment(self,comment):                      # 添加评论
         self.num_of_comment += 1
         self.comments.append(comment)
-   
+        db.session.commit()
     def get_category(self):                             # 获取category
         categories = []
-        if self.category_id:
+        if self.category_id is not None:
             categories.append(Category.query.get(self.category_id).name)
         return categories
     
   
     def get_tag(self):                                  # 获取tag
         tags = []
-        for tag in self.tags:
-            tags.append(tag.name)
+        if self.tags is not None:
+            for tag in self.tags:
+                tags.append(tag.name)
         return tags
 
     
-    def get_comment(self):                              # 获取comment
+    def get_comment(self):                              # TODO删除comment
         comments = {}
         floor = 1
         for comment in self.comments:
@@ -180,8 +182,6 @@ class Article(db.Model):                                                # 文章
         info['num_of_view'] = self.num_of_view
         info['num_of_comment'] = self.num_of_comment
         return info
-
-   
     def get_detail(self):                               # 获取详情
         detail={}
         detail['info']=self.get_info()
