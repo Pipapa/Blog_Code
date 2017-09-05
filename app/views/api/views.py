@@ -28,8 +28,9 @@ def get_article_list():
     if check_args([limit,page,pre_page]):
         jsonObj['error'] = 'The key is not valid'
         return jsonify(jsonObj)
-    # 筛选/默认值
+    # 默认值
     num_of_article = Article.query.count()                                      # 总文章量 
+    # 查询参数
     query = Article.query.order_by(Article.update_time.desc())
     if tag is not None:                                                         # 标签查询
         query = query.filter(Article.tags.any(name=tag))
@@ -51,17 +52,24 @@ def get_article_list():
         if page is None:
             query = query.limit(limit)
     
-    # 是否分页查询
+    # 查询
     articles = query.all() 
     # 返回参数
     if len(articles) == 0:
-        jsonObj['error'] = 'Not find article'
+        jsonObj['error'] = 'No article be found'
         return jsonify(jsonObj)
     else:
         jsonObj['data'] = []
         for article in articles:
             jsonObj['data'].append(article.get_info())
+        # 分页情况
         jsonObj['page'] = page
+        jsonObj['has_next'] = jsonObj['has_prev'] = None
+        if page:
+            if page > 1:
+                jsonObj['has_prev'] = True
+            if page < num_of_article/pre_page:
+                jsonObj['has_next'] = True
         return jsonify(jsonObj)
   
 @api.route('/api/article/<int:id>')
