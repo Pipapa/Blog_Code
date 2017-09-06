@@ -1,5 +1,5 @@
 import json
-from flask import jsonify,url_for,request
+from flask import jsonify,url_for,request,abort
 from . import api
 from ... import db
 from ...models import User,Article,Category,Tag,Comment
@@ -16,8 +16,9 @@ def test():
     return 'true'
 
 @api.route('/api/article')                                   # 获取文章统计
-def get_article_list():
+def query_article():
     jsonObj = {}
+    error_key = jsonify(error = 'The key is not valid')
     # 获取参数
     limit = request.args.get('limit')
     page = request.args.get('page')
@@ -26,8 +27,7 @@ def get_article_list():
     category = request.args.get('category')
     # 处理参数 str to int 
     if check_args([limit,page,pre_page]):
-        jsonObj['error'] = 'The key is not valid'
-        return jsonify(jsonObj)
+       return error_key
     # 默认值
     num_of_article = Article.query.count()                                      # 总文章量 
     # 查询参数
@@ -39,11 +39,13 @@ def get_article_list():
         query = query.join(Category).filter(Category.name == category)
 
     if page is not None:                                                        # 分页
+        page = int(page)
         if pre_page is None:
             pre_page = 5
         else:
             pre_page = int(pre_page)
-        page = int(page)
+        if pre_page <= 0 or page <=0:
+            return error_key
         _start = (page-1) * pre_page                                            # 计算偏移量/分页
         query = query.limit(pre_page).offset(_start)
     
@@ -55,17 +57,15 @@ def get_article_list():
     # 查询
     articles = query.all() 
     # 返回参数
-    if len(articles) == 0:
-        jsonObj['error'] = 'No article be found'
-        return jsonify(jsonObj)
+    if len(articles) == 0:                                                      # 没有文章
+        abort(404)
     else:
         jsonObj['data'] = []
         for article in articles:
-            jsonObj['data'].append(article.get_info())
-        # 分页情况
-        jsonObj['page'] = page
+            jsonObj['data'].append(article.get_info())                          # 文章信息加入列表
+        jsonObj['page'] = page                                                  # 分页
         jsonObj['has_next'] = jsonObj['has_prev'] = None
-        if page:
+        if page:                                                                # 检测上下页
             if page > 1:
                 jsonObj['has_prev'] = True
             if page < num_of_article/pre_page:
@@ -79,3 +79,9 @@ def get_article(id):
 @api.route('/api/comment')                                   # 获取评论
 def get_comment():
     return 'true'
+
+@api.errorhandler(404)
+def page_not_found(e):
+    jsonObj = {}
+    jsonObj['error'] = 'No article be found'
+    return jsonify(jsonObj)
