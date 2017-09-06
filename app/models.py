@@ -159,16 +159,15 @@ class Article(db.Model):                                                # 文章
         return tags
 
     
-    def get_comment(self):                              # TODO删除comment
+    def get_comment(self):                              # 获取comment
         comments = {}
-        floor = 1
+        comments['date'] = []
         for comment in self.comments:
             content = {}
             content['username'] = comment.username
             content['content'] = comment.content
             content['public_time'] = comment.public_time.strftime('%Y-%-m-%d %H:%M')
-            comments[str(floor)]=content
-            floor=floor+1
+            comments['date'].append(content)
         return comments
 
    
@@ -177,7 +176,8 @@ class Article(db.Model):                                                # 文章
         info['id'] = self.id
         info['url'] = '/article/' + str(self.id)
         info['title'] = self.title
-        info['tags'] = self.get_tag()
+        info['summary'] = self.summary
+        info['tag'] = self.get_tag()
         info['category'] = self.get_category()
         info['public_time'] = self.public_time.strftime("%Y-%-m-%d")
         info['update_time'] = self.update_time.strftime("%Y-%-m-%d")
@@ -187,6 +187,6 @@ class Article(db.Model):                                                # 文章
     def get_detail(self):                               # 获取详情
         detail={}
         detail['info']=self.get_info()
-        detail['content']=self.content
+        detail['content'] = self.content
         detail['comment']=self.get_comment()
         return detail

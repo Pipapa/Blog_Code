@@ -46,7 +46,7 @@ def query_article():
             pre_page = int(pre_page)
         if pre_page <= 0 or page <=0:
             return error_key
-        _start = (page-1) * pre_page                                            # 计算偏移量/分页
+        _start = (page-1) * pre_page                                            # 计算/分页
         query = query.limit(pre_page).offset(_start)
     
     if limit is not None:                                                       # 限制大小/非分页情况下
@@ -74,7 +74,10 @@ def query_article():
   
 @api.route('/api/article/<int:id>')
 def get_article(id):
-    return 'id-true'
+    jsonObj = {}
+    article = Article.query.get_or_404(id)
+    jsonObj['date'] = article.get_detail()
+    return jsonify(jsonObj)
 
 @api.route('/api/comment')                                   # 获取评论
 def get_comment():
