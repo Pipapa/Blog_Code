@@ -5,74 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipapa</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/css/uikit.min.css" />
+    <!-- jQuery is required -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- UIkit JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/js/uikit-icons.min.js"></script>
+
 </head>
 <body>
-    <!-- bar -->
-    <div id="container">
-        <div id="topnav">
-            <div id="menu">
-                <ul class="menu">
-                    <li class="menu-item">
-                        <a href="#">首页</a>
-                    </li>
-                    <li class="menu-item">
-                            <a href="#">分类</a>
-                    </li>
-                    <li class="menu-item">
-                            <a href="#">标签</a>
-                    </li>
-                    <li class="menu-item">
-                            <a href="#">留言板</a>
-                    </li>
-                    <li class="menu-item">
-                            <a href="#">关于</a>
-                    </li>
-                </ul>
+    <div class="uk-container uk-container-center">
+        <div class="uk-width-1-1">
+            <!-- 导航栏 -->
+            <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar>
+                <div class="uk-navbar-left">
+                    <ul class="uk-navbar-nav">
+                        <li class="uk-active"><a href="#" style="font-size: 18px;">主页</a></li>
+                        <li><a>/</a></li>
+                        <li><a href="#" style="font-size: 18px;">标签</a></li>
+                        <li><a>/</a></li>
+                        <li><a href="#" style="font-size: 18px;">分类</a></li>
+                        <li><a>/</a></li>
+                        <li><a href="#" style="font-size: 18px;">About</a></li>
+                    </ul>
+                </div>
+                <div class="uk-margin uk-navbar-right">
+                    <form class="uk-search uk-search-default">
+                        <span class="uk-search-icon-flip" uk-search-icon></span>
+                        <input class="uk-search-input" type="search" placeholder="Search...">
+                    </form>
+                </div>
+            </nav>
+            <hr class="uk-margin-small-top">
+            <!-- main -->
+            <div uk-grid>
+                <!-- 文章列表 -->
+                <div class="uk-width-2-3">
+                         <!-- 分类 -->
+                    <div class="uk-child-width-expand@s uk-grid-small  uk-margin-small" uk-grid>
+                        <div class="uk-flex uk-grid-item-match">
+                                <div class="uk-card uk-card-default uk-card-body  uk-padding-small">
+                                    <div class="uk-text-top uk-text-center">
+                                        <h5>这是标题</h5>
+                                    </div>
+                                    <div class="uk-text-small">
+                                        <span>分类 : <a href="#">测试</a></span>
+                                        <span>/</span>
+                                        <span>标签 : <a href="#">测试</a></span>
+                                        <span>/</span>
+                                        <span>发布 : 2017-09-07</span>
+                                        <span>/</span>
+                                        <span>浏览 : 0</span>
+                                    </div>
+                                    <p>内容简介</p>
+                                    <div class="uk-text-right">
+                                        <a href="#">Read More...</a>
+                                    </div>
+                                </div> 
+                                
+                        </div>
+                    </div> 
+                </div>
+
+
+                <!-- 侧边栏 -->
+                <div class="uk-width-1-3">
+                    <!-- 分类 -->
+                    <div class="uk-child-width-expand@s uk-grid-small  uk-margin-small" uk-grid>
+                        <div class="uk-flex uk-grid-item-match">
+                            <div class="uk-card uk-card-default uk-card-body  uk-padding-small">
+                                <h4>分类</h4>
+                                <ul class="uk-list">
+                                    <li><a href="#">List 1</a></li>
+                                    <li><a href="#">List 1</a></li>
+                                    <li><a href="#">List 1</a></li>
+                                    <li><a href="#">List 1</a></li>
+                                </ul>
+                            </div> 
+                        </div>
+                    </div>
+                    <!-- 标签 -->
+                    <div class="uk-child-width-expand@s uk-grid-small uk-margin-small" uk-grid>
+                            <div class="uk-flex uk-grid-item-match">
+                                <div class="uk-card uk-card-default uk-card-body  uk-padding-small">
+                                    <h4>标签</h4>
+                                    <a href="#"><span class="uk-label uk-label-success">标签</span></a>
+                                </div> 
+                            </div>
+                    </div> 
+                    <!-- 近期文章 -->
+                    <div class="uk-child-width-expand@s uk-grid-small uk-margin-small" uk-grid>
+                            <div class="uk-flex uk-grid-item-match">
+                                <div class="uk-card uk-card-default uk-card-body uk-padding-small">
+                                    <h4>最近文章</h4>
+                                    <ul class="uk-list ">
+                                        <li>List 1</li>
+                                        <li>List 2</li>
+                                        <li>List 3</li>
+                                        <li>List 4</li>
+                                    </ul>
+                                </div> 
+                            </div>
+                    </div> 
+                </div>
+
+
             </div>
         </div>
     </div>
-
-    <!-- 内容 -->
-    <div id="container">
-        <div id="main">
-
-            <div class="post-title">
-                <h2><a href="#">标题</a></h2>
-            </div>
-            <p class="post-meta">
-                <span>2017-06-21</span>
-                <span>/浏览:</span>
-                <span>12</span>
-                <span>/分类:</span>
-                <span><a href="#">测试</a></span>
-                <span>/标签:</span>
-                <span><a href="#">测试</a></span>
-            </p>
-
-            <div class="post-content">
-                <p>一些概述</p>
-            </div>
-
-            <p class="more"><a href="#">Read More..</a></p>
-        
-            <ol class="page-navigator">
-                <li><a href="">1</a></li>
-                <li><a href="">2</a></li>
-                <li><a href="">3</a></li>
-                <li><a href="">4</a></li>
-                <li><span>...</span></li>
-                <li><a href="">6</a></li>
-                <li><a href="">&raquo;</a></li>
-            </ol>        
-
-        </div>
-    </div>
-    
-    <!-- footer -->
-    <div id="container">
-        <div id="footer">Powered by Flask &copy; 2015-2017 Pipapa</div>
-    </div>
-        
 </body>
 </html>

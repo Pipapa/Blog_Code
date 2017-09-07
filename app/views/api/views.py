@@ -19,7 +19,7 @@ def test():
 def query_article():
     jsonObj = {}
     error_key = jsonify(error = 'The key is not valid')
-    # 获取参数
+    # 获取参数 
     limit = request.args.get('limit')
     page = request.args.get('page')
     pre_page = request.args.get('pre_page')
@@ -72,18 +72,42 @@ def query_article():
                 jsonObj['has_next'] = True
         return jsonify(jsonObj)
   
-@api.route('/api/article/<int:id>')
+@api.route('/api/article/<int:id>')                          # 获取文章详情
 def get_article(id):
     jsonObj = {}
     article = Article.query.get_or_404(id)
     jsonObj['date'] = article.get_detail()
     return jsonify(jsonObj)
-
-@api.route('/api/comment')                                   # 获取评论
-def get_comment():
+@api.route('/api/tag')                                       # 获取全部标签
+def get_tag():
+    jsonObj = {}
+    jsonObj['data'] = []
+    tags = Tag.query.all()
+    for tag in tags:
+        jsonObj['data'].append(tag.get_info())
+    return jsonify(jsonObj)
+@api.route('/api/category')                                  # 获取全部分类
+def get_category():
+    jsonObj = {}
+    jsonObj['data'] = []
+    categories = Category.query.all()
+    for category in categories:
+        jsonObj['data'].append(category.get_info())
+    return jsonify(jsonObj)
+@api.route('/api/article/create',methods=['POST'])           # 创建一篇文章
+def create_article():
     return 'true'
 
-@api.errorhandler(404)
+@api.route('/api/article/put',methods=['POST'])              # 更新一篇文章
+def put_article():
+    return 'true'
+
+@api.route('/api/article/delete',methods=['POST'])           # 删除一篇文章
+def delete_article():
+    return 'true'
+
+
+@api.errorhandler(404)                                       # 404
 def page_not_found(e):
     jsonObj = {}
     jsonObj['error'] = 'No article be found'

@@ -65,6 +65,12 @@ class Category(db.Model):                                               # 类别
         self.name = name
         self.num_of_articles = num_of_articles
 
+    def get_info(self):
+        categories = {}
+        categories['name'] = self.name
+        categories['url'] = '/category/' + self.name
+        categories['num_of_article'] = self.num_of_articles
+        return categories
 class Tag(db.Model):                                                    # 标签
     __tablename__ = 'tags'
     id = db.Column(db.Integer,primary_key=True)
@@ -72,6 +78,11 @@ class Tag(db.Model):                                                    # 标签
 
     def __init__(self,name):
         self.name = name
+    def get_info(self):
+        tags = {}
+        tags['name'] = self.name
+        tags['url'] = '/tag/' + self.name
+        return tags
 
 
 class Comment(db.Model):                                                # 评论
