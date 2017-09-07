@@ -10,9 +10,71 @@
     <!-- jQuery is required -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+    <script>
+        window.onload = function(){
+            load_category()
+            load_tag()
+        }
+        /*加载tag*/
+        function load_tag(){
+            httpRequest = new XMLHttpRequest()
+            httpRequest.onreadystatechange = function(){
+                if(httpRequest.readyState === XMLHttpRequest.DONE){
+                    if(httpRequest.status === 200){
+                        data = JSON.parse(httpRequest.responseText)
+                        if(data['error'] == undefined){
+                            var tag = document.getElementById('tag')
+                            len = data['data'].length
+                            for(var i=0;i<len;i++){
+                                var _tag = document.createElement('a')
+                                _tag.innerHTML = '<span class="uk-label uk-label-success">' + data['data'][i].name + '</span>' + ' ';
+                                _tag.setAttribute('href',data['data'][i].url)
+                                tag.appendChild(_tag)
+                            }
+                        }else{
+                            
+                        }
+                    }else{
+                        alert('加载错误')
+                    }
+                }
+                
+            }
+            httpRequest.open('GET','/api/tag',true)
+            httpRequest.send()
+        }
+        function load_category(){
+            httpRequest = new XMLHttpRequest()
+            httpRequest.onreadystatechange = function(){
+                if(httpRequest.readyState === XMLHttpRequest.DONE){
+                    if(httpRequest.status === 200){
+                        data = JSON.parse(httpRequest.responseText)
+                        if(data['error'] == undefined){
+                            var category = document.getElementById('category')
+                            var len = data['data'].length
+                            for(var i=0;i<len;i++){
+                                var _category = document.createElement('li')
+                                _category.innerHTML = '<a href="' + data['data'][i].url + '">'+ data['data'][i].name +'</a>'
+                                category.appendChild(_category)
+                            }
+                        }else{
+                            
+                        }
+                    }else{
+                        alert('加载错误')
+                    }
+                }
+                
+            }
+            httpRequest.open('GET','/api/category',true)
+            httpRequest.send()
+        }
+    </script>
+
     <!-- UIkit JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/js/uikit-icons.min.js"></script>
+    
 
 </head>
 <body>
@@ -43,7 +105,6 @@
             <div uk-grid>
                 <!-- 文章列表 -->
                 <div class="uk-width-2-3">
-                         <!-- 分类 -->
                     <div class="uk-child-width-expand@s uk-grid-small  uk-margin-small" uk-grid>
                         <div class="uk-flex uk-grid-item-match">
                                 <div class="uk-card uk-card-default uk-card-body  uk-padding-small">
@@ -75,13 +136,9 @@
                     <!-- 分类 -->
                     <div class="uk-child-width-expand@s uk-grid-small  uk-margin-small" uk-grid>
                         <div class="uk-flex uk-grid-item-match">
-                            <div class="uk-card uk-card-default uk-card-body  uk-padding-small">
+                            <div class="uk-card uk-card-default uk-card-body  uk-padding-small" >
                                 <h4>分类</h4>
-                                <ul class="uk-list">
-                                    <li><a href="#">List 1</a></li>
-                                    <li><a href="#">List 1</a></li>
-                                    <li><a href="#">List 1</a></li>
-                                    <li><a href="#">List 1</a></li>
+                                <ul class="uk-list" id="category">
                                 </ul>
                             </div> 
                         </div>
@@ -89,9 +146,8 @@
                     <!-- 标签 -->
                     <div class="uk-child-width-expand@s uk-grid-small uk-margin-small" uk-grid>
                             <div class="uk-flex uk-grid-item-match">
-                                <div class="uk-card uk-card-default uk-card-body  uk-padding-small">
+                                <div class="uk-card uk-card-default uk-card-body  uk-padding-small" id="tag">
                                     <h4>标签</h4>
-                                    <a href="#"><span class="uk-label uk-label-success">标签</span></a>
                                 </div> 
                             </div>
                     </div> 
