@@ -6,14 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipapa</title>
     <style>
-        .main{
-            padding: 10px 10px;
-        }
-        header{
-            width: 760px;
-            margin: 0 auto;
-        }
-        nav{
+        body{
+            margin: 0;
         }
         nav ul{
             list-style: none;
@@ -26,33 +20,61 @@
         }
         nav ul li{
             float: left;
+            padding: 20px 30px;
         }
-        nav ul li a{
+        .post{
+            margin: 55px 20px;
+        }
+        .post-title{
             text-align: center;
-            padding: 14px 16px;
             text-decoration: none;
+            color: #22BAD9; 
         }
-        nav ul li a:hover{
+        .post-title:hover{
             color:#fff;
             background:#22BAD9;
-            text-decoration:none
+            text-decoration:none;
         }
+        td{
+            padding: 10px;
+            color: #ccc;
+        }
+        td a{
+            text-decoration: none;
+            color: #ccc; 
+        }
+        td a:hover{
+            color:#22BAD9;
+        }
+  
     </style>
 </head>
 <body>
-    <div class="main">
-        <!-- 导航栏 -->
-        <nav>    
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Tag</a></li>
-                <li><a href="#">Category</a></li>
-                <li><a href="#">About</a></li>
-            </ul>
-        </nav>
-        <!-- 分割线 -->
-        <hr>
-        <!-- 文章 -->
+    <!-- 导航栏 -->
+    <nav>    
+        <ul>
+            <li><a href="#" class="post-title">Home/</a></li>
+            <li><a href="#" class="post-title">Tag/</a></li>
+            <li><a href="#" class="post-title">Category/</a></li>
+            <li><a href="#" class="post-title">About/</a></li>
+        </ul>
+    </nav>
+    <!-- 文章 -->
+    <div class="post">
+        <table>
+            <tr>
+                <td>2017-06-21</td>
+                <td><a href="#">分类</a></td>
+                <td><a href="#">标签</a>,<a href="#">两个标签</a></td>
+                <td><a href="#" class="post-title">/一个标题/</a></td>
+            </tr>
+            <tr>
+                <td>2017-07-28</td>
+                <td><a href="#">分类</a></td>
+                <td><a href="#">标签</a></td>
+                <td><a href="#" class="post-title">/长一点标题/</a></td>
+            </tr>
+        </table>
     </div>
 </body>
 </html>
