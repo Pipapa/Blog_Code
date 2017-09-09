@@ -94,15 +94,17 @@ def get_category():
     for category in categories:
         jsonObj['data'].append(category.get_info())
     return jsonify(jsonObj)
-@api.route('/api/article/create',methods=['POST'])           # 创建一篇文章
+@api.route('/api/article/create',methods=['POST'])           # TODO 创建一篇文章
 def create_article():
+    if request.method == 'POST':
+        return 'true'
     return 'true'
 
-@api.route('/api/article/put',methods=['POST'])              # 更新一篇文章
+@api.route('/api/article/put',methods=['POST'])              # TODO 更新一篇文章
 def put_article():
     return 'true'
 
-@api.route('/api/article/delete',methods=['POST'])           # 删除一篇文章
+@api.route('/api/article/delete',methods=['POST'])           # TODO 删除一篇文章
 def delete_article():
     return 'true'
 

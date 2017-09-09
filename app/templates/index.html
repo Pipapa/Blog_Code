@@ -5,171 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipapa</title>
-    <!-- UIkit CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/css/uikit.min.css" />
-    <!-- jQuery is required -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-    <script>
-        window.onload = function(){
-            load_category()
-            load_tag()
+    <style>
+        .main{
+            padding: 10px 10px;
         }
-        /*加载tag*/
-        function load_tag(){
-            httpRequest = new XMLHttpRequest()
-            httpRequest.onreadystatechange = function(){
-                if(httpRequest.readyState === XMLHttpRequest.DONE){
-                    if(httpRequest.status === 200){
-                        data = JSON.parse(httpRequest.responseText)
-                        if(data['error'] == undefined){
-                            var tag = document.getElementById('tag')
-                            len = data['data'].length
-                            for(var i=0;i<len;i++){
-                                var _tag = document.createElement('a')
-                                _tag.innerHTML = '<span class="uk-label uk-label-success">' + data['data'][i].name + '</span>' + ' ';
-                                _tag.setAttribute('href',data['data'][i].url)
-                                tag.appendChild(_tag)
-                            }
-                        }else{
-                            
-                        }
-                    }else{
-                        alert('加载错误')
-                    }
-                }
-                
-            }
-            httpRequest.open('GET','/api/tag',true)
-            httpRequest.send()
+        header{
+            width: 760px;
+            margin: 0 auto;
         }
-        function load_category(){
-            httpRequest = new XMLHttpRequest()
-            httpRequest.onreadystatechange = function(){
-                if(httpRequest.readyState === XMLHttpRequest.DONE){
-                    if(httpRequest.status === 200){
-                        data = JSON.parse(httpRequest.responseText)
-                        if(data['error'] == undefined){
-                            var category = document.getElementById('category')
-                            var len = data['data'].length
-                            for(var i=0;i<len;i++){
-                                var _category = document.createElement('li')
-                                _category.innerHTML = '<a href="' + data['data'][i].url + '">'+ data['data'][i].name +'</a>'
-                                category.appendChild(_category)
-                            }
-                        }else{
-                            
-                        }
-                    }else{
-                        alert('加载错误')
-                    }
-                }
-                
-            }
-            httpRequest.open('GET','/api/category',true)
-            httpRequest.send()
+        nav{
         }
-    </script>
-
-    <!-- UIkit JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/js/uikit.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/js/uikit-icons.min.js"></script>
-    
-
+        nav ul{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            position: fixed;
+            top: 0;
+        }
+        nav ul li{
+            float: left;
+        }
+        nav ul li a{
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        nav ul li a:hover{
+            color:#fff;
+            background:#22BAD9;
+            text-decoration:none
+        }
+    </style>
 </head>
 <body>
-    <div class="uk-container uk-container-center">
-        <div class="uk-width-1-1">
-            <!-- 导航栏 -->
-            <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar>
-                <div class="uk-navbar-left">
-                    <ul class="uk-navbar-nav">
-                        <li class="uk-active"><a href="#" style="font-size: 18px;">主页</a></li>
-                        <li><a>/</a></li>
-                        <li><a href="#" style="font-size: 18px;">标签</a></li>
-                        <li><a>/</a></li>
-                        <li><a href="#" style="font-size: 18px;">分类</a></li>
-                        <li><a>/</a></li>
-                        <li><a href="#" style="font-size: 18px;">About</a></li>
-                    </ul>
-                </div>
-                <div class="uk-margin uk-navbar-right">
-                    <form class="uk-search uk-search-default">
-                        <span class="uk-search-icon-flip" uk-search-icon></span>
-                        <input class="uk-search-input" type="search" placeholder="Search...">
-                    </form>
-                </div>
-            </nav>
-            <hr class="uk-margin-small-top">
-            <!-- main -->
-            <div uk-grid>
-                <!-- 文章列表 -->
-                <div class="uk-width-2-3">
-                    <div class="uk-child-width-expand@s uk-grid-small  uk-margin-small" uk-grid>
-                        <div class="uk-flex uk-grid-item-match">
-                                <div class="uk-card uk-card-default uk-card-body  uk-padding-small">
-                                    <div class="uk-text-top uk-text-center">
-                                        <h5>这是标题</h5>
-                                    </div>
-                                    <div class="uk-text-small">
-                                        <span>分类 : <a href="#">测试</a></span>
-                                        <span>/</span>
-                                        <span>标签 : <a href="#">测试</a></span>
-                                        <span>/</span>
-                                        <span>发布 : 2017-09-07</span>
-                                        <span>/</span>
-                                        <span>浏览 : 0</span>
-                                    </div>
-                                    <p>内容简介</p>
-                                    <div class="uk-text-right">
-                                        <a href="#">Read More...</a>
-                                    </div>
-                                </div> 
-                                
-                        </div>
-                    </div> 
-                </div>
-
-
-                <!-- 侧边栏 -->
-                <div class="uk-width-1-3">
-                    <!-- 分类 -->
-                    <div class="uk-child-width-expand@s uk-grid-small  uk-margin-small" uk-grid>
-                        <div class="uk-flex uk-grid-item-match">
-                            <div class="uk-card uk-card-default uk-card-body  uk-padding-small" >
-                                <h4>分类</h4>
-                                <ul class="uk-list" id="category">
-                                </ul>
-                            </div> 
-                        </div>
-                    </div>
-                    <!-- 标签 -->
-                    <div class="uk-child-width-expand@s uk-grid-small uk-margin-small" uk-grid>
-                            <div class="uk-flex uk-grid-item-match">
-                                <div class="uk-card uk-card-default uk-card-body  uk-padding-small" id="tag">
-                                    <h4>标签</h4>
-                                </div> 
-                            </div>
-                    </div> 
-                    <!-- 近期文章 -->
-                    <div class="uk-child-width-expand@s uk-grid-small uk-margin-small" uk-grid>
-                            <div class="uk-flex uk-grid-item-match">
-                                <div class="uk-card uk-card-default uk-card-body uk-padding-small">
-                                    <h4>最近文章</h4>
-                                    <ul class="uk-list ">
-                                        <li>List 1</li>
-                                        <li>List 2</li>
-                                        <li>List 3</li>
-                                        <li>List 4</li>
-                                    </ul>
-                                </div> 
-                            </div>
-                    </div> 
-                </div>
-
-
-            </div>
-        </div>
+    <div class="main">
+        <!-- 导航栏 -->
+        <nav>    
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Tag</a></li>
+                <li><a href="#">Category</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </nav>
+        <!-- 分割线 -->
+        <hr>
+        <!-- 文章 -->
     </div>
 </body>
 </html>

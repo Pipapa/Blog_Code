@@ -108,7 +108,7 @@ class Article(db.Model):                                                # 文章
     public_time = db.Column(db.DateTime,index=True)
     update_time = db.Column(db.DateTime,index=True)
     num_of_view = db.Column(db.Integer,default=0)
-    num_of_comment = db.Column(db.Integer,default=0)
+    num_of_comment = db.Column(db.Integer,default=0)    # TODO DELETE IT
     # 连接其他表单
     category_id = db.Column(db.Integer,db.ForeignKey('categories.id'))
     tags = db.relationship('Tag',secondary=Tag_relationship,
@@ -193,7 +193,7 @@ class Article(db.Model):                                                # 文章
         info['public_time'] = self.public_time.strftime("%Y-%-m-%d")
         info['update_time'] = self.update_time.strftime("%Y-%-m-%d")
         info['num_of_view'] = self.num_of_view
-        info['num_of_comment'] = self.num_of_comment
+        info['num_of_comment'] = len(self.comments)
         return info
     def get_detail(self):                               # 获取详情
         detail={}
