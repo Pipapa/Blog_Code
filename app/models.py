@@ -108,7 +108,6 @@ class Article(db.Model):                                                # 文章
     public_time = db.Column(db.DateTime,index=True)
     update_time = db.Column(db.DateTime,index=True)
     num_of_view = db.Column(db.Integer,default=0)
-    num_of_comment = db.Column(db.Integer,default=0)    # TODO DELETE IT
     # 连接其他表单
     category_id = db.Column(db.Integer,db.ForeignKey('categories.id'))
     tags = db.relationship('Tag',secondary=Tag_relationship,
