@@ -15,15 +15,15 @@
             padding: 0;
             overflow: hidden;
             width: 100%;
-            position: fixed;
             top: 0;
         }
         nav ul li{
             float: left;
             padding: 20px 30px;
+            font-size: 18px;
         }
         .post{
-            margin: 55px 20px;
+            margin: 0px 20px;
         }
         .post-title{
             text-align: center;
@@ -35,9 +35,21 @@
             background:#22BAD9;
             text-decoration:none;
         }
+        .page-bar{
+            margin: 10px 0px;
+            margin-bottom: 20px;
+        }
+        .page-bar a{
+            text-decoration: none;
+            padding: 0px 10px;
+        }
+        .page-bar span{
+            padding: 0px 10px;
+        }
         td{
-            padding: 10px;
+            padding: 5px;
             color: #ccc;
+            font-size: 16px;
         }
         td a{
             text-decoration: none;
@@ -46,8 +58,86 @@
         td a:hover{
             color:#22BAD9;
         }
-  
+        footer{
+            padding-left: 30px;
+            float: left;
+        }
     </style>
+    <script>
+        /*获取参数*/
+        var getUrlParam = function(name){
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
+            var r = window.location.search.substr(1).match(reg);  
+            if (r != null) return unescape(r[2]); return null; 
+        }
+        window.onload = function(){
+            load_article()
+        }
+        var load_article = function(){
+            page = getUrlParam('page')
+            var url = '/api/article?pre_page=5&page=' + page
+            var request = new XMLHttpRequest()
+            request.onreadystatechange = function(){
+                if(request.readyState == XMLHttpRequest.DONE){
+                    if(request.status == 200){
+                        var data = JSON.parse(request.responseText)
+                        if(data['error'] == undefined){
+                            /*成功获取*/
+                            /*文章*/
+                            var article_table = document.getElementById('article')
+                            var articles = data['data']
+                            var num_of_article = articles.length
+                            for(var i=0;i<num_of_article;i++){
+                                var tr = document.createElement('tr')
+                                var time = document.createElement('td')
+                                var category = document.createElement('td')
+                                var tags = document.createElement('td')
+                                var title = document.createElement('td')
+                                
+                                time.innerHTML = articles[i].update_time + '/'
+                                category.innerHTML = '(<a href="'+ '/category/' + articles[i].category[0] +'">'+ articles[i].category[0] +'</a>'
+                                for(var j=0;j<articles[i].tag.length;j++){
+                                    tags.innerHTML = tags.innerHTML + '<a href="'+ '/tag/' + articles[i].tag[j] +'">'+ articles[i].tag[j] +'</a>'
+                                    if(j != articles[i].tag.length - 1){
+                                        tags.innerHTML = tags.innerHTML + ','
+                                    }else{
+                                        tags.innerHTML = tags.innerHTML + ')'
+                                    }
+                                }
+                                title.innerHTML = '<a href="#" class="post-title">'+ articles[i].title +'</a>'
+                                tr.appendChild(time)
+                                tr.appendChild(title)
+                                tr.appendChild(category)
+                                tr.appendChild(tags)
+                                article_table.appendChild(tr)
+                            }
+                            /*翻页*/
+                            var page_bar = document.getElementById('page')
+                            if(data['has_prev']){
+                                var prev = document.createElement('a')
+                                prev.setAttribute('href','/article?page='+(parseInt(page)-1))
+                                prev.innerHTML = '<'
+                                page_bar.appendChild(prev)
+                            }
+                            var page_num = document.createElement('span')
+                            page_num.innerHTML = 'page:' + data['page'] + '/' +data['num_of_page']
+                            page_bar.appendChild(page_num)
+                            if(data['has_next']){
+                                var next = document.createElement('a')
+                                next.setAttribute('href','/article?page='+(parseInt(page)+1))
+                                next.innerHTML = '>'
+                                page_bar.appendChild(next)
+                            }
+                        }else{
+                        }
+                    }
+                }else{
+                }
+            }
+            request.open('GET',url,true)
+            request.send()
+        }
+    </script>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -60,21 +150,18 @@
         </ul>
     </nav>
     <!-- 文章 -->
-    <div class="post">
-        <table>
-            <tr>
-                <td>2017-06-21</td>
-                <td><a href="#">分类</a></td>
-                <td><a href="#">标签</a>,<a href="#">两个标签</a></td>
-                <td><a href="#" class="post-title">/一个标题/</a></td>
-            </tr>
-            <tr>
-                <td>2017-07-28</td>
-                <td><a href="#">分类</a></td>
-                <td><a href="#">标签</a></td>
-                <td><a href="#" class="post-title">/长一点标题/</a></td>
-            </tr>
+    <div class="post" id="post">
+        <table id="article">
+           
         </table>
+        <!-- 翻页 -->
+        <div class="page-bar" id="page">
+               
+        </div>        
     </div>
+    <!-- 底部 -->
+    <footer>
+        Powerd by Pipapa,<a href="#">FrogBlog</a>
+    </footer>
 </body>
 </html>

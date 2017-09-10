@@ -64,11 +64,16 @@ def query_article():
         for article in articles:
             jsonObj['data'].append(article.get_info())                          # 文章信息加入列表
         jsonObj['page'] = page                                                  # 分页
-        jsonObj['has_next'] = jsonObj['has_prev'] = None
+        jsonObj['num_of_page']=jsonObj['has_next'] = jsonObj['has_prev'] = None
         if page:                                                                # 检测上下页
+            if num_of_article%pre_page:
+                num_of_page = int(num_of_article/pre_page) + 1
+            else:
+                num_of_page = int(num_of_article/pre_page)
+            jsonObj['num_of_page'] = num_of_page
             if page > 1:
                 jsonObj['has_prev'] = True
-            if page < num_of_article/pre_page:
+            if page < num_of_page:
                 jsonObj['has_next'] = True
         return jsonify(jsonObj)
   

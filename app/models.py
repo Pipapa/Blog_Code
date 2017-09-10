@@ -177,7 +177,7 @@ class Article(db.Model):                                                # 文章
             content = {}
             content['username'] = comment.username
             content['content'] = comment.content
-            content['public_time'] = comment.public_time.strftime('%Y-%-m-%d %H:%M')
+            content['public_time'] = comment.public_time.strftime('%Y-%m-%d %H:%M')
             comments['date'].append(content)
         return comments
 
@@ -190,8 +190,8 @@ class Article(db.Model):                                                # 文章
         info['summary'] = self.summary
         info['tag'] = self.get_tag()
         info['category'] = self.get_category()
-        info['public_time'] = self.public_time.strftime("%Y-%-m-%d")
-        info['update_time'] = self.update_time.strftime("%Y-%-m-%d")
+        info['public_time'] = self.public_time.strftime("%Y-%m-%d")
+        info['update_time'] = self.update_time.strftime("%Y-%m-%d")
         info['num_of_view'] = self.num_of_view
         info['num_of_comment'] = len(self.comments)
         return info
