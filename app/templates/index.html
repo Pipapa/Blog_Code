@@ -5,65 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipapa</title>
-    <style>
-        body{
-            margin: 0;
-        }
-        nav ul{
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            width: 100%;
-            top: 0;
-        }
-        nav ul li{
-            float: left;
-            padding: 20px 30px;
-            font-size: 18px;
-        }
-        .post{
-            margin: 0px 20px;
-        }
-        .post-title{
-            text-align: center;
-            text-decoration: none;
-            color: #22BAD9; 
-        }
-        .post-title:hover{
-            color:#fff;
-            background:#22BAD9;
-            text-decoration:none;
-        }
-        .page-bar{
-            margin: 10px 0px;
-            margin-bottom: 20px;
-        }
-        .page-bar a{
-            text-decoration: none;
-            padding: 0px 10px;
-        }
-        .page-bar span{
-            padding: 0px 10px;
-        }
-        td{
-            padding: 5px;
-            color: #ccc;
-            font-size: 16px;
-        }
-        td a{
-            text-decoration: none;
-            color: #ccc; 
-        }
-        td a:hover{
-            color:#22BAD9;
-        }
-        footer{
-            padding-left: 30px;
-            float: left;
-        }
-    </style>
-    <script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/frog.css') }}">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>    
+        <ul>
+            <li><a href="/" class="post-title">Home/</a></li>
+            <li><a href="/tag" class="post-title">Tag/</a></li>
+            <li><a href="/category" class="post-title">Category/</a></li>
+            <li><a href="/about" class="post-title">About/</a></li>
+        </ul>
+    </nav>
+    <!-- 文章列表 -->
+    <div class="post" id="post">
+        <table>
+           
+        </table>
+        <!-- 翻页 -->
+        <div class="page-bar">
+               
+        </div>        
+    </div>
+    <!-- 底部 -->
+    <footer>
+        Powered by <a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a> © 2017 Pipapa
+    </footer>
+</body>
+<script>
         /*获取参数*/
         var getUrlParam = function(name){
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
@@ -75,7 +44,7 @@
         }
         var load_article = function(){
             page = getUrlParam('page')
-            var url = '/api/article?pre_page=5&page=' + page
+            var url = '/api/article?pre_page=10&page=' + page
             var request = new XMLHttpRequest()
             request.onreadystatechange = function(){
                 if(request.readyState == XMLHttpRequest.DONE){
@@ -83,8 +52,9 @@
                         var data = JSON.parse(request.responseText)
                         if(data['error'] == undefined){
                             /*成功获取*/
+                            var post_list = document.getElementById('post')
                             /*文章*/
-                            var article_table = document.getElementById('article')
+                            var article_table = document.createElement('table')
                             var articles = data['data']
                             var num_of_article = articles.length
                             for(var i=0;i<num_of_article;i++){
@@ -104,15 +74,17 @@
                                         tags.innerHTML = tags.innerHTML + ')'
                                     }
                                 }
-                                title.innerHTML = '<a href="#" class="post-title">'+ articles[i].title +'</a>'
+                                title.innerHTML = '<a href="'+ articles[i].url +'" class="post-title">'+ articles[i].title +'</a>'
                                 tr.appendChild(time)
                                 tr.appendChild(title)
                                 tr.appendChild(category)
                                 tr.appendChild(tags)
                                 article_table.appendChild(tr)
+                                post.appendChild(article_table)
                             }
                             /*翻页*/
-                            var page_bar = document.getElementById('page')
+                            var page_bar = document.createElement('div')
+                            page_bar.setAttribute('class','page-bar')
                             if(data['has_prev']){
                                 var prev = document.createElement('a')
                                 prev.setAttribute('href','/article?page='+(parseInt(page)-1))
@@ -128,6 +100,7 @@
                                 next.innerHTML = '>'
                                 page_bar.appendChild(next)
                             }
+                            post_list.appendChild(page_bar)
                         }else{
                         }
                     }
@@ -138,30 +111,4 @@
             request.send()
         }
     </script>
-</head>
-<body>
-    <!-- 导航栏 -->
-    <nav>    
-        <ul>
-            <li><a href="#" class="post-title">Home/</a></li>
-            <li><a href="#" class="post-title">Tag/</a></li>
-            <li><a href="#" class="post-title">Category/</a></li>
-            <li><a href="#" class="post-title">About/</a></li>
-        </ul>
-    </nav>
-    <!-- 文章 -->
-    <div class="post" id="post">
-        <table id="article">
-           
-        </table>
-        <!-- 翻页 -->
-        <div class="page-bar" id="page">
-               
-        </div>        
-    </div>
-    <!-- 底部 -->
-    <footer>
-        Powerd by Pipapa,<a href="#">FrogBlog</a>
-    </footer>
-</body>
 </html>

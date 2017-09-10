@@ -6,7 +6,7 @@ from ...models import User,Article,Category,Tag,Comment
 
 @user.route('/')                                                        # 主界面,跳转到文章
 def index():
-    return redirect(url_for('user.article_index'))
+    return redirect(url_for('user.article_index',page=1))
 @user.route('/admin/login',methods=['POST','GET'])                      # 登录
 def login():
     if request.method == 'POST':
