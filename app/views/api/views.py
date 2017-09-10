@@ -81,7 +81,8 @@ def query_article():
 def get_article(id):
     jsonObj = {}
     article = Article.query.get_or_404(id)
-    jsonObj['date'] = article.get_detail()
+    jsonObj['data'] = article.get_detail()
+    article.add_view()
     return jsonify(jsonObj)
 @api.route('/api/tag')                                       # 获取全部标签
 def get_tag():

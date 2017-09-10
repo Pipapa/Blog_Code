@@ -103,7 +103,6 @@ class Article(db.Model):                                                # 文章
     __tablename__ = 'articles'
     id = db.Column(db.Integer,primary_key=True)
     title = db.Column(db.String(64))
-    summary = db.Column(db.Text)
     content = db.Column(db.Text)
     public_time = db.Column(db.DateTime,index=True)
     update_time = db.Column(db.DateTime,index=True)
@@ -117,16 +116,11 @@ class Article(db.Model):                                                # 文章
     
     # 构造
     def __init__(self,title,content,
-                category=None,tags=None,summary=None,num_of_view=0):
+                category=None,tags=None,num_of_view=0):
         self.title = title
         self.content = content
         self.public_time = self.update_time = datetime.utcnow()
         self.num_of_view = num_of_view
-        # 生产文章大意
-        if summary is not None:
-            self.summary = summary
-        else:
-            self.summary = '这里是文章大意'
 
         # 添加类型
         if category is not None:
@@ -186,7 +180,6 @@ class Article(db.Model):                                                # 文章
         info['id'] = self.id
         info['url'] = '/article/' + str(self.id)
         info['title'] = self.title
-        info['summary'] = self.summary
         info['tag'] = self.get_tag()
         info['category'] = self.get_category()
         info['public_time'] = self.public_time.strftime("%Y-%m-%d")

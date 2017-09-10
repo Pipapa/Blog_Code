@@ -29,7 +29,7 @@
     </div>
     <!-- 底部 -->
     <footer>
-        Powered by <a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a> © 2017 Pipapa
+        Powered by <a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a> &copy; 2017 Pipapa
     </footer>
 </body>
 <script>
@@ -44,6 +44,9 @@
         }
         var load_article = function(){
             page = getUrlParam('page')
+            if(!page){
+                page = 1
+            }
             var url = '/api/article?pre_page=10&page=' + page
             var request = new XMLHttpRequest()
             request.onreadystatechange = function(){

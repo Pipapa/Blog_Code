@@ -1,5 +1,6 @@
 body{
-    margin: 0;
+    width: 1024px;
+    margin: 0 auto;
 }
 nav ul{
     list-style: none;
@@ -41,8 +42,8 @@ nav ul li{
     text-decoration:none;
 }
 .page-bar{
-    margin: 10px 0px;
-    margin-bottom: 20px;
+    margin: 0; 
+    margin-top: 30px;
 }
 .page-bar a{
     text-decoration: none;
@@ -50,6 +51,9 @@ nav ul li{
 }
 .page-bar span{
     padding: 0px 10px;
+}
+.markdown-body{
+    margin: 30px;
 }
 table{
     margin: 5px 0px;
@@ -64,6 +68,21 @@ td a{
     color: #ccc; 
 }
 td a:hover{
+    color:#22BAD9;
+}
+.article-info{
+    margin: 30px;
+}
+.article-info span{
+    padding: 0px 5px;
+    color: #cccccc;
+}
+.article-info span a{
+    color: #cccccc;
+    text-decoration: none;
+}
+.article-info span a:hover{
+    color: #ffffff;
     color:#22BAD9;
 }
 footer{

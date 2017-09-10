@@ -5,53 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipapa</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/frog.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.8.0/github-markdown.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
 </head>
 <body>
-    <!-- bar -->
-    <div id="container">
-        <div id="topnav">
-            <div id="menu">
-                <ul class="menu">
-                    <li class="menu-item">
-                        <a href="#">首页</a>
-                    </li>
-                    <li class="menu-item">
-                            <a href="#">分类</a>
-                    </li>
-                    <li class="menu-item">
-                            <a href="#">标签</a>
-                    </li>
-                    <li class="menu-item">
-                            <a href="#">留言板</a>
-                    </li>
-                    <li class="menu-item">
-                            <a href="#">关于</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
+   <!-- 导航栏 -->
+   <nav>    
+        <ul>
+            <li><a href="/" class="post-title">Home/</a></li>
+            <li><a href="/tag" class="post-title">Tag/</a></li>
+            <li><a href="/category" class="post-title">Category/</a></li>
+            <li><a href="/about" class="post-title">About/</a></li>
+        </ul>
+    </nav>
     <!-- 内容 -->
-    <div id="container">
-        <div id="main">
-
-            <div class="post-title">
-                <h2><a href="#">标题</a></h2>
-            </div>
-
-            <div class="post-content">
-                <p>一些内容</p>
-            </div>
-
-        </div>
+    <div class="article-info" id="article-info">
+       
     </div>
-    
-    <!-- footer -->
-    <div id="container">
-        <div id="footer">Powered by Flask &copy; 2015-2017 Pipapa</div>
-    </div>
+   
+    <div class="markdown-body" id="article">
         
+    </div> 
+    <!-- 底部 -->
+    <footer>
+        Powered by <a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a> &copy; 2017 Pipapa
+    </footer> 
 </body>
+    <script>
+        window.onload = function(){
+            id = getUrlIndex()
+            get_content(id)
+        }
+        var getUrlIndex = function(){
+            var url = encodeURI(window.location.href)
+            url = url.substring(url.indexOf('article')+8)
+            return url
+        }
+        var get_content = function(id){
+            var url = '/api/article/' + id
+            var request = new XMLHttpRequest()
+            request.onreadystatechange = function(){
+                if(request.readyState == XMLHttpRequest.DONE){
+                    if(request.status == 200){
+                        var data = JSON.parse(request.responseText)
+                        /*使用showdownjs转换markdown为html*/
+                        data = data['data']
+                        var post = document.getElementById('article')
+                        text = data['content'] 
+                        marked.setOptions({
+                            highlight: function(code){
+                                return hljs.highlightAuto(code).value
+                            }
+                        })
+                        post.innerHTML = marked(text)
+
+                        var info = document.getElementById('article-info')
+                        var time = document.createElement('span')
+                        var category = document.createElement('span')
+                        var tag = document.createElement('span')
+                        var num_of_view = document.createElement('span')
+
+                        time.innerHTML = data['info']['public_time'] + '/' + data['info']['update_time']
+                        num_of_view.innerHTML = '访问量: ' + data['info']['num_of_view']
+                        category.innerHTML = '<a href="' + '/category/' + data['info']['category'] +  '">' + data['info']['category'] +'</a>'
+                        var tag_len = data['info']['tag'].length
+                        for(var i=0;i<tag_len;i++){
+                            if(i != tag_len-1){
+                                tag.innerHTML = tag.innerHTML + '<a href="' + '/tag/' + data['info']['tag'][i] + '">' + data['info']['tag'][i] + '</a>,'
+                            }else{
+                                tag.innerHTML = tag.innerHTML + '<a href="' + '/tag/' + data['info']['tag'][i] + '">' + data['info']['tag'][i] + '</a>'
+                            }
+                        }
+                        info.appendChild(time)
+                        info.appendChild(category)
+                        info.appendChild(tag)
+                        info.appendChild(num_of_view)
+                    }
+                }
+            }
+            request.open('GET',url,true)
+            request.send()
+        }
+    </script>
 </html>
