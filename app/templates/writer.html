@@ -5,19 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>编辑</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/frog.css') }}">
+    <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
+    <style>
+        .writer{
+            margin: 10px 30px;
+        }
+        .writer span{
+            font-size: 16px;
+            color: #85929e;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <form method="POST" action="/api/article">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="标题" name="title">
-                <input type="text" class="form-control" placeholder="概述" name="summary">
-                <textarea class="form-control" rows="3" placeholder="内容" name="content"></textarea> 
-                <input type="submit">
-            </div>
-        </from>
+    <!-- 导航栏 -->
+    <nav>    
+        <ul>
+            <li><a href="/" class="post-title">Home/</a></li>
+            <li><a href="/tag" class="post-title">Tag/</a></li>
+            <li><a href="/category" class="post-title">Category/</a></li>
+            <li><a href="/about" class="post-title">About/</a></li>
+        </ul>
+    </nav>
+   
+    <!-- 编辑框 -->
+    <div class="writer">
+        <div id="toolbar_title">
+            <span>标题</span>
+        </div>
+        <div id="title" class="text" style="margin-bottom: 30px;">
+
+        </div>
+
+        <div id="toolbar_editor">
+            <span>文本</span>
+        </div>
+        <div id="editor" class="text" style="height:300px;">
+             
+        </div>
+
+        <button onclick="submit()">提交</button>
     </div>
+    <!-- 底部 -->
+    <footer>
+        Powered by <a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a> &copy; 2017 Pipapa
+    </footer>
     
 </body>
+<script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+<script>
+    var title = document.getElementById('title')
+    var writer = document.getElementById('editor')
+
+    var editor = new Quill(writer,{
+        theme:'snow',
+        modules :{
+            toolbar : "#toolbar_editor"
+        }
+    })
+    var title_editor = new Quill(title,{
+        theme: 'snow',
+        modules : {
+            toolbar : '#toolbar_title',
+        }
+    })
+
+    /*POST*/
+    var submit = function(){
+        alert(title_editor.getText())
+    }
+    
+
+</script>
 </html>

@@ -54,8 +54,6 @@ def category_index(category=None):
 @user.route('/admin/writer')                                            # 编辑文章
 def writer_admin():
     return render_template('writer.html')
-
-
 # 404
 @user.errorhandler(404)
 def not_found(error):
