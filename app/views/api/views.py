@@ -103,7 +103,13 @@ def get_category():
 @api.route('/api/article/create',methods=['POST'])           # TODO 创建一篇文章
 def create_article():
     if request.method == 'POST':
-        return 'true'
+        data = request.get_json()
+        # 获取到数据
+        info = data['data']
+        article = Article(title=info['title'],content=info['content'],
+                        category=info['category'],tags=info['tag'])
+        db.session.add(article)
+        db.session.commit()
     return 'true'
 
 @api.route('/api/article/put',methods=['POST'])              # TODO 更新一篇文章

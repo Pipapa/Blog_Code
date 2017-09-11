@@ -15,6 +15,9 @@
             font-size: 16px;
             color: #85929e;
         }
+        .writer button{
+            margin: 10px 0px;
+        }
     </style>
 </head>
 <body>
@@ -40,9 +43,24 @@
         <div id="toolbar_editor">
             <span>文本</span>
         </div>
-        <div id="editor" class="text" style="height:300px;">
+        <div id="editor" class="text" style="height:300px;margin-bottom:30px;">
              
         </div>
+        
+        <div id="toolbar_category">
+            <span>分类</span>
+        </div>
+        <div id="category" class="text" style="margin-bottom: 30px;">
+        
+        </div>
+
+        <div id="toolbar_tag">
+            <span>标签(多个用','分隔)</span>
+        </div>
+        <div id="tag" class="text" style="margin-bottom: 30px;">
+        
+        </div>
+
 
         <button onclick="submit()">提交</button>
     </div>
@@ -56,8 +74,10 @@
 <script>
     var title = document.getElementById('title')
     var writer = document.getElementById('editor')
+    var category = document.getElementById('category')
+    var tag = document.getElementById('tag')
 
-    var editor = new Quill(writer,{
+    var content_editor = new Quill(writer,{
         theme:'snow',
         modules :{
             toolbar : "#toolbar_editor"
@@ -70,11 +90,39 @@
         }
     })
 
+    var category_editor = new Quill(category,{
+        theme: 'snow',
+        modules :{
+            toolbar : '#toolbar_category'
+        }
+    })
+
+    var tag_editor = new Quill(tag,{
+        theme : 'snow',
+        modules : {
+            toolbar : '#toolbar_tag'
+        }
+    })
+
+    /*获取数据,去除'/n'*/
+    var get_text = function(obj){
+        var len = obj.getLength()
+        return obj.getText()
+    }
     /*POST*/
     var submit = function(){
-        alert(title_editor.getText())
+        /*TODO 判断是否可以POST*/
+        var content = {}
+        var data = {}
+        data['title'] = get_text(title_editor)
+        data['content'] = get_text(content_editor)
+        data['category'] = get_text(category_editor)
+        data['tag'] = get_text(tag_editor).split(',')
+        content['data'] = data
+        var request = new XMLHttpRequest()
+        request.open('POST','/api/article/create',true)
+        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+        request.send(JSON.stringify(content))
     }
-    
-
 </script>
 </html>
