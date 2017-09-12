@@ -114,6 +114,28 @@ class Article(db.Model):                                                # 文章
     comments = db.relationship('Comment',secondary=Comment_relationship,
                             backref=db.backref('articles',lazy='dynamic'))
     
+    # 添加类型
+    def add_category(self,category):
+        if category is not None:
+            category_query = Category.query.filter_by(name=category).first()
+            # 未创建的分类
+            if category_query is None:
+                category_query = Category(name=category)
+                db.session.add(category_query)
+                db.session.commit()
+            self.category_id = category_query.id
+    # 添加标签
+    def add_tag(self,tags):
+        if tags is not None:
+            for tag in tags:
+                tag_query = Tag.query.filter_by(name=tag).first()
+                if tag_query is None:
+                    tag_query = Tag(name=tag)
+                    db.session.add(tag_query)
+                    db.session.commit()
+                self.tags.append(tag_query)
+
+    
     # 构造
     def __init__(self,title,content,
                 category=None,tags=None,num_of_view=0):
@@ -121,31 +143,26 @@ class Article(db.Model):                                                # 文章
         self.content = content
         self.public_time = self.update_time = datetime.utcnow()
         self.num_of_view = num_of_view
+        self.add_category(category)
+        self.add_tag(tags)
 
-        # 添加类型
-        if category is not None:
-            category_ = Category.query.filter_by(name=category).first()
-            if category_ is None:
-                category_ = Category(name=category)
-                db.session.add(category_)
-                db.session.commit()
-            self.category_id = category_.id
+    def put(self,data):                                      # 更新数据
+        if data['title'] is not None:
+            self.title = data['title']
+        if data['content'] is not None:
+            self.content = data['content']
+        if data['category'] is not None:
+            self.category_id = None
+            self.add_category(data['category'])
+        if data['tag'] is not None:
+            self.tags = []
+            self.add_tag(data['tag'])            
+        db.session.commit()
 
-        # 添加标签
-        if tags is not None:
-            for tag in tags:
-                tag_ = Tag.query.filter_by(name=tag).first()
-                if tag_ is None:
-                    tag_ = Tag(name=tag)
-                    db.session.add(tag_)
-                    db.session.commit()
-                self.tags.append(tag_)
-    
     def add_view(self):                                 # 增加浏览量
         self.num_of_view += 1
         db.session.commit()
     def add_comment(self,comment):                      # 添加评论
-        self.num_of_comment += 1
         self.comments.append(comment)
         db.session.commit()
     def get_category(self):                             # 获取category
@@ -153,16 +170,12 @@ class Article(db.Model):                                                # 文章
         if self.category_id is not None:
             categories.append(Category.query.get(self.category_id).name)
         return categories
-    
-  
     def get_tag(self):                                  # 获取tag
         tags = []
         if self.tags is not None:
             for tag in self.tags:
                 tags.append(tag.name)
         return tags
-
-    
     def get_comment(self):                              # 获取comment
         comments = {}
         comments['date'] = []

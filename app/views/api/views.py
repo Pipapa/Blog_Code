@@ -114,10 +114,14 @@ def create_article():
             db.session.commit()
     return 'true'
 
-@api.route('/api/article/put',methods=['POST'])              # TODO 更新一篇文章
+@api.route('/api/article/put',methods=['POST'])              # 更新一篇文章
 def put_article():
     if request.method == 'POST':
         data = request.get_json()
+        if 'method' in data.keys() and data['method'] == 'put':
+            data = data['data']
+            article = Article.query.get_or_404(data['id'])
+            article.put(data)
     return 'true'
 
 @api.route('/api/article/delete',methods=['POST'])           # TODO 删除一篇文章
