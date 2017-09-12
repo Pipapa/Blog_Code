@@ -109,20 +109,44 @@
         var len = obj.getLength()
         return obj.getText()
     }
+    /*获取参数*/
+    var getUrlParam = function(name){
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
+        var r = window.location.search.substr(1).match(reg);  
+        if (r != null) return unescape(r[2]); return null; 
+    }
     /*POST*/
     var submit = function(){
         /*TODO 判断是否可以POST*/
         var content = {}
         var data = {}
+        data['id']  = getUrlParam('id')
         data['title'] = get_text(title_editor)
         data['content'] = get_text(content_editor)
         data['category'] = get_text(category_editor)
         data['tag'] = get_text(tag_editor).split(',')
+        content['method'] = getUrlParam('method')
         content['data'] = data
+        /*POST*/
+        switch(content['method']){
+            case 'create':
+                post_data('/api/article/create',content)
+                break
+            case 'put':
+                post_data('/api/article/put',content)
+                break
+            case 'delete':
+                post_data('/api/article/delete',content)
+                break
+            default:
+                break
+        }
+    }
+    var post_data = function(url,data){
         var request = new XMLHttpRequest()
-        request.open('POST','/api/article/create',true)
+        request.open('POST',url,true)
         request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-        request.send(JSON.stringify(content))
+        request.send(JSON.stringify(data)) 
     }
 </script>
 </html>

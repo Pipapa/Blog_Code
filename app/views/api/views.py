@@ -100,24 +100,36 @@ def get_category():
     for category in categories:
         jsonObj['data'].append(category.get_info())
     return jsonify(jsonObj)
-@api.route('/api/article/create',methods=['POST'])           # TODO 创建一篇文章
+@api.route('/api/article/create',methods=['POST'])           # 创建一篇文章
 def create_article():
     if request.method == 'POST':
         data = request.get_json()
-        # 获取到数据
-        info = data['data']
-        article = Article(title=info['title'],content=info['content'],
-                        category=info['category'],tags=info['tag'])
-        db.session.add(article)
-        db.session.commit()
+        # 判断合法
+        if 'method' in data.keys() and data['method'] == 'create':
+            # 获取到数据
+            info = data['data']
+            article = Article(title=info['title'],content=info['content'],
+                            category=info['category'],tags=info['tag'])
+            db.session.add(article)
+            db.session.commit()
     return 'true'
 
 @api.route('/api/article/put',methods=['POST'])              # TODO 更新一篇文章
 def put_article():
+    if request.method == 'POST':
+        data = request.get_json()
     return 'true'
 
 @api.route('/api/article/delete',methods=['POST'])           # TODO 删除一篇文章
 def delete_article():
+    if request.method == 'POST':
+        data = request.get_json()
+        print(data)
+        if 'method' in data.keys() and data['method'] == 'delete':
+            data = data['data']
+            article = Article.query.get_or_404(data['id'])
+            db.session.delete(article)
+            db.session.commit()
     return 'true'
 
 
