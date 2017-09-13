@@ -114,7 +114,7 @@ class Article(db.Model):                                                # 文章
     comments = db.relationship('Comment',secondary=Comment_relationship,
                             backref=db.backref('articles',lazy='dynamic'))
     
-    # 添加类型
+    # 添加类型 str
     def add_category(self,category):
         if category is not None:
             category_query = Category.query.filter_by(name=category).first()
@@ -124,7 +124,7 @@ class Article(db.Model):                                                # 文章
                 db.session.add(category_query)
                 db.session.commit()
             self.category_id = category_query.id
-    # 添加标签
+    # 添加标签 list
     def add_tag(self,tags):
         if tags is not None:
             for tag in tags:
@@ -166,10 +166,10 @@ class Article(db.Model):                                                # 文章
         self.comments.append(comment)
         db.session.commit()
     def get_category(self):                             # 获取category
-        categories = []
+        category = ''
         if self.category_id is not None:
-            categories.append(Category.query.get(self.category_id).name)
-        return categories
+            category=Category.query.get(self.category_id).name
+        return category
     def get_tag(self):                                  # 获取tag
         tags = []
         if self.tags is not None:
@@ -193,8 +193,8 @@ class Article(db.Model):                                                # 文章
         info['id'] = self.id
         info['url'] = '/article/' + str(self.id)
         info['title'] = self.title
-        info['tag'] = self.get_tag()
         info['category'] = self.get_category()
+        info['tag'] = self.get_tag()
         info['public_time'] = self.public_time.strftime("%Y-%m-%d")
         info['update_time'] = self.update_time.strftime("%Y-%m-%d")
         info['num_of_view'] = self.num_of_view

@@ -34,54 +34,88 @@
     </footer>
 </body>
 <script>
-      
-        window.onload = function(){
-            load_article()
+    const tag_api_url = 'tag/'
+    const category_api_url = 'category/'
+
+    window.onload = function(){
+        get_article_list()
+    }
+
+    var set_title = function(title,url){
+        var title_a = document.createElement('a')
+        title_a.setAttribute('href',url)
+        title_a.className = 'post-title'
+        title_a.innerHTML = title
+        return title_a
+    }
+
+    var set_category = function(category){
+        var category_a = document.createElement('a')
+        category_a.innerHTML = category
+        category_a.setAttribute('href',category_api_url + category)
+        return category_a
+    }
+
+    var set_tag = function(tags){
+        var tag_a = ''
+        for(var i=0;i<tags.length;i++){
+            tag_a = tag_a + '<a href="' + tag_api_url + tags[i] +'">' + tags[i] + "</a>"
+            if(i != tags.length-1) tag_a += ','
         }
-        var load_article = function(){
-            page = getUrlParam('page')
-            if(!page){
-                page = 1
+        return tag_a
+    }
+
+    var set_article_list = function(data){
+        if(data['error'] == undefined){
+            /* 获取数据 */
+            var articles = data['data']
+            
+            var page_bar = document.getElementById('page-bar')
+            var post_list = document.getElementById('post')
+
+            var article_table = document.createElement('table')
+
+            /* 输出列表 */
+            var num_of_article = articles.length
+            for(var i = 0; i < num_of_article ; i++){
+                var list = document.createElement('tr')
+                var time = document.createElement('td')
+                var title = document.createElement('td')
+                var divide_line = document.createElement('td')
+                var category = document.createElement('td')
+                var divide_symbol = document.createElement('td')
+                var tag = document.createElement('td')
+
+                /* 设置参数 */
+                divide_line.innerHTML = '|'
+                divide_symbol.innerHTML = '--->'
+                time.innerHTML = articles[i].update_time + ' >'
+                title.appendChild(set_title(articles[i].title,articles[i].url))
+                category.appendChild(set_category(articles[i].category))
+                tag.innerHTML = set_tag(articles[i].tag)
+                
+                /* append */
+                var article_meta = [time,title,divide_line,category,divide_symbol,tag]
+                for(var j = 0;j < article_meta.length ;j++)
+                    list.appendChild(article_meta[j])
+                post_list.appendChild(list)
             }
-            var url = '/api/article?pre_page=10&page=' + page
-            var request = new XMLHttpRequest()
-            request.onreadystatechange = function(){
-                if(request.readyState == XMLHttpRequest.DONE){
-                    if(request.status == 200){
-                        var data = JSON.parse(request.responseText)
-                        if(data['error'] == undefined){
-                            /*成功获取*/
-                            var post_list = document.getElementById('post')
-                            /*文章*/
-                            var article_table = document.createElement('table')
-                            var articles = data['data']
-                            var num_of_article = articles.length
-                            for(var i=0;i<num_of_article;i++){
-                                var tr = document.createElement('tr')
-                                var time = document.createElement('td')
-                                var category = document.createElement('td')
-                                var tags = document.createElement('td')
-                                var title = document.createElement('td')
-                                
-                                time.innerHTML = articles[i].update_time + '/'
-                                category.innerHTML = '(<a href="'+ '/category/' + articles[i].category[0] +'">'+ articles[i].category[0] +'</a>'
-                                for(var j=0;j<articles[i].tag.length;j++){
-                                    tags.innerHTML = tags.innerHTML + '<a href="'+ '/tag/' + articles[i].tag[j] +'">'+ articles[i].tag[j] +'</a>'
-                                    if(j != articles[i].tag.length - 1){
-                                        tags.innerHTML = tags.innerHTML + ','
-                                    }else{
-                                        tags.innerHTML = tags.innerHTML + ')'
-                                    }
-                                }
-                                title.innerHTML = '<a href="'+ articles[i].url +'" class="post-title">'+ articles[i].title +'</a>'
-                                tr.appendChild(time)
-                                tr.appendChild(title)
-                                tr.appendChild(category)
-                                tr.appendChild(tags)
-                                article_table.appendChild(tr)
-                                post.appendChild(article_table)
-                            }
-                            /*翻页*/
+
+        }else{
+            /* 参数出现错误 */
+
+        }
+    }
+
+    var get_article_list = function(){
+        var pre_page = getUrlParam('pre_page')
+        var page = getUrlParam('page')
+        if(!page) page=1
+        if(!pre_page) pre_page=10
+        var url = '/api/article?pre_page='+ pre_page +'&page' + page
+        get_data(url,set_article_list)
+    }
+    /* 
                             var page_bar = document.createElement('div')
                             page_bar.setAttribute('class','page-bar')
                             if(data['has_prev']){
@@ -108,6 +142,6 @@
             }
             request.open('GET',url,true)
             request.send()
-        }
+        } */
     </script>
 </html>
