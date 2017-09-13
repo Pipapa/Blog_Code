@@ -9,7 +9,7 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = '/login'
 
 def create_app(config):
-    app = Flask(__name__,static_folder='static',template_folder='templates')
+    app = Flask(__name__,static_url_path='/static')
     # 加载配置文件
     app.config.from_object(config)
     # 初始化

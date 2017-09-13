@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipapa</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/frog.css') }}">
+    <link rel="stylesheet" href="./static/css/frog.css">
+    <script src="./static/js/frog.js"></script>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -33,12 +34,7 @@
     </footer>
 </body>
 <script>
-        /*获取参数*/
-        var getUrlParam = function(name){
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
-            var r = window.location.search.substr(1).match(reg);  
-            if (r != null) return unescape(r[2]); return null; 
-        }
+      
         window.onload = function(){
             load_article()
         }

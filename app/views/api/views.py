@@ -124,7 +124,7 @@ def put_article():
             article.put(data)
     return 'true'
 
-@api.route('/api/article/delete',methods=['POST'])           # TODO 删除一篇文章
+@api.route('/api/article/delete',methods=['POST'])           # 删除一篇文章
 def delete_article():
     if request.method == 'POST':
         data = request.get_json()
