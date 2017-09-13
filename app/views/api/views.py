@@ -11,11 +11,15 @@ def check_args(args):                                        # 检查数字参�
             return 1
     return 0
 
-@api.route('/api/test')
+@api.route('/api/test',methods=['POST'])
 def test():
-    return 'true'
+    if request.method == 'POST':
+        print('return')
+        return 'true'
+    else:
+        return 'false'
 
-@api.route('/api/article')                                   # 获取文章统计
+@api.route('/api/article',methods=['POST'])                  # 获取文章统计
 def query_article():
     jsonObj = {}
     error_key = jsonify(error = 'The key is not valid')
