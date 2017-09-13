@@ -7,30 +7,29 @@
     <title>Pipapa</title>
     <link rel="stylesheet" href="./static/css/frog.css">
     <script src="./static/js/frog.js"></script>
+    <style>
+    
+    </style>
 </head>
 <body>
     <!-- 导航栏 -->
-    <nav>    
-        <ul>
-            <li><a href="/" class="post-title">Home/</a></li>
-            <li><a href="/tag" class="post-title">Tag/</a></li>
-            <li><a href="/category" class="post-title">Category/</a></li>
-            <li><a href="/about" class="post-title">About/</a></li>
-        </ul>
-    </nav>
-    <!-- 文章列表 -->
-    <div class="post" id="post">
-        <table>
-           
-        </table>
-        <!-- 翻页 -->
-        <div class="page-bar">
-               
-        </div>        
+    <div class="wrap">
+        <nav>    
+            <ul>
+                <li><a href="/" class="post-title">Home/</a></li>
+                <li><a href="/tag" class="post-title">Tag/</a></li>
+                <li><a href="/category" class="post-title">Category/</a></li>
+                <li><a href="/about" class="post-title">About/</a></li>
+            </ul>
+        </nav>
+        <!-- 文章列表 -->
+        <div class="post" id="post">
+            <!-- 翻页 -->
+        </div>
     </div>
     <!-- 底部 -->
     <footer>
-        Powered by <a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a> &copy; 2017 Pipapa
+        <I>Powered by <a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a> &copy; 2017 Pipapa</I>
     </footer>
 </body>
 <script>
@@ -65,6 +64,28 @@
         return tag_a
     }
 
+    var set_page_bar = function(page,num_of_page,has_prev,has_next){
+        var page_bar = document.createElement('div')
+        var page_num = document.createElement('span')
+        var prev = document.createElement('a')
+        var next = document.createElement('a')
+        
+        prev.innerHTML = '<b><</b>'
+        next.innerHTML = '<b>></b>'
+       
+        page_bar.className = 'page-bar'
+        if(has_prev){
+            prev.setAttribute('href','article?page='+(page-1))
+            page_bar.appendChild(prev)
+        }
+        page_num.innerText = 'page:' + parseInt(page) + '/' + parseInt(num_of_page)
+        page_bar.appendChild(page_num)
+        if(has_next){
+            next.setAttribute('href','article?page='+(page+1))
+            page_bar.appendChild(next)
+        }
+        return page_bar
+    }
     var set_article_list = function(data){
         if(data['error'] == undefined){
             /* 获取数据 */
@@ -87,9 +108,9 @@
                 var tag = document.createElement('td')
 
                 /* 设置参数 */
-                divide_line.innerHTML = '|'
-                divide_symbol.innerHTML = '--->'
-                time.innerHTML = articles[i].update_time + ' >'
+                divide_line.innerHTML = '||'
+                divide_symbol.innerHTML = '=>'
+                time.innerHTML = articles[i].update_time + ' > '
                 title.appendChild(set_title(articles[i].title,articles[i].url))
                 category.appendChild(set_category(articles[i].category))
                 tag.innerHTML = set_tag(articles[i].tag)
@@ -98,9 +119,10 @@
                 var article_meta = [time,title,divide_line,category,divide_symbol,tag]
                 for(var j = 0;j < article_meta.length ;j++)
                     list.appendChild(article_meta[j])
-                post_list.appendChild(list)
+                article_table.appendChild(list)
             }
-
+            post_list.appendChild(article_table)
+            post_list.appendChild(set_page_bar(data['page'],data['num_of_page'],data['has_prev'],data['has_next']))
         }else{
             /* 参数出现错误 */
 
@@ -111,37 +133,9 @@
         var pre_page = getUrlParam('pre_page')
         var page = getUrlParam('page')
         if(!page) page=1
-        if(!pre_page) pre_page=10
-        var url = '/api/article?pre_page='+ pre_page +'&page' + page
+        if(!pre_page) pre_page=3
+        var url = '/api/article?pre_page='+ pre_page +'&page=' + page
         get_data(url,set_article_list)
     }
-    /* 
-                            var page_bar = document.createElement('div')
-                            page_bar.setAttribute('class','page-bar')
-                            if(data['has_prev']){
-                                var prev = document.createElement('a')
-                                prev.setAttribute('href','/article?page='+(parseInt(page)-1))
-                                prev.innerHTML = '<'
-                                page_bar.appendChild(prev)
-                            }
-                            var page_num = document.createElement('span')
-                            page_num.innerHTML = 'page:' + data['page'] + '/' +data['num_of_page']
-                            page_bar.appendChild(page_num)
-                            if(data['has_next']){
-                                var next = document.createElement('a')
-                                next.setAttribute('href','/article?page='+(parseInt(page)+1))
-                                next.innerHTML = '>'
-                                page_bar.appendChild(next)
-                            }
-                            post_list.appendChild(page_bar)
-                        }else{
-                        }
-                    }
-                }else{
-                }
-            }
-            request.open('GET',url,true)
-            request.send()
-        } */
     </script>
 </html>

@@ -1,5 +1,6 @@
 body{
     width: 85%;
+    height: 100%;
     margin: 0 auto;
 }
 nav ul{
@@ -13,47 +14,54 @@ nav ul{
 nav ul li{
     float: left;
     padding: 20px 30px;
-    font-size: 18px;
+    font-size: 22px;
+}
+nav ul li a{
+    padding: 0px 10px;
+    text-decoration: none;
+    color: #0091cd;
+}
+nav ul li a:hover{
+    padding: 0px 10px;
+    text-decoration: none;
+    color: #ffffff; 
+    background-color: #0091cd;   
 }
 .post{
     margin: 0px 20px;
-}
-.post h4{
     padding: 10px;
-    margin: 0px 0px;
 }
-.post h4 a{
+.post a{
     text-decoration: none;
-    color: #85929e;
+    color: #ccc;
 }
-.post h4 a:hover{
-    color:#fff;
-    background:#22BAD9;
+.post a:hover{
+    color: #21BAD9;
     text-decoration:none;
 }
-.post-title{
+.post .post-title{
     text-align: center;
     text-decoration: none;
     color: #22BAD9; 
 }
-.post-title:hover{
+.post .post-title:hover{
     color:#fff;
     background:#22BAD9;
     text-decoration:none;
 }
+
 .page-bar{
     margin: 0; 
-    margin-top: 30px;
+    margin-top: 60px;
 }
 .page-bar a{
     text-decoration: none;
-    padding: 0px 10px;
+    padding: 50px 10px;
+    color: #85929e;
 }
 .page-bar span{
-    padding: 0px 10px;
-}
-.markdown-body{
-    margin: 30px;
+    padding: 50px 10px;
+    color: #85929e;
 }
 
 table{
@@ -71,8 +79,10 @@ td a{
 td a:hover{
     color:#22BAD9;
 }
+
 .article-info{
     margin: 30px;
+    padding: 0px 5px;
 }
 .article-info span{
     padding: 0px 5px;
@@ -86,9 +96,15 @@ td a:hover{
     color: #ffffff;
     color:#22BAD9;
 }
+.markdown-body{
+    margin: 30px;
+    padding: 10px;
+    width: 1000px;
+}
 
 footer{
-    padding-left: 30px;
-    padding-top: 40px;
+    padding-left: 40px;
+    padding-top: 100px;
+    color: #85929e;
     float: left;
 }
