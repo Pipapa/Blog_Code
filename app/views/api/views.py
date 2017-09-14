@@ -13,7 +13,7 @@ def check_args(args):                                        # 检查数字参�
 
 @api.route('/api/test',methods=['POST','GET'])
 def test():
-    a = Article(title='TEST111',content='sdsd111',categories=[],tags=['aa','cc','dd'])
+    a = Article(title='lll',content='sss...',categories=['sss'],tags=['aaa','bbb'])
     return 'true' 
 
 # 获取文章列表

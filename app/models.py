@@ -4,6 +4,13 @@ from datetime import datetime
 
 from . import db,login_manager
 
+# 创建实例(tag,category)
+def get_or_create(model,name):
+    instance = db.session.query(model).filter_by(name=name).first()
+    if instance is None:
+        instance = model(name=name)
+    return instance
+
 # 用户
 class User(db.Model,UserMixin):                                        
     __tablename__ = 'users'
@@ -105,17 +112,11 @@ class Article(db.Model):
     # 添加分类
     def add_categories(self,categories=[]):
         for category in categories:
-            queryCategory = Category.query.filter_by(name=category).first()
-            if queryCategory is None:
-                queryCategory = Category(name=category)
-            self.categories.append(queryCategory)
+            self.categories.append(get_or_create(Category,category))
     # 添加标签
     def add_tags(self,tags=[]):
         for tag in tags:
-            queryTag = Tag.query.filter_by(name=tag).first()
-            if queryTag is None:
-                queryTag = Tag(name=tag)
-            self.tags.append(queryTag)
+            self.tags.append(get_or_create(Tag,tag))
     # 构造
     def __init__(self,title,content,categories=[],tags=[]):
         self.title = title
