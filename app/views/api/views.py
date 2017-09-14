@@ -11,18 +11,26 @@ def check_args(args):                                        # 检查数字参�
             return 1
     return 0
 
-@api.route('/api/test',methods=['POST'])
+@api.route('/api/test',methods=['POST','GET'])
 def test():
-    if request.method == 'POST':
-        print('return')
-        return 'true'
-    else:
-        return 'false'
+    a = Article(title='TEST111',content='sdsd111',categories=[],tags=['aa','cc','dd'])
+    return 'true' 
 
+# 获取文章列表
+@api.route('/api/posts',methods=['GET'])
+def get_posts():
+    parameter = {}
+    parameter['items'] = []
+    page = request.args.get('page')
+    pre_page = request.args.get('pre_page')
+    if page is None: page=1
+    if pre_page is None: pre_page=5
+    articles = Article.query.limit(pre_page).offset((page-1)*pre_page)
+    for article in articles:
+       parameter['items'].append(article.get_parameter()) 
+    return jsonify(parameter)
 @api.route('/api/article',methods=['POST'])                  # 获取文章统计
 def query_article():
-    if request.method == 'POST':
-        parameter = request.get_json()
     jsonObj = {}
     error_key = jsonify(error = 'The key is not valid')
     # 获取参数 
