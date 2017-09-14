@@ -21,6 +21,8 @@ def test():
 
 @api.route('/api/article',methods=['POST'])                  # 获取文章统计
 def query_article():
+    if request.method == 'POST':
+        parameter = request.get_json()
     jsonObj = {}
     error_key = jsonify(error = 'The key is not valid')
     # 获取参数 

@@ -87,6 +87,7 @@
         return page_bar
     }
     var set_article_list = function(data){
+        data = JSON.parse(data)
         if(data['error'] == undefined){
             /* 获取数据 */
             var articles = data['data']
@@ -132,10 +133,8 @@
     var get_article_list = function(){
         var pre_page = getUrlParam('pre_page')
         var page = getUrlParam('page')
-        if(!page) page=1
-        if(!pre_page) pre_page=3
-        var url = '/api/article?pre_page='+ pre_page +'&page=' + page
-        get_data(url,set_article_list)
+        var url = '/api/article'
+        post_data(url,JSON.stringify(parameter),set_article_list)
     }
     </script>
 </html>

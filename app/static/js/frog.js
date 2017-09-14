@@ -1,9 +1,14 @@
 /* post json */
-var post_data = function(url,data){
+var post_data = function(url,data,callback){
     var request = new XMLHttpRequest()
     request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+    request.onreadystatechange = function(){
+        if(request.readyState == XMLHttpRequest.DONE && request.status == 200){
+            callback(request.responseText)
+        }
+    }
     request.open('POST',url,true)
-    request.send(JSON.stringify(data))
+    request.send(data)
 }
 /* get json */
 var get_data = function(url,callback){
@@ -11,7 +16,7 @@ var get_data = function(url,callback){
     /* callback */
     request.onreadystatechange = function(){
         if(request.readyState == XMLHttpRequest.DONE && request.status == 200){
-            callback(JSON.parse(request.responseText))
+            callback(request.responseText)
         }
     }
     request.open('GET',url,true)
