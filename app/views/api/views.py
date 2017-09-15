@@ -17,18 +17,29 @@ def test():
     return 'true' 
 
 # 获取文章列表
-@api.route('/api/posts',methods=['GET'])
+@api.route('/api/posts',methods=['GET','POST'])
 def get_posts():
-    parameter = {}
-    parameter['items'] = []
-    page = request.args.get('page')
-    pre_page = request.args.get('pre_page')
-    if page is None: page=1
-    if pre_page is None: pre_page=5
-    articles = Article.query.limit(pre_page).offset((page-1)*pre_page)
-    for article in articles:
-       parameter['items'].append(article.get_parameter()) 
-    return jsonify(parameter)
+    if request.method == 'GET':
+        parameter = {}
+        parameter['items'] = []
+        page = request.args.get('page')
+        pre_page = request.args.get('pre_page')
+        # 默认参数/查询
+        page = int(page) if page else 1
+        pre_page = int(pre_page) if pre_page else 5
+        articles = Article.query.order_by(Article.updated.desc()).limit(pre_page).offset((page-1)*pre_page).all()
+        for article in articles:
+            parameter['items'].append(article.get_item()) 
+        # 获取页数
+        allArticle = Article.query.count()
+        allPage = int(allArticle/pre_page) if allArticle % pre_page == 0 else int(allArticle/pre_page) + 1
+        parameter['prevPage'] = True if page>1 else False
+        parameter['nextPage'] = True if page<allPage else False
+        parameter['nowPage'] = page
+        parameter['allPage'] = allPage
+        return jsonify(parameter)
+    elif request.method == 'POST':
+        return 'ture'
 @api.route('/api/article',methods=['POST'])                  # 获取文章统计
 def query_article():
     jsonObj = {}

@@ -10,6 +10,12 @@ def get_or_create(model,name):
     if instance is None:
         instance = model(name=name)
     return instance
+# 转化字符串列表(tag,category)
+def to_str(items):
+    item = []
+    for i in items:
+        item.append(i.name)
+    return item
 
 # 用户
 class User(db.Model,UserMixin):                                        
@@ -126,3 +132,14 @@ class Article(db.Model):
         self.add_tags(tags)
         db.session.add(self)
         db.session.commit()
+    # 获取
+    def get_item(self):
+        items = {}
+        items['id'] = self.id
+        items['slefLink'] = '/post/' + str(self.id)
+        items['title'] = self.title
+        items['tags'] = to_str(self.tags)
+        items['categories'] = to_str(self.categories)
+        items['published'] =  self.published
+        items['updated'] = self.updated
+        return items
