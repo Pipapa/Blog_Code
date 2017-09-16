@@ -4,8 +4,9 @@ from . import user
 from ... import db
 from ...models import User,Article,Category,Tag,Comment
 
+# 路由跳转
 @user.route('/posts')
-@user.route('/')                                                        # 主界面,跳转到文章
+@user.route('/')                                                        
 def index():
     return redirect(url_for('user.posts',page=1))
 
@@ -14,6 +15,10 @@ def index():
 @user.route('/posts/pages/<int:page>')
 def posts(page):
     return render_template('index.html')
+# 文章显示
+@user.route('/posts/<int:id>')
+def post(id):
+    return render_template('article.html') 
 # 404
 @user.errorhandler(404)
 def not_found(error):

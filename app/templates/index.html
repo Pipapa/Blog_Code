@@ -4,130 +4,140 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Pipapa</title>
-    <link rel="stylesheet" href="/static/css/frog.css">
-    <script src="/static/js/frog.js"></script>
+    <title>Pipapa - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css" />
+    <link rel="icon" href="/static/images/favicon.ico">
     <style>
-    
+        body > .ui.container{
+            margin-top: 3em;
+        }
     </style>
+    <script>
+        /*GET数据*/
+        var get_data = function(url,callback){
+            var request = new XMLHttpRequest()
+            request.onreadystatechange = function(){
+                if(request.readyState == XMLHttpRequest.DONE && request.status == 200){
+                    callback(request.responseText)
+                }
+            }
+            request.open('GET',url,true)
+            request.send()
+        }
+        /*获取参数*/
+        var set_posts = function(data){
+            data = JSON.parse(data)
+            posts = data['items']
+        }
+        window.onload = function(){
+            get_data('/api/posts',set_posts)
+        }
+    </script>
 </head>
 <body>
-    <!-- 导航栏 -->
-    <div class="wrap">
-        <nav>    
-            <ul>
-                <li><a href="/" class="post-title">Home/</a></li>
-                <li><a href="/tag" class="post-title">Tag/</a></li>
-                <li><a href="/category" class="post-title">Category/</a></li>
-                <li><a href="/about" class="post-title">About/</a></li>
-            </ul>
-        </nav>
-        <!-- 文章列表 -->
-        <div class="post" id="post">
-            <!-- 翻页 -->
+    <div class="ui container">
+        <!-- 导航栏 -->
+        <div class="ui pointing menu">
+            <a class="active item">Home</a>
+            <div class="right menu">
+                <div class="item">
+                    <div class="ui transparent icon input">
+                        <input type="text" placeholder="Search...">
+                        <i class="search link icon"></i>
+                    </div>
+                </div>
+            </div>
         </div>
+        <!-- 主体 -->
+        <div class="ui segment">
+            <div class="ui grid">
+                <div class="eleven wide column" id="posts">
+                    <a href="#" class="ui red ribbon label">Home</a>
+
+                    <!-- 文章列表 -->
+                    <div class="ui clearing segment">
+                        <a class="ui grey header" href="#">标题</a>
+                        <div class="ui clearing divider"></div>
+                        <div class="ui content">
+                            <div class="ui label">
+                                2017-06-21
+                                <a class="detail" href="#"><i class="folder icon"></i>分类</a>
+                                <a class="detail" href="#"><i class="tag icon"></i>标签1</a>
+                                <a class="detail" href="#">标签1</a>
+                                <a class="detail" href="#">标签1</a>
+                            </div>
+                            <a href="https://www.baidu.com" class="mini ui right floated button" >> ReadMore...</a>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- 边栏 -->
+                <div class="five wide column">
+                    <!-- 个人卡片 -->
+                    <div class="ui card">
+                        <div class="content">
+                            <img class="right floated mini ui image" src="/static/images/favicon.ico">
+                            <div class="header">Pipapa</div>
+                            <div class="description">
+                                瞎写前端的蒟蒻,本博客由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动
+                            </div>
+                        </div> 
+                        <!-- 链接 -->
+                        <div class="extra content">
+                            <div class="ui circular icon button">
+                                <i class="github icon" onclick="window.open('https://github.com/Pipapa')"></i>
+                            </div>
+                            <div class="ui circular icon button">
+                                <i class="wechat icon" onclick="window.open('')"></i>
+                            </div>
+                            <div class="ui circular icon button">
+                                <i class="steam icon" onclick="window.open('')"></i>
+                            </div>
+                            <div class="ui circular icon button">
+                                <i class="telegram icon"></i>
+                            </div>
+                            <div class="ui circular icon button">
+                                <i class="weibo icon"></i>
+                            </div>
+                            <div class="ui circular icon button">
+                                <i class="send icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 分类 -->
+                    <div class="ui card">
+                        <div class="content">
+                            <div class="header">Categories</div>
+                        </div>
+                        <div class="content">
+                            <div class="ui selection list">
+                                <div class="item">
+                                    <a class="header">
+                                        <div class="ui right floated">10</div>
+                                        <i class="folder icon"></i>分类
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 标签 -->
+                    <div class="ui card">
+                        <div class="content">
+                            <div class="header">Tags</div>
+                        </div>
+                        <div class="content">
+                            <div class="ui tag labels">
+                                <a class="ui label" href="#">啦啦啦啦啦绿绿绿绿</a>
+                                <a class="ui label">啦啦</a>
+                                <a class="ui label">啦啦啦啦啦绿绿绿绿</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <span>Powerd by ForgBlog</span>
     </div>
-    <!-- 底部 -->
-    <footer>
-        <I>Powered by <a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a> &copy; 2017 Pipapa</I>
-    </footer>
+    
 </body>
-<script>
-    const tag_api_url = 'tag/'
-    const category_api_url = 'category/'
-
-    window.onload = function(){
-        get_article_list()
-    }
-
-    var set_title = function(title,url){
-        var title_a = document.createElement('a')
-        title_a.setAttribute('href',url)
-        title_a.className = 'post-title'
-        title_a.innerHTML = title
-        return title_a
-    }
-
-    var get_list = function(list,url){
-        var item_a = ''
-        for(var i=0;i<list.length;i++){
-            item_a = item_a + '<a href="' + url + list[i] + '">' + list[i] + "</a>"
-            if(i != list.length-1) item_a = item_a + ','
-        }
-        return item_a
-    }
-
-    var set_page_bar = function(page,num_of_page,has_prev,has_next){
-        var page_bar = document.createElement('div')
-        var page_num = document.createElement('span')
-        var prev = document.createElement('a')
-        var next = document.createElement('a')
-        
-        prev.innerHTML = '<b><</b>'
-        next.innerHTML = '<b>></b>'
-       
-        page_bar.className = 'page-bar'
-        if(has_prev){
-            prev.setAttribute('href','/posts/pages/'+(page-1))
-            page_bar.appendChild(prev)
-        }
-        page_num.innerText = 'page:' + parseInt(page) + '/' + parseInt(num_of_page)
-        page_bar.appendChild(page_num)
-        if(has_next){
-            next.setAttribute('href','/posts/pages/'+(page+1))
-            page_bar.appendChild(next)
-        }
-        return page_bar
-    }
-    var set_article_list = function(data){
-        data = JSON.parse(data)
-        if(data['error'] == undefined){
-            /* 获取数据 */
-            var articles = data['items']
-            
-            var page_bar = document.getElementById('page-bar')
-            var post_list = document.getElementById('post')
-
-            var article_table = document.createElement('table')
-
-            /* 输出列表 */
-            var num_of_article = articles.length
-            for(var i = 0; i < num_of_article ; i++){
-                var list = document.createElement('tr')
-                var time = document.createElement('td')
-                var title = document.createElement('td')
-                var divide_line = document.createElement('td')
-                var category = document.createElement('td')
-                var divide_symbol = document.createElement('td')
-                var tag = document.createElement('td')
-
-                /* 设置参数 */
-                divide_line.innerHTML = '||'
-                divide_symbol.innerHTML = '=>'
-                time.innerHTML = articles[i].updated + ' > '
-                title.appendChild(set_title(articles[i].title,articles[i].selfLink))
-                category.innerHTML = get_list(articles[i].categories)
-                tag.innerHTML = get_list(articles[i].tags)
-                
-                /* append */
-                var article_meta = [time,title,divide_line,category,divide_symbol,tag]
-                for(var j = 0;j < article_meta.length ;j++)
-                    list.appendChild(article_meta[j])
-                article_table.appendChild(list)
-            }
-            post_list.appendChild(article_table)
-            post_list.appendChild(set_page_bar(data['nowPage'],data['allPage'],data['prevPage'],data['nextPage']))
-        }else{
-            /* 参数出现错误 */
-
-        }
-    }
-
-    var get_article_list = function(){
-        var pre_page = getUrlParam('pre_page')
-        var page = getUrlParam('page')
-        var url = '/api/posts'
-        get_data(url,set_article_list) 
-    }
-    </script>
 </html>
