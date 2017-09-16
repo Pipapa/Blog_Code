@@ -39,7 +39,29 @@ def postsList():
 # 标签资源
 @api.route('/api/tags')
 def allTags():
-    return ';ttt'
+    key = request.args.get('key')
+    if key:
+        query = query.filter(name=key)
+    else:
+        items = {}
+        items['items'] = []
+        tags = Tag.query.all()
+        for tag in tags:
+            items['items'].append(tag.get_item())
+        return jsonify(items)
+# 分类资源
+@api.route('/api/categories')
+def allCategories():
+    key = request.args.get('key')
+    if key:
+        return 'ter'
+    else:
+        items = {}
+        items['items'] = []
+        categories = Category.query.all()
+        for category in categories:
+            items['items'].append(category.get_item())
+        return jsonify(items)
 # 文章资源
 @api.route('/api/posts/<int:id>',methods=['POST','PUT','DELETE','GET'])
 def postsContent(id):

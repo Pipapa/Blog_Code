@@ -69,6 +69,13 @@ class Category(db.Model):
         self.name = name
         db.session.add(self)
         db.session.commit()
+    
+    def get_item(self):
+        item = {}
+        item['name'] = self.name
+        item['totalPosts'] = Article.query.filter(Article.categories.any(name=self.name)).count()
+        item['selfLink'] = '/categories/' + self.name 
+        return item
 
 # 标签表单
 class Tag(db.Model):                                                   
@@ -80,7 +87,12 @@ class Tag(db.Model):
         self.name = name
         db.session.add(self)
         db.session.commit()
-
+    def get_item(self):
+        item = {}
+        item['name'] = self.name
+        item['totalPosts'] = Article.query.filter(Article.tags.any(name=self.name)).count()
+        item['selfLink'] = '/tags/' + self.name
+        return item
 # 评论表单
 class Comment(db.Model):                                                
     __tablename__ = 'comments'

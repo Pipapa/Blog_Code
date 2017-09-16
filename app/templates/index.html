@@ -24,13 +24,117 @@
             request.open('GET',url,true)
             request.send()
         }
+        /*加载列表*/
+        var get_post = function(post){
+            var n_hr = document.createElement('div')
+            n_hr.className = 'ui clearing divider'
+            
+            var n_post = document.createElement('div')
+            n_post.className = 'ui clearing segment'
+
+            var n_title = document.createElement('a')
+            n_title.className = 'ui grey header'
+            n_title.innerText = post['title']
+            n_title.setAttribute('href',post['selfLink'])
+
+            var n_footer = document.createElement('div')
+            n_footer.className = 'ui content'
+
+            /*---*/
+            var n_label = document.createElement('div')
+            n_label.className = 'ui label'
+
+            n_label.innerText = post['updated']
+
+            for(var i=0;i < post['categories'].length;i++){
+                var n_c = document.createElement('a')
+                n_c.className = 'detail'
+                n_c.setAttribute('href','/category/' + post['categories'][i])
+                if(i==0){
+                    n_c.innerHTML = '<i class="folder icon"></i>' + post['categories'][i]
+                }else{
+                    n_c.innerHTML = post['categories'][i]
+                }
+                n_label.appendChild(n_c)
+            }
+            
+            for(var i=0;i < post['tags'].length;i++){
+                var n_t = document.createElement('a')
+                n_t.className = 'detail'
+                n_t.setAttribute('href','/tag/' + post['tags'][i])
+                if(i==0){
+                    n_t.innerHTML = '<i class="tag icon"></i>' + post['tags'][i]
+                }else{
+                    n_t.innerHTML = post['tags'][i]
+                }
+                n_label.appendChild(n_t)
+            }
+            /*---*/
+
+            var n_open = document.createElement('a')
+            n_open.className = 'mini ui right floated button'
+            n_open.setAttribute('href',post['selfLink'])
+            n_open.innerText = '> ReadMore...'
+
+            n_footer.appendChild(n_label)
+            n_footer.appendChild(n_open)
+
+            n_post.appendChild(n_title)
+            n_post.appendChild(n_hr)
+            n_post.appendChild(n_footer)
+
+            return n_post
+        }
+        /*加载标签*/
+        var set_tags = function(data){
+            var data = JSON.parse(data)
+            var tags = data['items']
+            var n_tags = document.getElementById('tags')
+            var n_load = document.getElementById('load-tags')
+            n_load.parentNode.removeChild(n_load)
+            for(var i=0;i<tags.length;i++){
+                var n_a = document.createElement('a')
+                n_a.className = 'ui label'
+                n_a.setAttribute('href',tags[i].selfLink)
+                n_a.innerText = tags[i].name
+                n_tags.appendChild(n_a)
+            }
+        }
+        /*加载分类*/
+        var set_categories = function(data){
+            var data = JSON.parse(data)
+            var n_load = document.getElementById('load-categories')
+            n_load.parentNode.removeChild(n_load)
+            var categories = data['items']
+            var n_categories = document.getElementById('categories')
+            for(var i=0;i<categories.length;i++){
+                var n_item = document.createElement('div')
+                n_item.className = 'item'
+                var n_a = document.createElement('a')
+                n_a.className = 'header'
+                n_a.setAttribute('href',categories[i].selfLink)
+                n_a.innerHTML = '<div class="ui right floated">'+ categories[i].totalPosts +'</div><i class="folder icon"></i>' + categories[i].name
+                n_item.appendChild(n_a)
+                n_categories.appendChild(n_item)
+            }
+        }
         /*获取参数*/
         var set_posts = function(data){
-            data = JSON.parse(data)
-            posts = data['items']
+            var data = JSON.parse(data)
+            var posts = data['items']
+
+            var n_posts = document.getElementById('posts')
+            var n_load = document.getElementById("load-posts")
+            n_load.parentNode.removeChild(n_load)
+
+            for(var i=0;i<posts.length;i++){
+                n_posts.appendChild(get_post(posts[i]))
+            }
         }
         window.onload = function(){
             get_data('/api/posts',set_posts)
+            get_data('/api/categories',set_categories)
+            get_data('/api/tags',set_tags)
         }
     </script>
 </head>
@@ -55,24 +159,13 @@
                     <a href="#" class="ui red ribbon label">Home</a>
 
                     <!-- 文章列表 -->
-                    <div class="ui clearing segment">
-                        <a class="ui grey header" href="#">标题</a>
-                        <div class="ui clearing divider"></div>
-                        <div class="ui content">
-                            <div class="ui label">
-                                2017-06-21
-                                <a class="detail" href="#"><i class="folder icon"></i>分类</a>
-                                <a class="detail" href="#"><i class="tag icon"></i>标签1</a>
-                                <a class="detail" href="#">标签1</a>
-                                <a class="detail" href="#">标签1</a>
-                            </div>
-                            <a href="https://www.baidu.com" class="mini ui right floated button" >> ReadMore...</a>
-                        </div>
+                    <div class="ui loading segment" id="load-posts">
+                        <p></p><p></p><p></p>
                     </div>
-
                 </div>
                 <!-- 边栏 -->
                 <div class="five wide column">
+                    <a href="#" class="ui orange right ribbon label">About me</a>
                     <!-- 个人卡片 -->
                     <div class="ui card">
                         <div class="content">
@@ -110,12 +203,9 @@
                             <div class="header">Categories</div>
                         </div>
                         <div class="content">
-                            <div class="ui selection list">
-                                <div class="item">
-                                    <a class="header">
-                                        <div class="ui right floated">10</div>
-                                        <i class="folder icon"></i>分类
-                                    </a>
+                            <div class="ui selection list" id="categories">
+                                <div class="ui segment" id="load-categories">
+                                    <div class="ui active loader"></div>
                                 </div>
                             </div>
                         </div>
@@ -126,10 +216,10 @@
                             <div class="header">Tags</div>
                         </div>
                         <div class="content">
-                            <div class="ui tag labels">
-                                <a class="ui label" href="#">啦啦啦啦啦绿绿绿绿</a>
-                                <a class="ui label">啦啦</a>
-                                <a class="ui label">啦啦啦啦啦绿绿绿绿</a>
+                            <div class="ui tag labels" id="tags">
+                                <div class="ui segment" id="load-tags">
+                                    <div class="ui active loader"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
