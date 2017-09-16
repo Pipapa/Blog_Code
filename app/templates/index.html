@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipapa</title>
-    <link rel="stylesheet" href="./static/css/frog.css">
-    <script src="./static/js/frog.js"></script>
+    <link rel="stylesheet" href="/static/css/frog.css">
+    <script src="/static/js/frog.js"></script>
     <style>
     
     </style>
@@ -48,20 +48,13 @@
         return title_a
     }
 
-    var set_category = function(category){
-        var category_a = document.createElement('a')
-        category_a.innerHTML = category
-        category_a.setAttribute('href',category_api_url + category)
-        return category_a
-    }
-
-    var set_tag = function(tags){
-        var tag_a = ''
-        for(var i=0;i<tags.length;i++){
-            tag_a = tag_a + '<a href="' + tag_api_url + tags[i] +'">' + tags[i] + "</a>"
-            if(i != tags.length-1) tag_a += ','
+    var get_list = function(list,url){
+        var item_a = ''
+        for(var i=0;i<list.length;i++){
+            item_a = item_a + '<a href="' + url + list[i] + '">' + list[i] + "</a>"
+            if(i != list.length-1) item_a = item_a + ','
         }
-        return tag_a
+        return item_a
     }
 
     var set_page_bar = function(page,num_of_page,has_prev,has_next){
@@ -75,13 +68,13 @@
        
         page_bar.className = 'page-bar'
         if(has_prev){
-            prev.setAttribute('href','article?page='+(page-1))
+            prev.setAttribute('href','/posts/pages/'+(page-1))
             page_bar.appendChild(prev)
         }
         page_num.innerText = 'page:' + parseInt(page) + '/' + parseInt(num_of_page)
         page_bar.appendChild(page_num)
         if(has_next){
-            next.setAttribute('href','article?page='+(page+1))
+            next.setAttribute('href','/posts/pages/'+(page+1))
             page_bar.appendChild(next)
         }
         return page_bar
@@ -90,7 +83,7 @@
         data = JSON.parse(data)
         if(data['error'] == undefined){
             /* 获取数据 */
-            var articles = data['data']
+            var articles = data['items']
             
             var page_bar = document.getElementById('page-bar')
             var post_list = document.getElementById('post')
@@ -111,10 +104,10 @@
                 /* 设置参数 */
                 divide_line.innerHTML = '||'
                 divide_symbol.innerHTML = '=>'
-                time.innerHTML = articles[i].update_time + ' > '
-                title.appendChild(set_title(articles[i].title,articles[i].url))
-                category.appendChild(set_category(articles[i].category))
-                tag.innerHTML = set_tag(articles[i].tag)
+                time.innerHTML = articles[i].updated + ' > '
+                title.appendChild(set_title(articles[i].title,articles[i].selfLink))
+                category.innerHTML = get_list(articles[i].categories)
+                tag.innerHTML = get_list(articles[i].tags)
                 
                 /* append */
                 var article_meta = [time,title,divide_line,category,divide_symbol,tag]
@@ -123,7 +116,7 @@
                 article_table.appendChild(list)
             }
             post_list.appendChild(article_table)
-            post_list.appendChild(set_page_bar(data['page'],data['num_of_page'],data['has_prev'],data['has_next']))
+            post_list.appendChild(set_page_bar(data['nowPage'],data['allPage'],data['prevPage'],data['nextPage']))
         }else{
             /* 参数出现错误 */
 
@@ -133,8 +126,8 @@
     var get_article_list = function(){
         var pre_page = getUrlParam('pre_page')
         var page = getUrlParam('page')
-        var url = '/api/article'
-        post_data(url,JSON.stringify(parameter),set_article_list)
+        var url = '/api/posts'
+        get_data(url,set_article_list) 
     }
     </script>
 </html>

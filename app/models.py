@@ -136,10 +136,10 @@ class Article(db.Model):
     def get_item(self):
         items = {}
         items['id'] = self.id
-        items['slefLink'] = '/post/' + str(self.id)
+        items['selfLink'] = '/post/' + str(self.id)
         items['title'] = self.title
         items['tags'] = to_str(self.tags)
         items['categories'] = to_str(self.categories)
-        items['published'] =  self.published
-        items['updated'] = self.updated
+        items['published'] =  self.published.strftime('%Y-%m-%d')
+        items['updated'] = self.updated.strftime('%Y-%m-%d')
         return items
