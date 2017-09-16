@@ -130,6 +130,18 @@
             for(var i=0;i<posts.length;i++){
                 n_posts.appendChild(get_post(posts[i]))
             }
+            var next_page = document.getElementById('next-page')
+            var prev_page = document.getElementById('prev-page')
+            if(data['prevPage']){
+                prev_page.onclick = function(){
+                    location.href = '/posts/pages/' + (data['nowPage'] - 1)
+                }
+            }else{prev_page.className = 'ui left labeled icon button disabled'}
+            if(data['nextPage']){
+                next_page.onclick = function(){
+                    location.href = '/posts/pages/' + (data['nowPage'] + 1)
+                }
+            }else{next_page.className = 'ui right labeled icon button disabled right floated'}
         }
         window.onload = function(){
             get_data('/api/posts',set_posts)
@@ -155,14 +167,23 @@
         <!-- 主体 -->
         <div class="ui segment">
             <div class="ui grid">
-                <div class="eleven wide column" id="posts">
-                    <a href="#" class="ui red ribbon label">Home</a>
+                <div class="eleven wide column" id="main">
+                    <div id="posts" style="margin-bottom:10px;">
+                        <a href="#" class="ui red ribbon label">Home</a>
 
-                    <!-- 文章列表 -->
-                    <div class="ui loading segment" id="load-posts">
-                        <p></p><p></p><p></p>
+                        <!-- 文章列表 -->
+                        <div class="ui loading segment" id="load-posts">
+                            <p></p><p></p><p></p>
+                        </div>
                     </div>
+                    <button class="ui left labeled icon button" id="prev-page">
+                        <i class="left arrow icon"></i>Prev
+                    </button>
+                    <button class="ui right labeled icon button right floated" id="next-page">
+                        <i class="right arrow icon"></i>Next
+                    </button>
                 </div>
+               
                 <!-- 边栏 -->
                 <div class="five wide column">
                     <a href="#" class="ui orange right ribbon label">About me</a>
