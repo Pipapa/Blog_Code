@@ -73,6 +73,9 @@ class Category(db.Model):
         item = {}
         item['name'] = self.name
         item['totalPosts'] = Article.query.filter(Article.categories.any(name=self.name)).count()
+        # 文章为0时自动删除
+        if item['totalPosts'] == 0:
+            self.delete()
         item['selfLink'] = '/categories/' + self.name 
         return item
     # 创建
@@ -98,6 +101,9 @@ class Tag(db.Model):
         item = {}
         item['name'] = self.name
         item['totalPosts'] = Article.query.filter(Article.tags.any(name=self.name)).count()
+        # 文章为0时自动删除
+        if item['totalPosts'] == 0:
+            self.delete()
         item['selfLink'] = '/tags/' + self.name
         return item
     # 创建
@@ -165,14 +171,6 @@ class Article(db.Model):
         db.session.commit() 
     # 删除
     def delete(self):
-        print('判读一下')
-        # 判断标签,分类是否为0
-        for tag in self.tags:
-            if 1 == Article.query.filter(Article.tags.any(name=tag.name)).count():
-                tag.delete()
-        for category in self.categories:
-            if 1 == Article.query.filter(Article.categories.any(name=category.name)).count():
-                category.delete()
         db.session.delete(self)
         db.session.commit()
     # 获取
@@ -186,3 +184,16 @@ class Article(db.Model):
         items['published'] =  self.published.strftime('%Y-%m-%d')
         items['updated'] = self.updated.strftime('%Y-%m-%d')
         return items
+    # 获取内容
+    def get_content(self):
+        items = self.get_item()
+        items['content'] = self.content 
+        return items
+    # 更新内容
+    def updata(self,items):
+        self.title = items['title']
+        self.updated = datetime.utcnow()
+        self.tags = self.categories = []
+        self.add_tags(items['tags'])
+        self.add_categories(items['categories']) 
+        db.session.commit()

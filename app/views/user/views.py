@@ -5,13 +5,13 @@ from ... import db
 from ...models import User,Article,Category,Tag,Comment
 
 # 路由跳转
+@user.route('/posts/pages')
 @user.route('/posts')
 @user.route('/')                                                        
 def index():
     return redirect(url_for('user.posts',page=1))
 
 # 文章主页
-@user.route('/posts/pages',defaults={'page':1})
 @user.route('/posts/pages/<int:page>')
 def posts(page):
     return render_template('index.html')

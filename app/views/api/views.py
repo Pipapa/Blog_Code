@@ -9,7 +9,7 @@ def test():
     return 'true' 
 
 # 文章列表资源
-@api.route('/api/posts',methods=['GET','POST'])
+@api.route('/api/posts/',methods=['GET','POST'])
 def postsList():
     # 获取文章列表资源 method == 'GET'
     if request.method == 'GET':
@@ -33,24 +33,41 @@ def postsList():
         parameter['allPage'] = allPage
         # 返回json
         return jsonify(parameter)
+    # 新建文章
     elif request.method == 'POST':
         parameter = request.get_json()
         post = parameter['items']
-        article = Article(title = post['title'],content = post['text'],
-            categories=post['categories'],tags=post['tags'])
+        article = Article(title=post['title'],content=post['content'],
+            categories=post['categories'],tags=post['tags']) 
         article.create()
-        return 'ture'
-
+        status = {'status':'success'}
+        return jsonify(status)
 # 文章资源
 @api.route('/api/posts/<int:id>',methods=['GET','PUT','DELETE'])
 def postsContent(id):
     status = {} 
     status['status'] = 'fialed'
+    # 获取资源
+    if request.method == 'GET':
+        article = Article.query.get_or_404(id)
+        items = {}
+        items['items'] = article.get_content()
+        return jsonify(items)
     # 删除资源
-    if request.method == 'DELETE':
-        article = Article.query.get(id)
+    elif request.method == 'DELETE':
+        article = Article.query.get_or_404(id)
         if article:
             article.delete() 
+            status['status'] = 'success'
+            return jsonify(status)
+    # 修改资源
+    elif request.method == 'PUT':
+        # 获取到的数据
+        parameter = request.get_json()
+        items = parameter['items']
+        article = Article.query.get_or_404(id)
+        if article:
+            article.updata(items)
             status['status'] = 'success'
             return jsonify(status)
     return jsonify(status)
