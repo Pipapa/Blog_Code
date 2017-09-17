@@ -148,7 +148,7 @@ class Article(db.Model):
     def get_item(self):
         items = {}
         items['id'] = self.id
-        items['selfLink'] = '/post/' + str(self.id)
+        items['selfLink'] = '/posts/' + str(self.id)
         items['title'] = self.title
         items['tags'] = to_str(self.tags)
         items['categories'] = to_str(self.categories)

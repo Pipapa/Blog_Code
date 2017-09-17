@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Pipapa - Home</title>
+    <title>Home - Pipapa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css" />
     <link rel="icon" href="/static/images/favicon.ico">
     <style>
@@ -130,6 +130,7 @@
             for(var i=0;i<posts.length;i++){
                 n_posts.appendChild(get_post(posts[i]))
             }
+            /* 分页设置 */
             var next_page = document.getElementById('next-page')
             var prev_page = document.getElementById('prev-page')
             if(data['prevPage']){
@@ -176,6 +177,7 @@
                             <p></p><p></p><p></p>
                         </div>
                     </div>
+                    <!-- 翻页 -->
                     <button class="ui left labeled icon button" id="prev-page">
                         <i class="left arrow icon"></i>Prev
                     </button>
@@ -247,7 +249,7 @@
                 </div>
             </div> 
         </div>
-        <span>Powerd by ForgBlog</span>
+        <i>由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动,<a href="/admin">管理网页</a></i>
     </div>
     
 </body>

@@ -36,6 +36,20 @@ def postsList():
     elif request.method == 'POST':
         return 'ture'
 
+# 文章资源
+@api.route('/api/posts/<int:id>',methods=['GET','PUT','DELETE'])
+def postsContent(id):
+    status = {} 
+    status['status'] = 'fialed'
+    # 删除资源
+    if request.method == 'DELETE':
+        article = Article.query.get(id)
+        if article:
+            db.session.delete(article)
+            db.session.commit()
+            status['status'] = 'success'
+            return jsonify(status)
+    return jsonify(status)
 # 标签资源
 @api.route('/api/tags')
 def allTags():
@@ -62,7 +76,3 @@ def allCategories():
         for category in categories:
             items['items'].append(category.get_item())
         return jsonify(items)
-# 文章资源
-@api.route('/api/posts/<int:id>',methods=['POST','PUT','DELETE','GET'])
-def postsContent(id):
-    return str(id)
