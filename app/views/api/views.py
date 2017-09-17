@@ -45,8 +45,7 @@ def postsContent(id):
     if request.method == 'DELETE':
         article = Article.query.get(id)
         if article:
-            db.session.delete(article)
-            db.session.commit()
+            article.delete() 
             status['status'] = 'success'
             return jsonify(status)
     return jsonify(status)

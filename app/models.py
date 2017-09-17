@@ -76,6 +76,10 @@ class Category(db.Model):
         item['totalPosts'] = Article.query.filter(Article.categories.any(name=self.name)).count()
         item['selfLink'] = '/categories/' + self.name 
         return item
+    # 删除
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 # 标签表单
 class Tag(db.Model):                                                   
@@ -93,6 +97,10 @@ class Tag(db.Model):
         item['totalPosts'] = Article.query.filter(Article.tags.any(name=self.name)).count()
         item['selfLink'] = '/tags/' + self.name
         return item
+    # 删除
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 # 评论表单
 class Comment(db.Model):                                                
     __tablename__ = 'comments'
@@ -143,6 +151,17 @@ class Article(db.Model):
         self.add_categories(categories)
         self.add_tags(tags)
         db.session.add(self)
+        db.session.commit()
+    # 删除
+    def delete(self):
+        # 判断标签,分类是否为0
+        for tag in self.tags:
+            if 0 == Article.query.filter(Article.tags.any(name=tag.name)).count():
+                tag.delete()
+        for category in self.categories:
+            if 0 == Article.query.filter(Article.categories.any(name=category.name)).count():
+                category.delete()
+        db.session.delete(self)
         db.session.commit()
     # 获取
     def get_item(self):
