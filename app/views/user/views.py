@@ -24,6 +24,11 @@ def post(id):
 @user.route('/admin')
 def admin():
     return render_template('admin.html')
+# 写文章页面
+@user.route('/admin/writer',defaults={'id': ''})
+@user.route('/admin/writer/<int:id>')
+def writer(id):
+    return render_template('writer.html')
 # 404
 @user.errorhandler(404)
 def not_found(error):

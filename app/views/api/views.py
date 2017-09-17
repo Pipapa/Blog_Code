@@ -34,6 +34,11 @@ def postsList():
         # 返回json
         return jsonify(parameter)
     elif request.method == 'POST':
+        parameter = request.get_json()
+        post = parameter['items']
+        article = Article(title = post['title'],content = post['text'],
+            categories=post['categories'],tags=post['tags'])
+        article.create()
         return 'ture'
 
 # 文章资源

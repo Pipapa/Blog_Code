@@ -9,6 +9,7 @@ def get_or_create(model,name):
     instance = db.session.query(model).filter_by(name=name).first()
     if instance is None:
         instance = model(name=name)
+        instance.create()
     return instance
 # 转化字符串列表(tag,category)
 def to_str(items):
@@ -67,8 +68,6 @@ class Category(db.Model):
 
     def __init__(self,name):
         self.name = name
-        db.session.add(self)
-        db.session.commit()
     
     def get_item(self):
         item = {}
@@ -76,10 +75,16 @@ class Category(db.Model):
         item['totalPosts'] = Article.query.filter(Article.categories.any(name=self.name)).count()
         item['selfLink'] = '/categories/' + self.name 
         return item
+    # 创建
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+    
     # 删除
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+    
 
 # 标签表单
 class Tag(db.Model):                                                   
@@ -89,14 +94,16 @@ class Tag(db.Model):
 
     def __init__(self,name):
         self.name = name
-        db.session.add(self)
-        db.session.commit()
     def get_item(self):
         item = {}
         item['name'] = self.name
         item['totalPosts'] = Article.query.filter(Article.tags.any(name=self.name)).count()
         item['selfLink'] = '/tags/' + self.name
         return item
+    # 创建
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
     # 删除
     def delete(self):
         db.session.delete(self)
@@ -115,8 +122,10 @@ class Comment(db.Model):
         self.email = email
         self.comment = comment
         self.published = datetime.utcnow()    
+    # 创建
+    def create(self):
         db.session.add(self)
-        db.session.commit()
+        db.session.commit() 
 
 #文章表单
 class Article(db.Model):                                               
@@ -150,16 +159,19 @@ class Article(db.Model):
         self.published = self.updated = datetime.utcnow()
         self.add_categories(categories)
         self.add_tags(tags)
+    # 增加
+    def create(self):
         db.session.add(self)
-        db.session.commit()
+        db.session.commit() 
     # 删除
     def delete(self):
+        print('判读一下')
         # 判断标签,分类是否为0
         for tag in self.tags:
-            if 0 == Article.query.filter(Article.tags.any(name=tag.name)).count():
+            if 1 == Article.query.filter(Article.tags.any(name=tag.name)).count():
                 tag.delete()
         for category in self.categories:
-            if 0 == Article.query.filter(Article.categories.any(name=category.name)).count():
+            if 1 == Article.query.filter(Article.categories.any(name=category.name)).count():
                 category.delete()
         db.session.delete(self)
         db.session.commit()
