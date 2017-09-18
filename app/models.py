@@ -88,7 +88,6 @@ class Category(db.Model):
         db.session.delete(self)
         db.session.commit()
     
-
 # 标签表单
 class Tag(db.Model):                                                   
     __tablename__ = 'tags'
@@ -184,8 +183,8 @@ class Article(db.Model):
         items['description'] = self.descirption
         items['tags'] = to_str(self.tags)
         items['categories'] = to_str(self.categories)
-        items['published'] =  self.published.strftime('%Y-%m-%d')
-        items['updated'] = self.updated.strftime('%Y-%m-%d')
+        items['published'] =  self.published.strftime('%Y-%m-%d')+'@'+self.published.strftime('%p%I:%M')
+        items['updated'] = self.published.strftime('%Y-%m-%d')+'@'+self.published.strftime('%p%I:%M')
         return items
     # 获取内容
     def get_content(self):

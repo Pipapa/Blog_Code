@@ -6,7 +6,7 @@ db=SQLAlchemy()
 login_manager=LoginManager()
 
 login_manager.session_protection = 'strong'
-login_manager.login_view = '/login'
+login_manager.login_view = '/admin/login'
 
 def create_app(config):
     app = Flask(__name__,static_url_path='/static')
