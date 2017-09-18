@@ -80,7 +80,8 @@ def postsContent(id):
 def allTags():
     key = request.args.get('key')
     if key:
-        query = query.filter(name=key)
+        # TODO
+        return 'ss'
     else:
         items = {}
         items['items'] = []
@@ -93,6 +94,7 @@ def allTags():
 def allCategories():
     key = request.args.get('key')
     if key:
+        # TODO
         return 'ter'
     else:
         items = {}

@@ -13,151 +13,16 @@
         }
     </style>
     <script>
-        /*GET数据*/
-        var get_data = function(url,callback){
-            var request = new XMLHttpRequest()
-            request.onreadystatechange = function(){
-                if(request.readyState == XMLHttpRequest.DONE && request.status == 200){
-                    callback(request.responseText)
-                }
-            }
-            request.open('GET',url,true)
-            request.send()
-        }
-        /*加载列表*/
-        var get_post = function(post){
-            var n_hr = document.createElement('div')
-            n_hr.className = 'ui clearing divider'
-            
-            var n_post = document.createElement('div')
-            n_post.className = 'ui clearing segment'
-
-            var n_title = document.createElement('a')
-            n_title.className = 'ui grey header'
-            n_title.innerText = post['title']
-            n_title.setAttribute('href',post['selfLink'])
-
-            var n_footer = document.createElement('div')
-            n_footer.className = 'ui content'
-
-            /*---*/
-            var n_label = document.createElement('div')
-            n_label.className = 'ui label'
-
-            n_label.innerText = post['updated']
-
-            for(var i=0;i < post['categories'].length;i++){
-                var n_c = document.createElement('a')
-                n_c.className = 'detail'
-                n_c.setAttribute('href','/category/' + post['categories'][i])
-                if(i==0){
-                    n_c.innerHTML = '<i class="folder icon"></i>' + post['categories'][i]
-                }else{
-                    n_c.innerHTML = post['categories'][i]
-                }
-                n_label.appendChild(n_c)
-            }
-            
-            for(var i=0;i < post['tags'].length;i++){
-                var n_t = document.createElement('a')
-                n_t.className = 'detail'
-                n_t.setAttribute('href','/tag/' + post['tags'][i])
-                if(i==0){
-                    n_t.innerHTML = '<i class="tag icon"></i>' + post['tags'][i]
-                }else{
-                    n_t.innerHTML = post['tags'][i]
-                }
-                n_label.appendChild(n_t)
-            }
-            /*---*/
-
-            var n_open = document.createElement('a')
-            n_open.className = 'mini ui right floated button'
-            n_open.setAttribute('href',post['selfLink'])
-            n_open.innerText = '> ReadMore...'
-
-            n_footer.appendChild(n_label)
-            n_footer.appendChild(n_open)
-
-            n_post.appendChild(n_title)
-            n_post.appendChild(n_hr)
-            n_post.appendChild(n_footer)
-
-            return n_post
-        }
-        /*加载标签*/
-        var set_tags = function(data){
-            var data = JSON.parse(data)
-            var tags = data['items']
-            var n_tags = document.getElementById('tags')
-            var n_load = document.getElementById('load-tags')
-            n_load.parentNode.removeChild(n_load)
-            for(var i=0;i<tags.length;i++){
-                var n_a = document.createElement('a')
-                n_a.className = 'ui label'
-                n_a.setAttribute('href',tags[i].selfLink)
-                n_a.innerText = tags[i].name
-                n_tags.appendChild(n_a)
-            }
-        }
-        /*加载分类*/
-        var set_categories = function(data){
-            var data = JSON.parse(data)
-            var n_load = document.getElementById('load-categories')
-            n_load.parentNode.removeChild(n_load)
-            var categories = data['items']
-            var n_categories = document.getElementById('categories')
-            for(var i=0;i<categories.length;i++){
-                var n_item = document.createElement('div')
-                n_item.className = 'item'
-                var n_a = document.createElement('a')
-                n_a.className = 'header'
-                n_a.setAttribute('href',categories[i].selfLink)
-                n_a.innerHTML = '<div class="ui right floated">'+ categories[i].totalPosts +'</div><i class="folder icon"></i>' + categories[i].name
-                n_item.appendChild(n_a)
-                n_categories.appendChild(n_item)
-            }
-        }
-        /*翻页*/
-        var to_page = function(page){
-            location.href = '/posts/pages/' + page
-        }
-        /*获取参数*/
-        var set_posts = function(data){
-            var data = JSON.parse(data)
-            var posts = data['items']
-
-            var n_posts = document.getElementById('posts')
-            var n_load = document.getElementById("load-posts")
-            n_load.parentNode.removeChild(n_load)
-
-            for(var i=0;i<posts.length;i++){
-                n_posts.appendChild(get_post(posts[i]))
-            }
-            /* 分页设置 */
-            var next_page = document.getElementById('next-page')
-            var prev_page = document.getElementById('prev-page')
-            if(data['prevPage']){
-                prev_page.setAttribute('onclick','to_page(' + (data['nowPage']-1) +')')
-            }else{prev_page.className = 'ui left labeled icon button disabled'}
-            if(data['nextPage']){
-                next_page.setAttribute('onclick','to_page(' + (data['nowPage']+1) +')')
-            }else{next_page.className = 'ui right labeled icon button disabled right floated'}
-        }
-        window.onload = function(){
-            url = decodeURI(location.href)
-            var page = url.substr(url.indexOf('pages')+6)
-            get_data('/api/posts?page='+page,set_posts)
-            get_data('/api/categories',set_categories)
-            get_data('/api/tags',set_tags)
-        }
+        
     </script>
 </head>
 <body>
     <div class="ui container">
         <!-- 导航栏 -->
         <div class="ui pointing menu">
-            <a class="active item">Home</a>
+            <a href="#" class="active item">Home</a>
+            <a href="#" class="item">Comment</a>
+            <!-- 搜索框 -->
             <div class="right menu">
                 <div class="item">
                     <div class="ui transparent icon input">
@@ -167,73 +32,132 @@
                 </div>
             </div>
         </div>
-        <!-- 主体 -->
+
+        
         <div class="ui segment">
             <div class="ui grid">
+                <!-- 主体 -->
                 <div class="eleven wide column" id="main">
                     <div id="posts" style="margin-bottom:10px;">
                         <a href="#" class="ui red ribbon label">Home</a>
 
-                        <!-- 文章列表 -->
-                        <div class="ui loading segment" id="load-posts">
-                            <p></p><p></p><p></p>
+                        <div class="ui segment">
+                        
+                            <div class="ui divided items" id="posts">
+                                <!-- 文章列表 -->
+                                <div class="item">
+                                    <div class="content">
+                                       
+                                        <a href="" class="header">This is a title</a>
+
+                                        <div class="meta">
+                                            <span><i class="bar chart icon"></i> 2017-06-21@AM07:21</span>
+                                        </div>
+                                        <div class="descirption">
+                                            <i>生成的描述...</i>
+                                        </div>
+                                        <div class="extra">
+                                            <span><i class="unhide icon"></i>12 人围观过</span>
+                                            <span><i class="folder open outline icon"></i><a href="">分类</a></span>
+                                            <span><i class="tags icon"></i><a href="">标签</a> , <a href="">标签</a></span>
+                                            <div class="ui right floated">
+                                                <span><a href="#">ReadMore..</a></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="content">
+                                        <a href="" class="header">This is a title</a>
+                                        <div class="meta">
+                                            <span><i class="bar chart icon"></i> 2017-06-21@AM06:21</span>
+                                        </div>
+                                        <div class="descirption">
+                                            <i>生成的描述...</i>
+                                        </div>
+                                        <div class="extra">
+                                            <span><i class="unhide icon"></i>12 人围观</span>
+                                            <span><i class="folder open outline icon"></i><a href="">分类</a></span>
+                                            <span><i class="tags icon"></i><a href="">标签</a> , <a href="">标签</a></span>
+                                            <div class="ui right floated">
+                                                <span><a href="#">ReadMore..</a></span>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- 翻页 -->
-                    <button class="ui left labeled icon button" id="prev-page">
-                        <i class="left arrow icon"></i>Prev
+                    <div class="ui divider hidden"></div>
+                    <button class="mini ui circular olive icon button">
+                        <i class="arrow left icon"></i>
                     </button>
-                    <button class="ui right labeled icon button right floated" id="next-page">
-                        <i class="right arrow icon"></i>Next
+                    <button class="mini ui circular olive icon button">
+                        <i class="arrow right icon"></i>
                     </button>
+                    <div class="ui divider"></div>
+                    
                 </div>
                
                 <!-- 边栏 -->
                 <div class="five wide column">
                     <a href="#" class="ui orange right ribbon label">About me</a>
+
                     <!-- 个人卡片 -->
                     <div class="ui card">
                         <div class="content">
                             <img class="right floated mini ui image" src="/static/images/favicon.ico">
                             <div class="header">Pipapa</div>
                             <div class="description">
-                                瞎写前端的蒟蒻,本博客由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动
+                                <s>本博客由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动.(不会前端,完全瞎写)</s>
                             </div>
                         </div> 
                         <!-- 链接 -->
                         <div class="extra content">
-                            <div class="ui circular icon button">
-                                <i class="github icon" onclick="window.open('https://github.com/Pipapa')"></i>
+                            <div class="mini ui circular icon button"onclick="window.open('https://github.com/Pipapa')">
+                                <i class="github icon"></i>
                             </div>
-                            <div class="ui circular icon button">
-                                <i class="wechat icon" onclick="window.open('')"></i>
+                            <div class="mini ui circular icon button">
+                                <i class="wechat icon"></i>
                             </div>
-                            <div class="ui circular icon button">
-                                <i class="steam icon" onclick="window.open('')"></i>
+                            <div class="mini ui circular icon button">
+                                <i class="steam icon"></i>
                             </div>
-                            <div class="ui circular icon button">
+                            <div class="mini ui circular icon button">
                                 <i class="telegram icon"></i>
                             </div>
-                            <div class="ui circular icon button">
+                            <div class="mini ui circular icon button">
                                 <i class="weibo icon"></i>
                             </div>
-                            <div class="ui circular icon button">
+                            <div class="mini ui circular icon button">
                                 <i class="send icon"></i>
                             </div>
                         </div>
                     </div>
+
                     <!-- 分类 -->
                     <div class="ui card">
                         <div class="content">
                             <div class="header">Categories</div>
                         </div>
+
                         <div class="content">
                             <div class="ui selection list" id="categories">
-                                <div class="ui segment" id="load-categories">
-                                    <div class="ui active loader"></div>
+
+                                <div class="item" onclick="window.open('http://www.baidu.com')">    
+                                    <div class="right floated content">
+                                        <div class="header">1</div>
+                                    </div>
+                                    <div class="content">
+                                        <div class="header"><i class="folder icon"></i>分类</div>
+                                    </div>
                                 </div>
+                               
                             </div>
                         </div>
+
                     </div>
                     <!-- 标签 -->
                     <div class="ui card">
@@ -241,17 +165,21 @@
                             <div class="header">Tags</div>
                         </div>
                         <div class="content">
-                            <div class="ui tag labels" id="tags">
-                                <div class="ui segment" id="load-tags">
-                                    <div class="ui active loader"></div>
-                                </div>
+                            <div class="ui yellow labels" id="tags">
+                                
+                                <a href="http://www.baidu.com" class="ui label">
+                                    Dogs
+                                    <div class="detail">21</div>
+                                </a>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div> 
         </div>
-        <i>由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动,<a href="/admin">管理网页</a></i>
+        <div class="ui content center aligned"><i>由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动, <a href="/admin"><i class="settings icon"></i>管理网页</a></i></div>
+        
     </div>
     
 </body>
