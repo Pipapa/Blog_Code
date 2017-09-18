@@ -49,27 +49,31 @@ def postsContent(id):
     status['status'] = 'fialed'
     # 获取资源
     if request.method == 'GET':
-        article = Article.query.get_or_404(id)
+        article = Article.query.get(id)
+        if article is None:
+            return jsonify({'status':'failed'})
         items = {}
         items['items'] = article.get_content()
         return jsonify(items)
     # 删除资源
     elif request.method == 'DELETE':
-        article = Article.query.get_or_404(id)
+        article = Article.query.get(id)
         if article:
             article.delete() 
-            status['status'] = 'success'
-            return jsonify(status)
+            return jsonify({'status':'success'})
+        else:
+            return jsonify({'status':'failed'})
     # 修改资源
     elif request.method == 'PUT':
         # 获取到的数据
         parameter = request.get_json()
         items = parameter['items']
-        article = Article.query.get_or_404(id)
+        article = Article.query.getd(id)
         if article:
             article.updata(items)
-            status['status'] = 'success'
-            return jsonify(status)
+            return jsonify({'status':'success'})
+        else:
+            return jsonify({'status':'failed'})
     return jsonify(status)
 # 标签资源
 @api.route('/api/tags')
