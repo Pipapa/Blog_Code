@@ -180,6 +180,7 @@ class Article(db.Model):
         items['id'] = self.id
         items['selfLink'] = '/posts/' + str(self.id)
         items['title'] = self.title
+        items['view'] = self.view
         items['description'] = self.descirption
         items['tags'] = to_str(self.tags)
         items['categories'] = to_str(self.categories)
