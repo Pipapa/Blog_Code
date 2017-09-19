@@ -141,7 +141,7 @@ class Article(db.Model):
     descirption = db.Column(db.Text)
     published = db.Column(db.DateTime,index=True)
     updated = db.Column(db.DateTime,index=True)
-    viewnum = db.Column(db.Integer,default=0)
+    view = db.Column(db.Integer,default=0)
     # 连接其他表单
     categories = db.relationship('Category',secondary=Category_relationship,
                                  backref=db.backref('articles',lazy='dynamic'))
