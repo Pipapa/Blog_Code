@@ -13,195 +13,120 @@
         }
     </style>
     <script>
-        window.page = 1
-        window.pre_page = 10
-        /*GET数据*/
-        var get_data = function(url,callback){
-        var request = new XMLHttpRequest()
-        request.onreadystatechange = function(){
-            if(request.readyState == XMLHttpRequest.DONE && request.status == 200){
-                callback(request.responseText)
-            }
-        }
-        request.open('GET',url,true)
-        request.send()
-        }
-        /*创建一个列表*/
-        var get_post = function(data){
-            var n_tr = document.createElement('tr')
-            var n_check = document.createElement('td')
-            var n_id = document.createElement('td')
-            var n_title = document.createElement('td')
-            var n_category = document.createElement('td')
-            var n_edit = document.createElement('td')
-            var n_delete = document.createElement('td')
 
-            n_check.innerHTML = '<div class="ui toggle checkbox">'+
-                                '<input type="checkbox" value="'+ data.id +'"><label></label>'+'</div>'
-            n_id.innerText = data.id
-            n_title.innerHTML = '<a href="'+ '/posts/'+ data.id +'">'+ data.title +'</a>'
-            n_category.innerHTML = '<a href="'+ '/categories/'+ data.categories +'">'+ data.categories +'</a>'
-            n_edit.innerHTML = '<i class="large green edit icon"></i>'
-            n_delete.innerHTML = '<i class="large red trash outline icon"></i>'
-            n_edit.className = 'center aligned'
-            n_delete.className = 'center aligned'
-
-            n_delete.setAttribute('onclick','delete_posts('+data.id+')')
-        
-
-            n_tr.appendChild(n_check)
-            n_tr.appendChild(n_id)
-            n_tr.appendChild(n_title)
-            n_tr.appendChild(n_category)
-            n_tr.appendChild(n_edit)
-            n_tr.appendChild(n_delete)
-            return n_tr
-        }
-        /*加载文章列表*/
-        var set_posts_list = function(data){
-            var data = JSON.parse(data)
-            var posts = data['items']
-            var n_list = document.getElementById('post-lists')
-            for(var i=0;i<posts.length;i++){
-                n_list.appendChild(get_post(posts[i]))
-            }
-            
-        }
-
-        window.onload = function(){
-            get_data('/api/posts?pre_page='+window.pre_page+'&page='+window.page,set_posts_list)
-        }
-
-    
     </script>
 </head>
 <body>
     <div class="ui container">
         <!-- 导航栏 -->
         <div class="ui pointing menu">
-            <a class="item" href="/">Home</a>
-            <a class="active item">Admin</a>
+            <a href="/" class="item">Home</a>
+            <a href="/comments" class="item">Comment</a>
+            <a href="/admin" class="active item">Admin</a>
         </div>
-        <!-- 主体 -->
+
         <div class="ui segment">
             <div class="ui grid">
-                <!-- 控制板 -->
-                <div class="four wide column">
+                <div class="ui five wide column">
                     <div class="ui vertical menu">
-                        <a href="/admin" class="active item">
-                            文章管理
-                        </a>
-                        <a href="/admin/writer" class="item">
-                            发布文章
-                        </a>
-                        <a href="/admin/users" class="item">
-                            用户管理
-                        </a>
+                        <a href="" class="item">文章管理</a>
+                        <a href="" class="item">发布文章</a>
+                        <a href="" class="item">评论管理</a>
                     </div>
+                </div>
+
+                <div class="ui eleven wide column">
                     
                 </div>
-                <!-- 文章列表 -->
-                <div class="twelve wide column">
-                    <table class="ui celled table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <div class="ui toggle checkbox" onclick="select_all()">
-                                        <input type="checkbox" id="delete-all-checkbox"><label></label>
-                                    </div>
-                                </th>
-                                <th>ID</th>
-                                <th>标题</th>
-                                <th>分类</th>
-                                <th>编辑</th>
-                                <th>删除</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="post-lists">
-                            <!-- 文章列表 -->
-                        </tbody>
-
-                        <tfoot>
-                            <tr>
-                                <!-- 删除文章 -->
-                                <th colspan="3">
-                                    <div class="ui left floated button" onclick="delete_posts(get_selects())">
-                                        <i class="trash outline icon"></i>Delete
-                                    </div>
-                                </th>
-                                
-                                <!-- 翻页 -->
-                                <th colspan="3">
-                                    <div class="ui left icon button" id="prev-page">
-                                        <i class="left chevron icon"></i>
-                                    </div>
-                                    <div class="ui right icon button" id="next-page">
-                                        <i class="right chevron icon"></i>
-                                    </div>
-                                </th>
-
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                
+               
             </div> 
         </div>
-        <span>Powerd by ForgBlog</span>
+        <div class="ui content center aligned"><i>由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动, <a href="/admin"><i class="settings icon"></i>管理网页</a></i></div>
+        
     </div>
     
 </body>
 <script>
-    /*刷新*/
-    var refresh = function(){
-        window.location.reload()
-    }
-    /*选中全部复选框*/
-    var select_all = function(){
-        var n_input = document.getElementsByTagName('input')
-        var status = document.getElementById('delete-all-checkbox').checked
-        for(var i=0;i<n_input.length;i++){
-            if(n_input[i].type == 'checkbox'){
-                n_input[i].checked = status
-            }
+    /*获取数据*/
+    class Post {
+        constructor(title,updated,description,selfLink,view,categories,tags){
+            this.title = title
+            this.description = description
+            this.updated = updated
+            this.selfLink = selfLink
+            this.view = view
+            this.categories = categories
+            this.tags = tags
         }
-    }
-    /*查看被选中文章*/
-    var get_selects = function(){
-        var list = []
-        var n_input = document.getElementsByTagName('input')
-        for(var i=0;i<n_input.length;i++){
-            if(n_input[i].type == 'checkbox' && n_input[i].id != 'delete-all-checkbox' 
-                && n_input[i].checked){
-                    list.push(parseInt(n_input[i].value))
-            }
-        }
-        return list
-    }
-    /*删除文章*/
-    var delete_posts = function(data){
-        var list = new Array()
-        if(typeof(data) == 'object' ){
-            for(var i=0;i<data.length;i++){
-                var url = '/api/posts/' + data[i]
-                delete_data('DELETE',url)
-            }
-        }else if(typeof(data) == 'number'){
-            var url = '/api/posts/' + data
-            delete_data('DELETE',url)
-        }
-        refresh()
-    }
-    /*删除*/
-    var delete_data = function(method,url){
-        var request = new XMLHttpRequest()
-        request.onreadystatechange = function(){
-            if(request.readyState == XMLHttpRequest.DONE && request.status == 200){
-            }
-        }
-        request.open(method,url,true)
-        request.send()
-    }
 
+        create_title_node(){
+            var title = document.createElement('a')
+            title.setAttribute('href',this.selfLink)
+            title.className = 'header'
+            title.innerText = this.title
+            return title
+        }
+        create_time_node(){
+            var time = document.createElement('div')
+            time.className = 'meta'
+            time.innerHTML = '<span><i class="bar chart icon"></i>'+this.updated+'</span>'
+            return time
+        }
+        create_description_node(){
+            var description = document.createElement('div')
+            description.className = 'description'
+            description.innerHTML = '<i>'+this.description+'</i>'
+            return description
+        }
+        create_extra_node(){
+            var extra = document.createElement('div')
+            extra.className = 'extra'
+
+            var view = document.createElement('span')
+            var categories = document.createElement('span')
+            var tags = document.createElement('span')
+            var readmore = document.createElement('div')
+
+            categories.innerHTML = '<span><i class="folder open outline icon"></i>'
+            for(var i=0;i<this.categories.length;i++){
+                categories.innerHTML += '<a href="/categories/'+ this.categories[i] +'">'+ this.categories[i] +'</a>'
+                if(i!=this.categories.length-1){
+                    categories.innerHTML += ' , '
+                }
+            }
+            categories.innerHTML += '</span>'
+            tags.innerHTML = '<span><i class="tags icon"></i>'
+            for(var i=0;i<this.tags.length;i++){
+                tags.innerHTML += '<a href="/tags/'+ this.tags[i] +'">'+ this.tags[i] +'</a>'
+                if(i!=this.tags.length-1){
+                    tags.innerHTML += ' , '
+                }
+            }
+            tags.innerHTML += '</span>'
+            view.innerHTML = '<i class="unhide icon"></i>'+ this.view +' 人围观过'
+            readmore.className = 'ui right floated'
+            readmore.innerHTML = '<strong><a href="'+ this.selfLink +'">ReadMore...</a></strong>'
+           
+            var o = [view,categories,tags,readmore]
+            for(var i=0;i<o.length;i++){
+                extra.appendChild(o[i])
+            }
+            return extra
+        }
+        create_post() {
+            var item = document.createElement('div')
+            var content = document.createElement('div')
+            item.className = 'item'
+            content.className = 'content'
+
+            content.appendChild(this.create_title_node())
+            content.appendChild(this.create_time_node())
+            content.appendChild(this.create_description_node())
+            content.appendChild(this.create_extra_node())
+            item.appendChild(content)
+            return item
+        }
+    }
 </script>
 </html>
