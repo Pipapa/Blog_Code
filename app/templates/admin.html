@@ -118,7 +118,7 @@
         create_post() {
             var item = document.createElement('tr')
             item.innerHTML = '<td class="collapsing"><div class="ui checkbox"><input type="checkbox" value="'+ this.id +'">'+ 
-                '<label></label></td><td>'+this.id+'</td><td>' + this.title + '</td><td>' + 
+                '<label></label></td><td>'+this.id+'</td><td>' + '<i><a href="'+ '/posts/' + this.id +'">' + this.title + '</a></i></td><td>' + 
                 '<div class="mini ui buttons"><button class="ui green button" onclick="window.open(\'/admin/writer/'+ this.id +'\')">Edit</button><div class="or"></div>'+
                 '<button class="ui orange button" onclick="delete_post('+ this.id +')">Delete</button></div></td>'
             return item

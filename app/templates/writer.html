@@ -88,8 +88,10 @@
         var text = document.getElementById('text')
         var categories = document.getElementById('categories')
         var tags = document.getElementById('tags')
+        var description = document.getElementById('description')
         title.value = data['title']
         text.value = data['content']
+        description.value = data['description']
         categories.value = data['categories'].join(',')
         tags.value = data['tags'].join(',')
     }
