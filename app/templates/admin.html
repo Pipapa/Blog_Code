@@ -13,6 +13,34 @@
         }
     </style>
     <script>
+        var get_data = function(url,callback){
+            var requese = new XMLHttpRequest()
+            requese.onreadystatechange = function(){
+                if(requese.readyState == XMLHttpRequest.DONE && requese.status == 200){
+                    var data = JSON.parse(requese.responseText)
+                    callback(data)
+                }
+            }
+            requese.open('GET',url,true)
+            requese.send()
+        }
+
+        var select_all = function(){
+            var checkboxs = document.getElementsByTagName('input')
+            for(var i=0;i<checkboxs.length;i++){
+                if(checkboxs[i].type == 'checkbox'){
+                    checkboxs[i].checked = true;
+                }
+            }
+        }
+        var unselect_all = function(){
+            var checkboxs = document.getElementsByTagName('input')
+            for(var i=0;i<checkboxs.length;i++){
+                if(checkboxs[i].type == 'checkbox'){
+                    checkboxs[i].checked = false;
+                }
+            }
+        }
 
     </script>
 </head>
@@ -27,16 +55,57 @@
 
         <div class="ui segment">
             <div class="ui grid">
-                <div class="ui five wide column">
+                <div class="ui five wide column"> 
+                    <!-- Menu -->
                     <div class="ui vertical menu">
-                        <a href="" class="item">文章管理</a>
-                        <a href="" class="item">发布文章</a>
-                        <a href="" class="item">评论管理</a>
+                        <a href="/admin" class="item">文章管理</a>
+                        <a href="/admin/writer" class="item">文章编辑</a>
+                        <a href="/admin/comment" class="item">评论管理</a>
                     </div>
                 </div>
-
+                <!-- Table -->
                 <div class="ui eleven wide column">
-                    
+                    <table class="ui compact celled definition table">
+                        <thead class="full-width">
+                            <tr>
+                                <th>
+                                </th>
+                                <th class="one wide">ID</th>
+                                <th class="twelve wide">标题</th>
+                                <th class="two wide">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="posts">
+                            <!-- 文章列表 -->
+                           
+                        </tbody>
+
+                        <tfoot class="full-width">
+                            <tr>
+                                <th class="one wide">
+                                </th>
+
+                                <th colspan="3"> 
+                                    <button class="ui mini button">
+                                        删除选中
+                                    </button>
+                                    <div class="mini ui buttons">
+                                        <button class="ui button" onclick="select_all()">选中全部</button>
+                                        <button class="ui button" onclick="unselect_all()">取消选中</button>
+                                    </div>
+                                   
+                                    <button class="mini ui right floated circular olive icon button disabled" id="next" onclick="next_page()">
+                                        <i class="arrow right icon"></i>
+                                    </button>
+                                    <button class="mini ui right floated circular olive icon button disabled" id="prev" onclick="prev_page()">
+                                        <i class="arrow left icon"></i>
+                                    </button>
+                                </th>
+                            </tr>
+                            
+                        </tfoot>
+
+                    </table>
                 </div>
                 
                
@@ -50,83 +119,61 @@
 <script>
     /*获取数据*/
     class Post {
-        constructor(title,updated,description,selfLink,view,categories,tags){
+        constructor(id,title,selfLink){
+            this.id = id
             this.title = title
-            this.description = description
-            this.updated = updated
             this.selfLink = selfLink
-            this.view = view
-            this.categories = categories
-            this.tags = tags
         }
 
-        create_title_node(){
-            var title = document.createElement('a')
-            title.setAttribute('href',this.selfLink)
-            title.className = 'header'
-            title.innerText = this.title
-            return title
-        }
-        create_time_node(){
-            var time = document.createElement('div')
-            time.className = 'meta'
-            time.innerHTML = '<span><i class="bar chart icon"></i>'+this.updated+'</span>'
-            return time
-        }
-        create_description_node(){
-            var description = document.createElement('div')
-            description.className = 'description'
-            description.innerHTML = '<i>'+this.description+'</i>'
-            return description
-        }
-        create_extra_node(){
-            var extra = document.createElement('div')
-            extra.className = 'extra'
-
-            var view = document.createElement('span')
-            var categories = document.createElement('span')
-            var tags = document.createElement('span')
-            var readmore = document.createElement('div')
-
-            categories.innerHTML = '<span><i class="folder open outline icon"></i>'
-            for(var i=0;i<this.categories.length;i++){
-                categories.innerHTML += '<a href="/categories/'+ this.categories[i] +'">'+ this.categories[i] +'</a>'
-                if(i!=this.categories.length-1){
-                    categories.innerHTML += ' , '
-                }
-            }
-            categories.innerHTML += '</span>'
-            tags.innerHTML = '<span><i class="tags icon"></i>'
-            for(var i=0;i<this.tags.length;i++){
-                tags.innerHTML += '<a href="/tags/'+ this.tags[i] +'">'+ this.tags[i] +'</a>'
-                if(i!=this.tags.length-1){
-                    tags.innerHTML += ' , '
-                }
-            }
-            tags.innerHTML += '</span>'
-            view.innerHTML = '<i class="unhide icon"></i>'+ this.view +' 人围观过'
-            readmore.className = 'ui right floated'
-            readmore.innerHTML = '<strong><a href="'+ this.selfLink +'">ReadMore...</a></strong>'
-           
-            var o = [view,categories,tags,readmore]
-            for(var i=0;i<o.length;i++){
-                extra.appendChild(o[i])
-            }
-            return extra
-        }
         create_post() {
-            var item = document.createElement('div')
-            var content = document.createElement('div')
-            item.className = 'item'
-            content.className = 'content'
-
-            content.appendChild(this.create_title_node())
-            content.appendChild(this.create_time_node())
-            content.appendChild(this.create_description_node())
-            content.appendChild(this.create_extra_node())
-            item.appendChild(content)
+            var item = document.createElement('tr')
+            item.innerHTML = '<td class="collapsing"><div class="ui checkbox"><input type="checkbox">'+ 
+                '<label></label></td><td>'+this.id+'</td><td>' + this.title + '</td><td>' + 
+                '<div class="mini ui buttons"><button class="ui green button">Edit</button><div class="or"></div>'+
+                '<button class="ui orange button">Delete</button></div></td>'
             return item
         }
+    }
+    class PostList{
+        constructor(){
+            this.page = 1
+        }
+        next_page(){
+            this.page+=1
+        }
+        prev_page(){
+            this.page-=1
+        }
+        create_list(data){
+            var table = document.getElementById('posts')
+            var posts = data['items']
+            for(var i=0;i<posts.length;i++){
+                var post = new Post(posts[i].id,posts[i].title,posts[i].selfLink)
+                table.appendChild(post.create_post())
+            }
+            if(data['nextPage']){
+                document.getElementById('next').classList.remove('disabled')
+            }else{document.getElementById('next').classList.add('disabled')}
+            if(data['prevPage']){
+                document.getElementById('prev').classList.remove('disabled')
+            }else{document.getElementById('prev').classList.add('disabled')}
+        }
+    }
+    var refresh = function(){
+        document.getElementById('posts').innerHTML = ''
+        get_data('/api/posts?pre_page=10&page='+postlist.page,postlist.create_list)
+    }
+    var next_page = function(){
+        window.postlist.next_page()
+        refresh()
+    }
+    var prev_page = function(){
+        window.postlist.prev_page()
+        refresh()
+    }
+    window.onload = function(){
+        window.postlist = new PostList()
+        refresh()
     }
 </script>
 </html>
