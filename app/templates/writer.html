@@ -20,38 +20,36 @@
     <div class="ui container">
         <!-- 导航栏 -->
         <div class="ui pointing menu">
-            <a class="item" href="/">Home</a>
-            <a class="active item">Admin</a>
+            <a href="/" class="item">Home</a>
+            <a href="/comments" class="item">Comment</a>
+            <a href="/admin" class="active item">Admin</a>
         </div>
         <!-- 主体 -->
         <div class="ui segment">
             <div class="ui grid">
                 <!-- 控制板 -->
                 <div class="four wide column">
+                    <!-- Menu -->
                     <div class="ui vertical menu">
-                        <a href="/admin" class="item">
-                            文章管理
-                        </a>
-                        <a href="/admin/writer" class="active item">
-                            发布文章
-                        </a>
-                        <a href="/admin/users" class="item">
-                            用户管理
-                        </a>
-                    </div>
-                    
+                        <a href="/admin" class="item">文章管理</a>
+                        <a href="/admin/writer" class="item">文章编辑</a>
+                        <a href="/admin/comment" class="item">评论管理</a>
+                    </div>                    
                 </div>
                 <!-- 文章编辑 -->
                 <div class="twelve wide column">
 
                     <div class="ui form">
 
-                        <div class="field">
-                            <label>Title</label>
+                            <label>标题</label>
                             <input type="text" placeholder="Title" id="title">
-                        </div>    
+
+                        <label>简介</label>
+                        <textarea id="description" rows="2" placeholder="简介..."></textarea>
+                        
                         <label>Text</label>
                         <textarea rows="20" placeholder="Write Here..." id="text"></textarea>
+
                         <div class="fields">
                             <div class="six wide field">
                                 <label>Category</label>
@@ -60,7 +58,7 @@
                             
                             <div class="ten wide field">
                                 <label>Tags</label>
-                                <input type="text" placeholder="Tags" id="tags">
+                                <input type="text" placeholder="Tags(用逗号分隔)" id="tags">
                             </div>
                         </div>
 
@@ -70,7 +68,7 @@
                 </div>
             </div> 
         </div>
-        <i>由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动,<a href="/admin">管理网页</a></i>
+        <div class="ui content center aligned"><i>由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动, <a href="/admin"><i class="settings icon"></i>管理网页</a></i></div>
     </div>
     
 </body>
@@ -111,13 +109,15 @@
         var text = document.getElementById('text').value
         var categories = document.getElementById('categories').value
         var tags = document.getElementById('tags').value
+        var description = document.getElementById('description').value
         var parameter = {}
         parameter['methods'] = 'create'
         var posts = {}
         posts['title'] = title
         posts['content'] = text
-        posts['categories'] = categories?categories.split(','):[]
-        posts['tags'] = tags?tags.split(','):[]
+        posts['categories'] = categories?categories.split(','):['未分类']
+        posts['tags'] = tags?tags.split(','):['无标签']
+        posts['description'] = description
         parameter['items'] = posts
         submit_data(method,'/api/posts/'+post_id,JSON.stringify(parameter),refresh)
     }

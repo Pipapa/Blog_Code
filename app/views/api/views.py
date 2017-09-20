@@ -68,7 +68,7 @@ def postsContent(id):
         # 获取到的数据
         parameter = request.get_json()
         items = parameter['items']
-        article = Article.query.getd(id)
+        article = Article.query.get(id)
         if article:
             article.updata(items)
             return jsonify({'status':'success'})

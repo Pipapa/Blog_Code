@@ -199,4 +199,6 @@ class Article(db.Model):
         self.tags = self.categories = []
         self.add_tags(items['tags'])
         self.add_categories(items['categories']) 
+        self.content = items['content']
+        self.descirption = items['description'] if items['description'] else items['content'][0:30]
         db.session.commit()

@@ -18,7 +18,7 @@ def posts(page):
 # 文章显示
 @user.route('/posts/<int:id>')
 def post(id):
-    return render_template('article.html') 
+    return render_template('post.html') 
 
 # 管理页面
 @user.route('/admin')

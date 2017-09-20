@@ -26,22 +26,14 @@
         }
 
         var select_all = function(){
+            var status = document.getElementById('select').checked
             var checkboxs = document.getElementsByTagName('input')
             for(var i=0;i<checkboxs.length;i++){
                 if(checkboxs[i].type == 'checkbox'){
-                    checkboxs[i].checked = true;
+                    checkboxs[i].checked = status;
                 }
             }
         }
-        var unselect_all = function(){
-            var checkboxs = document.getElementsByTagName('input')
-            for(var i=0;i<checkboxs.length;i++){
-                if(checkboxs[i].type == 'checkbox'){
-                    checkboxs[i].checked = false;
-                }
-            }
-        }
-
     </script>
 </head>
 <body>
@@ -83,17 +75,15 @@
                         <tfoot class="full-width">
                             <tr>
                                 <th class="one wide">
+                                    <div class="ui checkbox">
+                                        <input type="checkbox" id="select" onclick="select_all()"> <label></label>
+                                    </div>
                                 </th>
 
                                 <th colspan="3"> 
-                                    <button class="ui mini button">
+                                    <button class="ui mini button" onclick="delete_posts()">
                                         删除选中
                                     </button>
-                                    <div class="mini ui buttons">
-                                        <button class="ui button" onclick="select_all()">选中全部</button>
-                                        <button class="ui button" onclick="unselect_all()">取消选中</button>
-                                    </div>
-                                   
                                     <button class="mini ui right floated circular olive icon button disabled" id="next" onclick="next_page()">
                                         <i class="arrow right icon"></i>
                                     </button>
@@ -127,10 +117,10 @@
 
         create_post() {
             var item = document.createElement('tr')
-            item.innerHTML = '<td class="collapsing"><div class="ui checkbox"><input type="checkbox">'+ 
+            item.innerHTML = '<td class="collapsing"><div class="ui checkbox"><input type="checkbox" value="'+ this.id +'">'+ 
                 '<label></label></td><td>'+this.id+'</td><td>' + this.title + '</td><td>' + 
-                '<div class="mini ui buttons"><button class="ui green button">Edit</button><div class="or"></div>'+
-                '<button class="ui orange button">Delete</button></div></td>'
+                '<div class="mini ui buttons"><button class="ui green button" onclick="window.open(\'/admin/writer/'+ this.id +'\')">Edit</button><div class="or"></div>'+
+                '<button class="ui orange button" onclick="delete_post('+ this.id +')">Delete</button></div></td>'
             return item
         }
     }
@@ -171,7 +161,35 @@
         window.postlist.prev_page()
         refresh()
     }
+    var delete_post = function(id){
+        var url = '/api/posts/' + id
+        var requese = new XMLHttpRequest()
+        requese.onreadystatechange = function(){
+            if(requese.readyState == XMLHttpRequest.DONE && requese.status == 200){
+                if(JSON.parse(requese.responseText)['status'] == 'success'){
+                    window.length --
+                    if(window.length <= 0){refresh()}
+                }
+            }
+        }
+        requese.open('DELETE',url,true)
+        requese.send()
+    }
+    var delete_posts = function(){
+        var delete_list = []
+        var checkboxs = document.getElementsByTagName('input')
+        for(var i=0;i<checkboxs.length;i++){
+            if(checkboxs[i].type == 'checkbox' && checkboxs[i].checked && checkboxs[i].id != 'select'){
+                delete_list.push(checkboxs[i].value)
+            }
+        }
+        window.length = delete_list.length
+        for(var i=0;i<delete_list.length;i++){
+            delete_post(delete_list[i])
+        }
+    }
     window.onload = function(){
+        window.length = 0
         window.postlist = new PostList()
         refresh()
     }

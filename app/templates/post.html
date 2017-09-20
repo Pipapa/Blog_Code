@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Post - Pipapa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.8.0/github-markdown.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+    <link rel="icon" href="/static/images/favicon.ico">
+    <style>
+        body > .ui.container{
+            margin-top: 3em;
+        }
+    </style>
+    <script>
+        var refresh = function(url){
+            window.location.href = url
+        }
+        var get_data = function(url,callback){
+            var requese = new XMLHttpRequest()
+            requese.onreadystatechange = function(){
+                if(requese.readyState == XMLHttpRequest.DONE && requese.status == 200){
+                    var data = JSON.parse(requese.responseText)
+                    callback(data)
+                }
+            }
+            requese.open('GET',url,true)
+            requese.send()
+        }
+    </script>
+  
+</head>
+<body>
+    <div class="ui container">
+        <!-- 导航栏 -->
+        <div class="ui pointing menu">
+            <a href="/" class="active item">Home</a>
+            <a href="/comments" class="item">Comment</a>
+            <!-- 搜索框 -->
+            <div class="right menu">
+                <div class="item">
+                    <div class="ui transparent icon input">
+                        <input type="text" placeholder="Search...">
+                        <i class="search link icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui segment">
+            <div class="ui grid">
+                <!-- 主体 -->
+                <div class="eleven wide column" id="main">
+                    <div style="margin-bottom:10px;">
+                        <a href="#" class="ui red ribbon label">Article</a>
+
+                        <div class="ui segment">
+                            <div class="ui divided items markdown-body" id="post">
+                                <!-- 文章 -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                 
+                   
+                    
+                </div>
+               
+                <!-- 边栏 -->
+                <div class="five wide column">
+                    <a href="#" class="ui orange right ribbon label">About me</a>
+
+                    <!-- 个人卡片 -->
+                    <div class="ui card">
+                        <div class="content">
+                            <img class="right floated mini ui image" src="/static/images/favicon.ico">
+                            <div class="header">Pipapa</div>
+                            <div class="description">
+                                <s>本博客由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动.(不会前端,完全瞎写)</s>
+                            </div>
+                        </div> 
+                        <!-- 链接 -->
+                        <div class="extra content">
+                            <div class="mini ui circular icon button"onclick="window.open('https://github.com/Pipapa')">
+                                <i class="github icon"></i>
+                            </div>
+                            <div class="mini ui circular icon button">
+                                <i class="wechat icon"></i>
+                            </div>
+                            <div class="mini ui circular icon button">
+                                <i class="steam icon"></i>
+                            </div>
+                            <div class="mini ui circular icon button">
+                                <i class="telegram icon"></i>
+                            </div>
+                            <div class="mini ui circular icon button">
+                                <i class="weibo icon"></i>
+                            </div>
+                            <div class="mini ui circular icon button">
+                                <i class="send icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 分类 -->
+                    <div class="ui card">
+                        <div class="content">
+                            <div class="header">Categories</div>
+                        </div>
+
+                        <div class="content">
+                            <div class="ui selection list" id="categories">
+
+                               
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- 标签 -->
+                    <div class="ui card">
+                        <div class="content">
+                            <div class="header">Tags</div>
+                        </div>
+                        <div class="content">
+                            <div class="ui yellow labels" id="tags">
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div class="ui content center aligned"><i>由<a href="https://github.com/Pipapa/FrogBlog">FrogBlog</a>强力驱动, <a href="/admin"><i class="settings icon"></i>管理网页</a></i></div>
+        
+    </div>
+    
+</body>
+<script>
+    class Category{
+        constructor(name,number,selfLink){
+            this.name = name
+            this.number = number
+            this.selfLink = selfLink
+        }
+        create_number(){
+            var number = document.createElement('div')
+            number.className = 'right floated content'
+            number.innerHTML = '<div class="header">'+this.number+'</div>'
+            return number
+        }
+        create_name(){
+            var content = document.createElement('div')
+            content.className = 'content'
+            content.innerHTML = '<strong><a class="ui empty circular label"></a> <i class="folder icon"></i>'+this.name+'</strong>'
+            return content
+        }
+        create_category(){
+            var item = document.createElement('div')
+            item.className = 'item'
+            item.setAttribute('onclick','window.open(\''+ this.selfLink +'\')')
+            item.appendChild(this.create_number())
+            item.appendChild(this.create_name())
+            return item
+        }
+    }
+    class Tag{
+        constructor(name,number,selfLink){
+            this.name = name
+            this.number = number
+            this.selfLink = selfLink
+        }
+        create_tag_node(){
+            var tag = document.createElement('a')
+            tag.setAttribute('href',this.selfLink)
+            tag.className = 'ui label'
+            tag.innerHTML = this.name+'<div class="detail">'+this.number+'</div>'
+            return tag
+        }
+        create_tag(){
+            return this.create_tag_node()
+        }
+    }
+    var load_home = {
+    }
+    load_home.load_categories = function(parameter){
+        var categories = parameter['items']
+        for(var i=0;i<categories.length;i++){
+            var data = categories[i]
+            var p = new Category(data.name,data.totalPosts,data.selfLink)
+            document.getElementById('categories').appendChild(p.create_category())
+        }
+    }
+    load_home.load_tags = function(parameter){
+        var tags = parameter['items']
+        for(var i=0;i<tags.length;i++){
+            var data = tags[i]
+            var t = new Tag(data.name,data.totalPosts,data.selfLink)
+            document.getElementById('tags').appendChild(t.create_tag())
+        }
+    }
+    load_home.load_post = function(data){
+        document.getElementById('post').innerHTML = marked(data['items'].content)
+    }
+    window.onload = function(){
+        marked.setOptions({
+                            highlight: function(code){
+                                return hljs.highlightAuto(code).value
+                            }
+                        })
+        var url = encodeURI(location.href)
+        var id = url.substr(url.indexOf('posts')+6) 
+        get_data('/api/posts/'+id,load_home.load_post)
+        get_data('/api/categories',load_home.load_categories)
+        get_data('/api/tags',load_home.load_tags)
+    }
+</script>
+</html>
