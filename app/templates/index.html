@@ -274,7 +274,7 @@
         var posts = parameter['items']
         for(var i=0;i<posts.length;i++){
             var data = posts[i]
-            var p = new Post(data.title,data.updated,data.description,data.selfLink,data.view,data.categories,data.tags)
+            var p = new Post(data.title,data.updated,data.summary,data.selfLink,data.view,data.categories,data.tags)
             document.getElementById('posts').appendChild(p.create_post())
         }
         var next = document.getElementById('next')

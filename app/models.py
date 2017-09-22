@@ -138,7 +138,7 @@ class Article(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     title = db.Column(db.String(64))
     content = db.Column(db.Text)
-    descirption = db.Column(db.Text)
+    summary = db.Column(db.Text)
     published = db.Column(db.DateTime,index=True)
     updated = db.Column(db.DateTime,index=True)
     view = db.Column(db.Integer,default=0)
@@ -159,10 +159,10 @@ class Article(db.Model):
         for tag in tags:
             self.tags.append(get_or_create(Tag,tag))
     # 构造
-    def __init__(self,title,content,description=None,categories=[],tags=[]):
+    def __init__(self,title,content,summary=None,categories=[],tags=[]):
         self.title = title
         self.content = content
-        self.descirption = descirption if description else content[0:30]
+        self.summary = summary if summary else content[0:50]
         self.published = self.updated = datetime.utcnow()
         self.add_categories(categories)
         self.add_tags(tags)
@@ -181,7 +181,7 @@ class Article(db.Model):
         items['selfLink'] = '/posts/' + str(self.id)
         items['title'] = self.title
         items['view'] = self.view
-        items['description'] = self.descirption
+        items['summary'] = self.summary
         items['tags'] = to_str(self.tags)
         items['categories'] = to_str(self.categories)
         items['published'] =  self.published.strftime('%Y-%m-%d')+'@'+self.published.strftime('%p%I:%M')
@@ -200,5 +200,5 @@ class Article(db.Model):
         self.add_tags(items['tags'])
         self.add_categories(items['categories']) 
         self.content = items['content']
-        self.descirption = items['description'] if items['description'] else items['content'][0:30]
+        self.summary = items['summary'] if items['summary'] else items['content'][0:50]
         db.session.commit()

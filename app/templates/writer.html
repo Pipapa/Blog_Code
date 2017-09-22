@@ -80,6 +80,12 @@
             window.location.href = '/'
         }
     }
+    class Writer{
+        constructor(){
+
+        }
+        
+    }
     /*填写表单*/
     var writer = function(data){
         var data = JSON.parse(data)
@@ -91,7 +97,7 @@
         var description = document.getElementById('description')
         title.value = data['title']
         text.value = data['content']
-        description.value = data['description']
+        description.value = data['summary']
         categories.value = data['categories'].join(',')
         tags.value = data['tags'].join(',')
     }
@@ -119,7 +125,7 @@
         posts['content'] = text
         posts['categories'] = categories?categories.split(','):['未分类']
         posts['tags'] = tags?tags.split(','):['无标签']
-        posts['description'] = description
+        posts['summary'] = description
         parameter['items'] = posts
         submit_data(method,'/api/posts/'+post_id,JSON.stringify(parameter),refresh)
     }

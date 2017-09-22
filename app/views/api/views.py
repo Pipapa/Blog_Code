@@ -37,7 +37,7 @@ def postsList():
     elif request.method == 'POST':
         parameter = request.get_json()
         post = parameter['items']
-        article = Article(title=post['title'],content=post['content'],
+        article = Article(title=post['title'],content=post['content'],summary=post['summary'],
             categories=post['categories'],tags=post['tags']) 
         article.create()
         status = {'status':'success'}
@@ -46,7 +46,7 @@ def postsList():
 @api.route('/api/posts/<int:id>',methods=['GET','PUT','DELETE'])
 def postsContent(id):
     status = {} 
-    status['status'] = 'fialed'
+    status['status'] = 'failed'
     # 获取资源
     if request.method == 'GET':
         article = Article.query.get(id)
