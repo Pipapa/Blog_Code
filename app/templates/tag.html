@@ -62,13 +62,7 @@
                     
                     <div class="ui divider hidden"></div>
                     <div class="ui divider hidden"></div>
-                    <!-- 翻页 -->
-                    <button class="mini ui right floated circular olive icon button disabled" id="next">
-                        <i class="arrow right icon"></i>
-                    </button>
-                    <button class="mini ui right floated circular olive icon button disabled" id="prev">
-                        <i class="arrow left icon"></i>
-                    </button>
+                 
                     
                 </div>
                
@@ -274,18 +268,8 @@
         var posts = parameter['items']
         for(var i=0;i<posts.length;i++){
             var data = posts[i]
-            var p = new Post(data.title,data.updated,data.description,data.selfLink,data.view,data.categories,data.tags)
+            var p = new Post(data.title,data.updated,data.summary,data.selfLink,data.view,data.categories,data.tags)
             document.getElementById('posts').appendChild(p.create_post())
-        }
-        var next = document.getElementById('next')
-        var prev = document.getElementById('prev')
-        if(parameter['nextPage']){
-            next.classList.remove('disabled')
-            next.setAttribute('onclick','refresh('+ '\'/posts/pages/' + (parameter['nowPage']+1) +'\')')
-        }
-        if(parameter['prevPage']){
-            prev.classList.remove('disabled')
-            prev.setAttribute('onclick','refresh('+ '\'/posts/pages/' + (parameter['nowPage']-1) +'\')')
         }
     }
     load_home.load_categories = function(parameter){
@@ -306,8 +290,8 @@
     }
     window.onload = function(){
         var url = encodeURI(location.href)
-        var page = url.substr(url.indexOf('pages')+6) 
-        get_data('/api/posts?page='+page,load_home.load_posts)
+        var tag = url.substr(url.lastIndexOf('/')+1)
+        get_data('/api/tags?key='+tag,load_home.load_posts)
         get_data('/api/categories',load_home.load_categories)
         get_data('/api/tags',load_home.load_tags)
     }

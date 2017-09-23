@@ -81,10 +81,10 @@ def allTags():
     key = request.args.get('key')
     if key:
         parameter = {}
-        parameter['item'] = []
+        parameter['items'] = []
         articles = Article.query.filter(Article.tags.any(Tag.name==key)).all()
         for article in articles:
-            parameter['item'].append(article.get_item())
+            parameter['items'].append(article.get_item())
         return jsonify(parameter)
     else:
         items = {}
@@ -99,10 +99,10 @@ def allCategories():
     key = request.args.get('key')
     if key:
         parameter = {}
-        parameter['item'] = []
+        parameter['items'] = []
         articles = Article.query.filter(Article.categories.any(Category.name==key)).all()
         for article in articles:
-            parameter['item'].append(article.get_item())
+            parameter['items'].append(article.get_item())
         return jsonify(parameter)
     else:
         items = {}

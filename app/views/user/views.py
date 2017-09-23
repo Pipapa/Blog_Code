@@ -19,7 +19,6 @@ def posts(page):
 @user.route('/posts/<int:id>')
 def post(id):
     return render_template('post.html') 
-
 # 管理页面
 @user.route('/admin')
 def admin():
@@ -29,6 +28,16 @@ def admin():
 @user.route('/admin/writer/<int:id>')
 def writer(id):
     return render_template('writer.html')
+# 标签页面
+@user.route('/tags',defaults={'key':''})
+@user.route('/tags/<string:key>')
+def tag(key):
+    return render_template('tag.html')
+# 分类页面
+@user.route('/categories',defaults={'key':''})
+@user.route('/categories/<string:key>')
+def category(key):
+    return render_template('category.html')
 # 404
 @user.errorhandler(404)
 def not_found(error):
