@@ -80,8 +80,12 @@ def postsContent(id):
 def allTags():
     key = request.args.get('key')
     if key:
-        # TODO
-        return 'ss'
+        parameter = {}
+        parameter['item'] = []
+        articles = Article.query.filter(Article.tags.any(Tag.name==key)).all()
+        for article in articles:
+            parameter['item'].append(article.get_item())
+        return jsonify(parameter)
     else:
         items = {}
         items['items'] = []
@@ -94,8 +98,12 @@ def allTags():
 def allCategories():
     key = request.args.get('key')
     if key:
-        # TODO
-        return 'ter'
+        parameter = {}
+        parameter['item'] = []
+        articles = Article.query.filter(Article.categories.any(Category.name==key)).all()
+        for article in articles:
+            parameter['item'].append(article.get_item())
+        return jsonify(parameter)
     else:
         items = {}
         items['items'] = []
