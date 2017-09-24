@@ -1,7 +1,7 @@
 import json
 from flask import jsonify,url_for,request,abort
 from . import api
-from ... import db
+from ... import db,login_manager
 from ...models import User,Article,Category,Tag,Comment
 
 # 文章列表资源
@@ -107,3 +107,14 @@ def allCategories():
         for category in categories:
             items['items'].append(category.get_item())
         return jsonify(items)
+# 用户资源
+@api.route('/api/users/<string:name>',methods=['PUT','DELETE'])
+def user(name):
+    if request.method == 'PUT':
+        items = request.get_json()
+        user = User.query.filter_by(username = items['username']).first()
+        if user and user.verify_password(items['password']):
+            return jsonify({'status':'success'})
+        else:
+            return jsonify({'status':'failed'})
+    return 'name'

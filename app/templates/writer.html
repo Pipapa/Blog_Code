@@ -13,7 +13,29 @@
         }
     </style>
     <script>
-        
+        /*数据*/
+        var submit_data = function(method,url,parameter,callback){
+            var request = new XMLHttpRequest()
+            request.onreadystatechange = function(){
+                if(request.readyState == XMLHttpRequest.DONE && request.status == 200){
+                    callback(request.responseText)
+                }
+            }
+            request.open(method,url,true)
+            request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+            request.send(parameter)
+        }
+        /*获取数据*/
+        var get_data = function(url,callback){
+            var request = new XMLHttpRequest()
+            request.onreadystatechange = function(){
+                if(request.readyState == XMLHttpRequest.DONE && request.status == 200){
+                    callback(request.responseText)
+                }
+            }
+            request.open('GET',url,true)
+            request.send()
+        }
     </script>
 </head>
 <body>
@@ -129,29 +151,7 @@
         parameter['items'] = posts
         submit_data(method,'/api/posts/'+post_id,JSON.stringify(parameter),refresh)
     }
-    /*数据*/
-    var submit_data = function(method,url,parameter,callback){
-        var request = new XMLHttpRequest()
-        request.onreadystatechange = function(){
-            if(request.readyState == XMLHttpRequest.DONE && request.status == 200){
-                callback(request.responseText)
-            }
-        }
-        request.open(method,url,true)
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-        request.send(parameter)
-    }
-    /*获取数据*/
-    var get_data = function(url,callback){
-        var request = new XMLHttpRequest()
-        request.onreadystatechange = function(){
-            if(request.readyState == XMLHttpRequest.DONE && request.status == 200){
-                callback(request.responseText)
-            }
-        }
-        request.open('GET',url,true)
-        request.send()
-    }
+    
     /*获取URL参数,判断post还是put*/
     var get_url = function(){
         var url = encodeURI(location.href)

@@ -1,7 +1,8 @@
 from flask import Blueprint,render_template,jsonify,request,redirect,url_for,request
+from flask_login import login_required
 
 from . import user
-from ... import db
+from ... import db,login_manager
 from ...models import User,Article,Category,Tag,Comment
 
 # 路由跳转
@@ -21,6 +22,7 @@ def post(id):
     return render_template('post.html') 
 # 管理页面
 @user.route('/admin')
+@login_required
 def admin():
     return render_template('admin.html')
 # 写文章页面
@@ -38,6 +40,10 @@ def tag(key):
 @user.route('/categories/<string:key>')
 def category(key):
     return render_template('category.html')
+# 登录页面
+@user.route('/admin/login')
+def login():
+    return render_template('login.html')
 # 404
 @user.errorhandler(404)
 def not_found(error):
