@@ -206,6 +206,7 @@
     }
     load_home.load_post = function(data){
         document.getElementById('post').innerHTML = marked(data['items'].content)
+        document.title = data['items'].title + '-Pipapa'
     }
     window.onload = function(){
         marked.setOptions({

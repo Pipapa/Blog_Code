@@ -4,10 +4,6 @@ from . import api
 from ... import db
 from ...models import User,Article,Category,Tag,Comment
 
-@api.route('/api/test',methods=['POST','GET'])
-def test():
-    return 'true' 
-
 # 文章列表资源
 @api.route('/api/posts/',methods=['GET','POST'])
 def postsList():

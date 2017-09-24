@@ -185,7 +185,7 @@ class Article(db.Model):
         items['tags'] = to_str(self.tags)
         items['categories'] = to_str(self.categories)
         items['published'] =  self.published.strftime('%Y-%m-%d')+'@'+self.published.strftime('%p%I:%M')
-        items['updated'] = self.published.strftime('%Y-%m-%d')+'@'+self.published.strftime('%p%I:%M')
+        items['updated'] = self.updated.strftime('%Y-%m-%d')+'@'+self.updated.strftime('%p%I:%M')
         return items
     # 获取内容
     def get_content(self):
