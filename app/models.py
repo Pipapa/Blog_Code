@@ -18,6 +18,9 @@ def to_str(items):
         item.append(i.name)
     return item
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 # 用户
 class User(db.Model,UserMixin):                                        
     __tablename__ = 'users'
@@ -25,10 +28,6 @@ class User(db.Model,UserMixin):
     username = db.Column(db.String(16),unique=True,index=True)
     email = db.Column(db.String(32),unique=True,index=True)
     hashPassword = db.Column(db.String(128))
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        return None
 
     def __init__(self,username,email,password):
         self.username = username

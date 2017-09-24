@@ -28,6 +28,7 @@ def admin():
 # 写文章页面
 @user.route('/admin/writer',defaults={'id': ''})
 @user.route('/admin/writer/<int:id>')
+@login_required
 def writer(id):
     return render_template('writer.html')
 # 标签页面

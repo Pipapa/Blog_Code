@@ -1,58 +1,49 @@
 import json
 from flask import jsonify,url_for,request,abort
+from flask_login import login_required,login_user,logout_user
 from . import api
 from ... import db,login_manager
 from ...models import User,Article,Category,Tag,Comment
 
 # 文章列表资源
-@api.route('/api/posts/',methods=['GET','POST'])
+@api.route('/api/posts/',methods=['GET'])
 def postsList():
-    # 获取文章列表资源 method == 'GET'
-    if request.method == 'GET':
-        parameter = {}
-        parameter['items'] = []
-        page = request.args.get('page')
-        pre_page = request.args.get('pre_page')
-        # 默认参数
-        page = int(page) if page else 1
-        pre_page = int(pre_page) if pre_page else 5
-        # 查询(分页)
-        articles = Article.query.order_by(Article.updated.desc()).limit(pre_page).offset((page-1)*pre_page).all()
-        for article in articles:
-            parameter['items'].append(article.get_item()) 
-        # 获取页数
-        allArticle = Article.query.count()
-        allPage = int(allArticle/pre_page) if allArticle % pre_page == 0 else int(allArticle/pre_page) + 1
-        parameter['prevPage'] = True if page>1 else False
-        parameter['nextPage'] = True if page<allPage else False
-        parameter['nowPage'] = page
-        parameter['allPage'] = allPage
-        # 返回json
-        return jsonify(parameter)
-    # 新建文章
-    elif request.method == 'POST':
-        parameter = request.get_json()
-        post = parameter['items']
-        article = Article(title=post['title'],content=post['content'],summary=post['summary'],
-            categories=post['categories'],tags=post['tags']) 
-        article.create()
-        status = {'status':'success'}
-        return jsonify(status)
+    parameter = {}
+    parameter['items'] = []
+    page = request.args.get('page')
+    pre_page = request.args.get('pre_page')
+    # 默认参数
+    page = int(page) if page else 1
+    pre_page = int(pre_page) if pre_page else 5
+    # 查询(分页)
+    articles = Article.query.order_by(Article.updated.desc()).limit(pre_page).offset((page-1)*pre_page).all()
+    for article in articles:
+        parameter['items'].append(article.get_item()) 
+    # 获取页数
+    allArticle = Article.query.count()
+    allPage = int(allArticle/pre_page) if allArticle % pre_page == 0 else int(allArticle/pre_page) + 1
+    parameter['prevPage'] = True if page>1 else False
+    parameter['nextPage'] = True if page<allPage else False
+    parameter['nowPage'] = page
+    parameter['allPage'] = allPage
+    # 返回json
+    return jsonify(parameter)
 # 文章资源
-@api.route('/api/posts/<int:id>',methods=['GET','PUT','DELETE'])
-def postsContent(id):
-    status = {} 
-    status['status'] = 'failed'
-    # 获取资源
-    if request.method == 'GET':
-        article = Article.query.get(id)
-        if article is None:
-            return jsonify({'status':'failed'})
-        items = {}
-        items['items'] = article.get_content()
-        return jsonify(items)
+@api.route('/api/posts/',methods=['POST'])
+@login_required
+def postList():
+      # 新建文章
+    parameter = request.get_json()
+    post = parameter['items']
+    article = Article(title=post['title'],content=post['content'],summary=post['summary'],
+        categories=post['categories'],tags=post['tags']) 
+    article.create()
+    status = {'status':'success'}
+    return jsonify(status)
+@api.route('/api/posts/<int:id>',methods=['PUT','DELETE'])
+def postContent(id):
     # 删除资源
-    elif request.method == 'DELETE':
+    if request.method == 'DELETE':
         article = Article.query.get(id)
         if article:
             article.delete() 
@@ -70,7 +61,16 @@ def postsContent(id):
             return jsonify({'status':'success'})
         else:
             return jsonify({'status':'failed'})
-    return jsonify(status)
+
+# 文章资源
+@api.route('/api/posts/<int:id>',methods=['GET'])
+def postsContent(id):
+    status = {} 
+    # 获取资源
+    article = Article.query.get(id)
+    items = {}
+    items['items'] = article.get_content()
+    return jsonify(items)
 # 标签资源
 @api.route('/api/tags')
 def allTags():
@@ -108,12 +108,13 @@ def allCategories():
             items['items'].append(category.get_item())
         return jsonify(items)
 # 用户资源
-@api.route('/api/users/<string:name>',methods=['PUT','DELETE'])
+@api.route('/api/users/<string:name>',methods=['PUT'])
 def user(name):
     if request.method == 'PUT':
         items = request.get_json()
         user = User.query.filter_by(username = items['username']).first()
         if user and user.verify_password(items['password']):
+            login_user(user)
             return jsonify({'status':'success'})
         else:
             return jsonify({'status':'failed'})
