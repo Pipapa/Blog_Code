@@ -6,7 +6,7 @@ from ... import db,login_manager
 from ...models import User,Article,Category,Tag,Comment
 
 # 文章列表资源
-@api.route('/api/posts/',methods=['GET'])
+@api.route('/api/posts',methods=['GET'])
 def postsList():
     parameter = {}
     parameter['items'] = []
@@ -29,7 +29,7 @@ def postsList():
     # 返回json
     return jsonify(parameter)
 # 文章资源
-@api.route('/api/posts/',methods=['POST'])
+@api.route('/api/posts',methods=['POST'])
 @login_required
 def postList():
       # 新建文章
