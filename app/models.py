@@ -28,7 +28,7 @@ class User(db.Model,UserMixin):
     username = db.Column(db.String(16),unique=True,index=True)
     email = db.Column(db.String(32),unique=True,index=True)
     hashPassword = db.Column(db.String(128))
-
+    
     def __init__(self,username,email,password):
         self.username = username
         self.email = email

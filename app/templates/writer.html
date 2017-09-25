@@ -149,7 +149,11 @@
         posts['tags'] = tags?tags.split(','):['无标签']
         posts['summary'] = description
         parameter['items'] = posts
-        submit_data(method,'/api/posts/'+post_id,JSON.stringify(parameter),refresh)
+        if(method == 'POST'){
+            submit_data(method,'/api/posts',JSON.stringify(parameter),refresh)
+        }else if(method == 'PUT'){
+            submit_data(method,'/api/posts/'+post_id,JSON.stringify(parameter),refresh)
+        }
     }
     
     /*获取URL参数,判断post还是put*/
