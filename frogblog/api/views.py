@@ -7,9 +7,6 @@ from frogblog.models import User,Article,Category,Tag,Comment
 
 api = Blueprint('api',__name__,url_prefix='/api')
 
-@api.route('/test')
-def test():
-    return 'true'
 # 文章列表资源
 @api.route('/posts',methods=['GET','POST'])
 def postsList():
@@ -126,3 +123,7 @@ def user(name):
             return jsonify({'status':'success'})
         else:
             return jsonify({'status':'failed'})
+
+@api.errorhandler(404)
+def statusFailed(error):
+    return jsonify({'status':'failed'})

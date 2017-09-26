@@ -1,1 +1,1 @@
-from .views import user
+from .views import frontend
