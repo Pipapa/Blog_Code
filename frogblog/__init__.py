@@ -9,16 +9,19 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = '/admin/login'
 
 def create_app(config):
-    app = Flask(__name__,static_url_path='/static')
+    app = Flask(__name__)
     # 加载配置文件
     app.config.from_object(config)
     # 初始化
     db.init_app(app)
     login_manager.init_app(app)
-    # 蓝图
-    from .views.user import user as user_blueprint
-    app.register_blueprint(user_blueprint)
-    from .views.api import api as api_blueprint
-    app.register_blueprint(api_blueprint)
-
+    # 设置
+    configure_blueprints(app)
     return app
+
+# 设置蓝图
+def configure_blueprints(app):
+    from .api import api
+    from .frontend import user
+    for i in [api,user]:
+        app.register_blueprint(i)

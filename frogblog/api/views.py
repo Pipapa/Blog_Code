@@ -1,12 +1,17 @@
 import json
-from flask import jsonify,url_for,request,abort
+from flask import jsonify,url_for,request,abort,Blueprint
 from flask_login import login_required,login_user,logout_user,current_user
-from . import api
-from ... import db,login_manager
-from ...models import User,Article,Category,Tag,Comment
-    
+
+from frogblog import db,login_manager
+from frogblog.models import User,Article,Category,Tag,Comment
+
+api = Blueprint('api',__name__,url_prefix='/api')
+
+@api.route('/test')
+def test():
+    return 'true'
 # 文章列表资源
-@api.route('/api/posts',methods=['GET','POST'])
+@api.route('/posts',methods=['GET','POST'])
 def postsList():
     if request.method == 'GET':
         parameter = {}
@@ -40,7 +45,7 @@ def postsList():
         article.create()
         return jsonify({'status':'success'})
 
-@api.route('/api/posts/<int:id>',methods=['GET','PUT','DELETE'])
+@api.route('/posts/<int:id>',methods=['GET','PUT','DELETE'])
 def postContent(id):
     if request.method == 'GET':
         # 获取资源
@@ -72,7 +77,7 @@ def postContent(id):
         else:
             return jsonify({'status':'failed'})
 # 标签资源
-@api.route('/api/tags')
+@api.route('/tags')
 def allTags():
     key = request.args.get('key')
     if key:
@@ -90,7 +95,7 @@ def allTags():
             items['items'].append(tag.get_item())
         return jsonify(items)
 # 分类资源
-@api.route('/api/categories')
+@api.route('/categories')
 def allCategories():
     key = request.args.get('key')
     if key:
@@ -108,7 +113,7 @@ def allCategories():
             items['items'].append(category.get_item())
         return jsonify(items)
 # 用户资源
-@api.route('/api/users/<string:name>',methods=['PUT'])
+@api.route('/users/<string:name>',methods=['PUT'])
 def user(name):
     if request.method == 'PUT':
         if current_user.is_authenticated is True:

@@ -8,3 +8,4 @@ class Config():
     SQLALCHEMY_TRACK_MODIFICATIONS=True
     SQLALCHEMY_DATABASE_URI='sqlite:///'+os.path.join(basedir,'FrogBlog.db')
     SECRET_KEY=os.urandom(24)
+    print(SQLALCHEMY_DATABASE_URI)

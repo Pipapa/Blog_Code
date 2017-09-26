@@ -1,9 +1,10 @@
 from flask import Blueprint,render_template,jsonify,request,redirect,url_for,request
 from flask_login import login_required
 
-from . import user
-from ... import db,login_manager
-from ...models import User,Article,Category,Tag,Comment
+from frogblog import db,login_manager
+from frogblog.models import User,Article,Category,Tag,Comment
+
+user = Blueprint('user',__name__)
 
 # 路由跳转
 @user.route('/posts/pages')
