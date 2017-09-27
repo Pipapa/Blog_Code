@@ -18,9 +18,6 @@ def to_str(items):
         item.append(i.name)
     return item
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 # 用户
 class User(db.Model,UserMixin):                                        
     __tablename__ = 'users'

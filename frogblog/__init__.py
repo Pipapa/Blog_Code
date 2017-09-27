@@ -7,6 +7,11 @@ login_manager=LoginManager()
 
 login_manager.session_protection = 'strong'
 login_manager.login_view = '/admin/login'
+# 设置登录
+@login_manager.user_loader
+def load_user(user_id):
+    from .models import User
+    return User.query.get(int(user_id))
 
 def create_app(config):
     app = Flask(__name__)
