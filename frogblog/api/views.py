@@ -7,6 +7,22 @@ from frogblog.models import User,Article,Category,Tag,Comment
 
 api = Blueprint('api',__name__,url_prefix='/api')
 
+# 文章总览
+@api.route('/info')
+def postsInfo():
+    # 获取标签/分类
+    def appendItem(model):
+        models = model.query.all()
+        items = []
+        for m in models:
+            items.append(m.get_item())
+        return items
+
+    parameter = {}
+    parameter['tags'] = appendItem(Tag)
+    parameter['categories'] = appendItem(Category)
+    return jsonify(parameter)
+
 # 文章列表资源
 @api.route('/posts',methods=['GET','POST'])
 def postsList():
@@ -32,8 +48,9 @@ def postsList():
         # 返回json
         return jsonify(parameter)
     elif request.method == 'POST':
+        # 未登录
         if current_user.is_authenticated is False:
-            return jsonify({'status':'Permission denied'})
+            abort(403)
         # 新建文章
         parameter = request.get_json()
         post = parameter['items']
@@ -43,17 +60,17 @@ def postsList():
         return jsonify({'status':'success'})
 
 @api.route('/posts/<int:id>',methods=['GET','PUT','DELETE'])
-def postContent(id):
+def postsContent(id):
     if request.method == 'GET':
-        # 获取资源
-        article = Article.query.get_or_404(id)
+        # 获取资源 
         items = {}
+        article = Article.query.get_or_404(id)
         items['items'] = article.get_content()
         return jsonify(items)
     # 删除资源
     elif request.method == 'DELETE':
         if current_user.is_authenticated is False:
-            return jsonify({'status':'Permission denied'})
+            abort(403)
         article = Article.query.get(id)
         if article:
             article.delete() 
@@ -62,56 +79,40 @@ def postContent(id):
             return jsonify({'status':'failed'})
     # 修改资源
     elif request.method == 'PUT':
-        # 获取到的数据
+        # 未登录
         if current_user.is_authenticated is False:
-            return jsonify({'status':'Permission denied'})
+            abort(403)
         parameter = request.get_json()
         items = parameter['items']
-        article = Article.query.get(id)
-        if article:
-            article.updata(items)
-            return jsonify({'status':'success'})
-        else:
-            return jsonify({'status':'failed'})
+        article = Article.query.get_or_404(id)
+        article.updata(items)
+        return jsonify({'status':'success'})
+
 # 标签资源
-@api.route('/tags')
-def allTags():
-    key = request.args.get('key')
-    if key:
-        parameter = {}
-        parameter['items'] = []
-        articles = Article.query.filter(Article.tags.any(Tag.name==key)).all()
-        for article in articles:
-            parameter['items'].append(article.get_item())
-        return jsonify(parameter)
-    else:
-        items = {}
-        items['items'] = []
-        tags = Tag.query.all()
-        for tag in tags:
-            items['items'].append(tag.get_item())
-        return jsonify(items)
+@api.route('/tags/<string:key>')
+def allTags(key):
+    query_key = Tag.name==key if key else None
+    parameter = {}
+    parameter['items'] = []
+    articles = Article.query.filter(Article.tags.any(query_key)).all()
+    for article in articles:
+        parameter['items'].append(article.get_item())
+    return jsonify(parameter)
+
 # 分类资源
-@api.route('/categories')
-def allCategories():
-    key = request.args.get('key')
-    if key:
-        parameter = {}
-        parameter['items'] = []
-        articles = Article.query.filter(Article.categories.any(Category.name==key)).all()
-        for article in articles:
-            parameter['items'].append(article.get_item())
-        return jsonify(parameter)
-    else:
-        items = {}
-        items['items'] = []
-        categories = Category.query.all()
-        for category in categories:
-            items['items'].append(category.get_item())
-        return jsonify(items)
+@api.route('/categories/<string:key>')
+def allCategories(key):
+    query_key = Category.name==key if key else None
+    parameter = {}
+    parameter['items'] = []
+    articles = Article.query.filter(Article.categories.any(query_key)).all()
+    for article in articles:
+        parameter['items'].append(article.get_item())
+    return jsonify(parameter)
+   
 # 用户资源
 @api.route('/users/<string:name>',methods=['PUT'])
-def user(name):
+def allUsers(name):
     if request.method == 'PUT':
         if current_user.is_authenticated is True:
             logout_user()
@@ -122,8 +123,11 @@ def user(name):
             login_user(user)
             return jsonify({'status':'success'})
         else:
-            return jsonify({'status':'failed'})
+            abort(404)
 
 @api.errorhandler(404)
 def statusFailed(error):
     return jsonify({'status':'failed'})
+@api.errorhandler(403)
+def statusForbidden(error):
+    return jsonify({'status':'forbidden'})
