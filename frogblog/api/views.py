@@ -43,6 +43,7 @@ def postsList():
         allPage = int(allArticle/pre_page) if allArticle % pre_page == 0 else int(allArticle/pre_page) + 1
         parameter['prevPage'] = True if page>1 else False
         parameter['nextPage'] = True if page<allPage else False
+        parameter['prePage'] = pre_page
         parameter['nowPage'] = page
         parameter['allPage'] = allPage
         # 返回json
