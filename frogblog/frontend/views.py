@@ -6,6 +6,7 @@ from frogblog.models import User,Article,Category,Tag,Comment
 
 frontend = Blueprint('user',__name__)
 
-@frontend.route('/')
-def index():
+@frontend.route('/',defaults={'path':''})
+@frontend.route('/<path:path>')
+def index(path):
     return render_template('index.html')
