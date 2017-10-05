@@ -1,5 +1,5 @@
 import json
-from flask import jsonify,url_for,request,abort,Blueprint
+from flask import jsonify,url_for,request,abort,Blueprint,Response
 from flask_login import login_required,login_user,logout_user,current_user
 
 from frogblog import db,login_manager
@@ -9,19 +9,7 @@ from functools import wraps
 
 api = Blueprint('api',__name__,url_prefix='/api')
 
-def allow_cross_domain(fun):
-    @wraps(fun)
-    def wrapper_fun(*args, **kwargs):
-        rst = make_response(fun(*args, **kwargs))
-        rst.headers['Access-Control-Allow-Origin'] = '*'
-        rst.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
-        allow_headers = "Referer,Accept,Origin,User-Agent"
-        rst.headers['Access-Control-Allow-Headers'] = allow_headers
-        return rst
-    return wrapper_fun
-
 # 文章总览
-@allow_cross_domain
 @api.route('/info')
 def postsInfo():
     # 获取标签/分类
@@ -38,7 +26,6 @@ def postsInfo():
     return jsonify(parameter)
 
 # 文章列表资源
-@allow_cross_domain
 @api.route('/posts',methods=['GET','POST'])
 def postsList():
     if request.method == 'GET':
@@ -75,7 +62,6 @@ def postsList():
         article.create()
         return jsonify({'status':'success'})
 
-@allow_cross_domain
 @api.route('/posts/<int:id>',methods=['GET','PUT','DELETE'])
 def postsContent(id):
     if request.method == 'GET':
@@ -106,7 +92,6 @@ def postsContent(id):
         return jsonify({'status':'success'})
 
 # 标签资源
-@allow_cross_domain
 @api.route('/tags/<string:key>')
 def allTags(key):
     query_key = Tag.name==key if key else None
@@ -118,7 +103,6 @@ def allTags(key):
     return jsonify(parameter)
 
 # 分类资源
-@allow_cross_domain
 @api.route('/categories/<string:key>')
 def allCategories(key):
     query_key = Category.name==key if key else None
@@ -130,7 +114,6 @@ def allCategories(key):
     return jsonify(parameter)
    
 # 用户资源
-@allow_cross_domain
 @api.route('/users/<string:name>',methods=['PUT'])
 def allUsers(name):
     if request.method == 'PUT':
