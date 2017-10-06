@@ -202,3 +202,7 @@ class Article(db.Model):
         self.content = items['content']
         self.summary = items['summary'] if items['summary'] else items['content'][0:50]
         db.session.commit()
+    # 增加浏览量
+    def add_view(self):
+        self.view = self.view+1
+        db.session.commit()

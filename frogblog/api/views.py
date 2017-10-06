@@ -69,6 +69,7 @@ def postsContent(id):
         items = {}
         article = Article.query.get_or_404(id)
         items['items'] = article.get_content()
+        article.add_view()
         return jsonify(items)
     # 删除资源
     elif request.method == 'DELETE':

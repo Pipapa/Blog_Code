@@ -27,6 +27,6 @@ def create_app(config):
 # 设置蓝图
 def configure_blueprints(app):
     from .api import api
+    app.register_blueprint(api)
     from .frontend import frontend
-    for bp in [api,frontend]:
-        app.register_blueprint(bp)
+    app.register_blueprint(frontend)
