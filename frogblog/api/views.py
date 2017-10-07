@@ -75,12 +75,9 @@ def postsContent(id):
     elif request.method == 'DELETE':
         if current_user.is_authenticated is False:
             abort(403)
-        article = Article.query.get(id)
-        if article:
-            article.delete() 
-            return jsonify({'status':'success'})
-        else:
-            return jsonify({'status':'failed'})
+        article = Article.query.get_or_404(id)
+        article.delete() 
+        return jsonify({'status':'success'})
     # 修改资源
     elif request.method == 'PUT':
         # 未登录
