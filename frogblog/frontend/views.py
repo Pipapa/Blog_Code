@@ -1,4 +1,4 @@
-from flask import Blueprint,jsonify,request,redirect,url_for,request,abort,send_file
+from flask import Blueprint,send_from_directory
 from flask_login import login_required
 
 from frogblog import db,login_manager
@@ -10,8 +10,8 @@ frontend = Blueprint('user',__name__)
 @frontend.route('/',defaults={'path':''})
 @frontend.route('/<path:path>')
 def index(path):
-    return send_file(Config.INDEX,'index.html',as_attachment=True)
+    return send_from_directory(Config.INDEX,'index.html')
 
 @frontend.route('/static/<string:dir>/<string:filename>')
 def static(dir,filename):
-    return send_file(Config.INDEX+'/static/'+dir+'/'+filename)
+    return send_from_directory(Config.STATIC+dir,filename)

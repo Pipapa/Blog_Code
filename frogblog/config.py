@@ -9,3 +9,4 @@ class Config():
     SQLALCHEMY_DATABASE_URI='sqlite:///'+os.path.join(basedir,'FrogBlog.db')
     SECRET_KEY=os.urandom(24)
     INDEX=basedir+'/templates/'
+    STATIC=basedir+'/statics/'
