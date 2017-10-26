@@ -7,7 +7,7 @@ from flask_cors import CORS
 CORS(app)
 
 def init_db():
-    from frogblog.models import User,Category,Tag,Article,Category
+    from frogblog.models import User,Category,Tag,Article,Category,db
     db.create_all(app=create_app(Config))
     
 if __name__ == '__main__':
