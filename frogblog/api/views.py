@@ -30,6 +30,7 @@ def postsInfo():
 def postsList():
     if request.method == 'GET':
         parameter = {}
+        parameter['items'] = []
         articles = Article.query.all()
         for article in articles:
             parameter['items'].append(article.get_item())
