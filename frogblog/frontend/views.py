@@ -1,3 +1,4 @@
+import os
 from flask import Blueprint,send_from_directory
 from flask_login import login_required
 
@@ -10,7 +11,7 @@ frontend = Blueprint('user',__name__)
 @frontend.route('/',defaults={'path':''})
 @frontend.route('/<path:path>')
 def index(path):
-    return send_from_directory(Config.INDEX,'index.html')
+    return open(Config.INDEX+'index.html').read()
 
 @frontend.route('/static/<string:dir>/<string:filename>')
 def static(dir,filename):

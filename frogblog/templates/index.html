@@ -4,24 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Pipapa`s Blog</title>
     <link rel="shortcut icon" href="/static/images/favicon.ico"/>
-    <script src="static/js/test.js"></script>
-    <script src="https://unpkg.com/vue"></script>
-    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 <body>
     <div id="app">
-        <p>{{ message }}</p>
+        <el-row :gutter="20">
+            <el-col :span="12" :offset="6">
+                <div class="grid-content bg-purple">
+                    <headbar></headbar>
+                    <posts><</posts>
+                </div>
+            </el-col>
+        </el-row>
+      
     </div>
-</body>
-<script>
-    var app = new Vue({
-        el: '#app',
-        data:{
-            message:'Hello World'
+</body>   
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script> 
+
+    Vue.component('headbar',{
+        template: '<div><h1 class="headbar">Pipapa`s blog</h1><h4 class="headbar_description">他强任他强，清风拂山岗；他横任他横，明月照大江</h4></div>',
+    })
+
+    Vue.component('posts',{
+        template: '<div></div>',
+        data:function(){
+            return {
+            }
         }
     })
 
+    new Vue({
+        el: '#app',
+    })
+
+   
+
 </script>
+<style>
+    .headbar{
+        text-align: center;
+        color: #598987;
+    }
+    .headbar_description{
+        text-align: center;
+        color: #77A88D;
+    }
+</style>
 </html>

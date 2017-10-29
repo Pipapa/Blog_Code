@@ -30,24 +30,9 @@ def postsInfo():
 def postsList():
     if request.method == 'GET':
         parameter = {}
-        parameter['items'] = []
-        page = request.args.get('page')
-        pre_page = request.args.get('pre_page')
-        # 默认参数
-        page = int(page) if page else 1
-        pre_page = int(pre_page) if pre_page else 5
-        # 查询(分页)
-        articles = Article.query.order_by(Article.updated.desc()).limit(pre_page).offset((page-1)*pre_page).all()
+        articles = Article.query.all()
         for article in articles:
-            parameter['items'].append(article.get_item()) 
-        # 获取页数
-        allArticle = Article.query.count()
-        allPage = int(allArticle/pre_page) if allArticle % pre_page == 0 else int(allArticle/pre_page) + 1
-        parameter['prevPage'] = True if page>1 else False
-        parameter['nextPage'] = True if page<allPage else False
-        parameter['prePage'] = pre_page
-        parameter['nowPage'] = page
-        parameter['allPage'] = allPage
+            parameter['items'].append(article.get_item())
         # 返回json
         return jsonify(parameter)
     elif request.method == 'POST':
