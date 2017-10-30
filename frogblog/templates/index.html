@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipapa`s Blog</title>
     <link rel="shortcut icon" href="/static/images/favicon.ico"/>
-
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 <body>
@@ -18,11 +17,13 @@
 <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
 <script> 
 
     Vue.component('headbar',{
-        template: '<div><h1 class="headbar">Pipapa`s blog</h1>'+
-                  '<h4 class="headbar_description">他强任他强，清风拂山岗；他横任他横，明月照大江</h4></div>',
+        props: ['title','description'],
+        template: '<div><h1 class="headbar">{{ title }}</h1>'+
+                  '<h4 class="headbar_description">{{ description }}</h4></div>',
     })
 
     Vue.component('posts',{
@@ -30,12 +31,11 @@
                     '<el-table-column prop="title"></el-table-column></el-table></div>',
         data:function(){
             return {
-                posts:[]
+                posts:[],
             }
         },
         created:function(){
             axios.get('http://127.0.0.1:5000/api/posts').then(response =>  {
-                console.log(response)
                 this.posts = response.data['items']
             })
             .catch(e => {
@@ -51,31 +51,57 @@
     })
 
     Vue.component('post',{
-        template:'',
+        template:'<div><headbar :title="title"></headbar><div v-html="compliedMarkdown"></div></div>',
         data:function(){
-
+            return{
+                article:'',
+                title:''
+            }
         },
         created:function(){
-
+            axios.get('http://127.0.0.1:5000/api/posts/'+ '1' ).then(response => {
+                this.article = response['data']['items']['content']
+                this.title   = response['data']['items']['title']
+            })
+            .catch(e => {
+                this.error.push(e)
+            })
         },
+        computed:{
+            compliedMarkdown: function(){
+                return marked(this.article,{sanitize:true})
+            }
+        }
+        ,
         methods:{
 
         }
     })
 
     const Index = {
-        template: '<el-row :gutter="20"><el-col :span="12" :offset="6"><div class="grid-content bg-purple"><headbar></headbar>'
-                    +'<posts><</posts></div></el-col></el-row>'
+        template: '<el-row :gutter="20"><el-col :span="12" :offset="6"><div class="grid-content bg-purple"><headbar title="Pipapa`s Blog" '+
+                  'description="他强任他强，清风拂山岗；他横任他横，明月照大江"></headbar>'+
+                  '<posts><</posts></div></el-col></el-row>'
+    }
+    const Post = {
+        template: '<el-row :gutter="20"><el-col :span="12" :offset="6"><div class="grid-content bg-purple">'+
+                  '<post></post></div></el-col></el-row>'
+    }
+
+    const Edit = {
+        template: ''
     }
 
     const router = new VueRouter({
+        mode: 'history',
         routes:[
             {path:'/',component:Index},
+            {path:'/posts/:id',component:Post},
+            {path:'/editor/:id',component:Edit}
         ]
     })
 
     const app = new Vue({
-        mode: 'history',
         router
     }).$mount('#app')
    
