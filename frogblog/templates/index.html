@@ -7,6 +7,7 @@
     <title>Pipapa`s Blog</title>
     <link rel="shortcut icon" href="/static/images/favicon.ico"/>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css" />
 </head>
 <body>
     <div id="app">
@@ -51,7 +52,7 @@
     })
 
     Vue.component('post',{
-        template:'<div><headbar :title="title"></headbar><div v-html="compliedMarkdown"></div></div>',
+        template:'<div><headbar :title="title"></headbar><div v-html="compliedMarkdown" class="markdown-body"></div></div>',
         data:function(){
             return{
                 article:'',
