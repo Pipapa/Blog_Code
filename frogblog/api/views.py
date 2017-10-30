@@ -1,11 +1,9 @@
-import json
 from flask import jsonify,url_for,request,abort,Blueprint,Response
 from flask_login import login_required,login_user,logout_user,current_user
 
 from frogblog import db,login_manager
 from frogblog.models import User,Article,Category,Tag,Comment
 
-from functools import wraps
 
 api = Blueprint('api',__name__,url_prefix='/api')
 
@@ -45,7 +43,7 @@ def postsList():
         post = parameter['items']
         article = Article(title=post['title'],content=post['content'],summary=post['summary'],
             categories=post['categories'],tags=post['tags']) 
-        article.create()
+        article.save()
         return jsonify({'status':'success'})
 
 @api.route('/posts/<int:id>',methods=['GET','PUT','DELETE'])

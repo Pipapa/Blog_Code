@@ -18,8 +18,18 @@ def to_str(items):
         item.append(i.name)
     return item
 
+class DataBase():
+    def __init__(this):
+        pass
+    def save(this):
+        db.session.add(this)
+        db.session.commit()
+    def delete(this):
+        db.session.delete(this)
+        db.session.commit()
+
 # 用户
-class User(db.Model,UserMixin):                                        
+class User(db.Model,UserMixin,DataBase):                                        
     __tablename__ = 'users'
     id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String(16),unique=True,index=True)
@@ -61,7 +71,7 @@ Category_relationship = db.Table('category_relationship',
     db.Column('comment_id',db.Integer,db.ForeignKey('categories.id'))
 )
 # 分类表单
-class Category(db.Model):                                               
+class Category(db.Model,DataBase):                                               
     __tablename__ = 'categories'
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(64),unique=True,index=True)
@@ -78,18 +88,9 @@ class Category(db.Model):
             self.delete()
         item['selfLink'] = '/categories/' + self.name 
         return item
-    # 创建
-    def create(self):
-        db.session.add(self)
-        db.session.commit()
-    
-    # 删除
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-    
+
 # 标签表单
-class Tag(db.Model):                                                   
+class Tag(db.Model,DataBase):                                                   
     __tablename__ = 'tags'
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(64),unique=True,index=True)
@@ -105,16 +106,9 @@ class Tag(db.Model):
             self.delete()
         item['selfLink'] = '/tags/' + self.name
         return item
-    # 创建
-    def create(self):
-        db.session.add(self)
-        db.session.commit()
-    # 删除
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+
 # 评论表单
-class Comment(db.Model):                                                
+class Comment(db.Model,DataBase):                                                
     __tablename__ = 'comments'
     id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String(16))
@@ -127,13 +121,9 @@ class Comment(db.Model):
         self.email = email
         self.comment = comment
         self.published = datetime.utcnow()    
-    # 创建
-    def create(self):
-        db.session.add(self)
-        db.session.commit() 
 
 #文章表单
-class Article(db.Model):                                               
+class Article(db.Model,DataBase):                                               
     __tablename__ = 'articles'
     id = db.Column(db.Integer,primary_key=True)
     title = db.Column(db.String(64))
@@ -166,14 +156,6 @@ class Article(db.Model):
         self.published = self.updated = datetime.utcnow()
         self.add_categories(categories)
         self.add_tags(tags)
-    # 增加
-    def create(self):
-        db.session.add(self)
-        db.session.commit() 
-    # 删除
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
     # 获取
     def get_item(self):
         items = {}
