@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="/static/images/favicon.ico"/>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-light.min.css" />
 </head>
 <body>
     <div id="app">
@@ -19,7 +20,25 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+<script src="https://unpkg.com/lodash@4.16.0"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script> 
+
+    hljs.initHighlightingOnLoad();
+
+    marked.setOptions({
+        renderer: new marked.Renderer(),
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false,
+        highlight: function (code) {
+            return hljs.highlightAuto(code).value;
+        }
+    });
 
     Vue.component('headbar',{
         props: ['title','description'],
@@ -60,7 +79,7 @@
             }
         },
         created:function(){
-            axios.get('http://127.0.0.1:5000/api/posts/'+ '1' ).then(response => {
+            axios.get('http://127.0.0.1:5000/api/posts/'+ this.$route.params.id ).then(response => {
                 this.article = response['data']['items']['content']
                 this.title   = response['data']['items']['title']
             })
@@ -79,6 +98,33 @@
         }
     })
 
+    Vue.component('editor',{
+        template:'<div><el-row><el-col :span="12"><div class="grid-content bg-purple"><textarea :value="input_article" @input="update"></textarea></div></el-col>'+
+                 '<el-col :span="12"><div class="grid-content bg-purple-light"><div v-html="compiledMarkdown"></div></div></el-col>'+
+                 '</el-row></div>',
+        data:function(){
+            return{
+                input_article : '',
+            }
+        },
+        created:function(){
+            if(this.$route.params.id){
+
+            }else{
+            }
+        },
+        computed:{
+            compiledMarkdown:function(){
+                return marked(this.input_article,{sanitize:true})
+            }
+        },
+        methods:{
+            update: _.debounce(function(e){
+                this.input_article = e.target.value
+            },300)
+        }
+    })
+
     const Index = {
         template: '<el-row :gutter="20"><el-col :span="12" :offset="6"><div class="grid-content bg-purple"><headbar title="Pipapa`s Blog" '+
                   'description="他强任他强，清风拂山岗；他横任他横，明月照大江"></headbar>'+
@@ -90,7 +136,7 @@
     }
 
     const Edit = {
-        template: ''
+        template: '<editor></editor>'
     }
 
     const router = new VueRouter({
@@ -98,7 +144,8 @@
         routes:[
             {path:'/',component:Index},
             {path:'/posts/:id',component:Post},
-            {path:'/editor/:id',component:Edit}
+            {path:'/editor/:id',component:Edit},
+            {path:'/editor',component:Edit},
         ]
     })
 
