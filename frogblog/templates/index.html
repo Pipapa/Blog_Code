@@ -98,11 +98,13 @@
     })
 
     Vue.component('editor',{
-        template:'<div><el-row><el-col :span="12"><div class="grid-content bg-purple"><el-input @change="changeEdit" v-model="input_article"></el-input></div></el-col>'+
-                 '<el-col :span="12"><div class="grid-content bg-purple-light"><div class="markdown-body" v-html="compiledMarkdown"></div></div></el-col>'+
+        template:'<div style="margin-top:20px;"><el-row><el-col :span="12"><div class="grid-content bg-purple"><el-input style="margin-bottom:10px;" v-model="input_title" placeholder="请输入标题"></el-input>'+
+                 '<el-input @change="changeEdit" v-model="input_article" type="textarea" :autosize="{minRows:30}"></el-input></div></el-col>'+
+                 '<el-col :span="12"><div class="grid-content bg-purple-light"><div class="markdown-body" v-html="compiledMarkdown" style="margin-left:10px;"></div></div></el-col>'+
                  '</el-row></div>',
         data:function(){
             return{
+                input_title : '',
                 input_article : '',
             }
         },
