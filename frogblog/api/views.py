@@ -36,8 +36,8 @@ def postsList():
         return jsonify(parameter)
     elif request.method == 'POST':
         # 未登录
-        if current_user.is_authenticated is False:
-            abort(403)
+        # if current_user.is_authenticated is False:
+        #     abort(403)
         # 新建文章
         parameter = request.get_json()
         post = parameter['items']

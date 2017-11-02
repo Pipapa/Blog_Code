@@ -102,7 +102,7 @@
                  '<el-input @change="changeEdit" v-model="input_article" type="textarea" :autosize="{minRows:30}" style="margin-bottom:10px;"></el-input>'+
                  '<el-row :gutter="5"><el-col :span="10"><div class="grid-content bg-purple"><el-input style="margin-bottom:10px;" v-model="input_categories" placeholder="请输入分类" ></el-input></div></el-col>'+
                  '<el-col :span="11"><div class="grid-content bg-purple-light"><el-input style="margin-bottom:10px;" v-model="input_tags" placeholder="请输入标签"></el-input></div></el-col>'+
-                 '<el-col :span="2"><div class="grid-content bg-purple-light"><el-button>上传</el-button></div></el-col>'+
+                 '<el-col :span="2"><div class="grid-content bg-purple-light"><el-button @click="post_info">上传</el-button></div></el-col>'+
                  '</el-row></div></el-col>'+
                  '<el-col :span="12"><div class="grid-content bg-purple-light"><div class="markdown-body" v-html="compiledMarkdown" style="margin-left:10px;"></div></div></el-col>'+
                  '</el-row></div>',
@@ -138,8 +138,21 @@
         methods:{
             changeEdit:function(str){
                 this.input_article = str
+            },
+            post_info:function(){
+                if(this.$route.params.id){
+
+                }else{
+                    let info = {}
+                    let post = info['items'] = {}
+                    post['title'] = this.input_title
+                    post['content'] = this.input_article
+                    post['summary'] = null
+                    post['categories'] = this.input_categories.split(',')
+                    post['tags'] = this.input_tags.split(',')
+                    console.log(info)
+                }
             }
-            
         }
     })
 
