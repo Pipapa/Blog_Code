@@ -99,7 +99,7 @@
 
     Vue.component('editor',{
         template:'<div style="margin-top:20px;"><el-row><el-col :span="12"><div class="grid-content bg-purple"><el-input style="margin-bottom:10px;" v-model="input_title" placeholder="请输入标题"></el-input>'+
-                 '<el-input @change="changeEdit" v-model="input_article" type="textarea" :autosize="{minRows:30}" style="margin-bottom:10px;"></el-input>'+
+                 '<el-input @change="changeEdit" v-model="input_article" type="textarea" :autosize="{minRows:30}" style="margin-bottom:10px;" placeholder="内容"></el-input>'+
                  '<el-row :gutter="5"><el-col :span="10"><div class="grid-content bg-purple"><el-input style="margin-bottom:10px;" v-model="input_categories" placeholder="请输入分类" ></el-input></div></el-col>'+
                  '<el-col :span="11"><div class="grid-content bg-purple-light"><el-input style="margin-bottom:10px;" v-model="input_tags" placeholder="请输入标签"></el-input></div></el-col>'+
                  '<el-col :span="2"><div class="grid-content bg-purple-light"><el-button @click="post_info">上传</el-button></div></el-col>'+
@@ -144,13 +144,18 @@
 
                 }else{
                     let info = {}
-                    let post = info['items'] = {}
-                    post['title'] = this.input_title
-                    post['content'] = this.input_article
-                    post['summary'] = null
-                    post['categories'] = this.input_categories.split(',')
-                    post['tags'] = this.input_tags.split(',')
-                    console.log(info)
+                    let post_data = info['items'] = {}
+                    post_data['title'] = this.input_title
+                    post_data['content'] = this.input_article
+                    post_data['summary'] = null
+                    post_data['categories'] = this.input_categories.split(',')
+                    post_data['tags'] = this.input_tags.split(',')
+                    
+                    axios.post('http://127.0.0.1:5000/api/posts',info).then(response => {
+                    })
+                    .catch(e => {
+                        this.error.push(e)
+                    })
                 }
             }
         }

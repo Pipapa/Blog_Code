@@ -24,7 +24,7 @@ def postsInfo():
     return jsonify(parameter)
 
 # 文章列表资源
-@api.route('/posts',methods=['GET','POST'])
+@api.route('/posts',methods=['POST','GET'])
 def postsList():
     if request.method == 'GET':
         parameter = {}
@@ -40,6 +40,7 @@ def postsList():
         #     abort(403)
         # 新建文章
         parameter = request.get_json()
+        print(parameter)
         post = parameter['items']
         article = Article(title=post['title'],content=post['content'],summary=post['summary'],
             categories=post['categories'],tags=post['tags']) 

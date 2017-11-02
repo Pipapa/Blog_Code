@@ -9,7 +9,7 @@ def get_or_create(model,name):
     instance = db.session.query(model).filter_by(name=name).first()
     if instance is None:
         instance = model(name=name)
-        instance.create()
+        instance.save()
     return instance
 # 转化字符串列表(tag,category)
 def to_str(items):
