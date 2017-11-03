@@ -40,7 +40,6 @@ def postsList():
         #     abort(403)
         # 新建文章
         parameter = request.get_json()
-        print(parameter)
         post = parameter['items']
         article = Article(title=post['title'],content=post['content'],summary=post['summary'],
             categories=post['categories'],tags=post['tags']) 
