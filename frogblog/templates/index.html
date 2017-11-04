@@ -140,18 +140,31 @@
                 this.input_article = str
             },
             post_info:function(){
+                let info = {}
+                let post_data = info['items'] = {}
+                post_data['title'] = this.input_title
+                post_data['content'] = this.input_article
+                post_data['summary'] = null
+                post_data['categories'] = this.input_categories.split(',')
+                post_data['tags'] = this.input_tags.split(',')
+
                 if(this.$route.params.id){
+                    axios.put('http://127.0.0.1:5000/api/posts/'+this.$route.params.id,info).then(response =>{
+                        if(response['data']['status'] == 'success'){
+                            alert('更新成功')
+                            window.location.href = '/'
+                        }
+                    })  
+                    .catch(e => {
+                        this.error.push(e)
+                    })  
 
                 }else{
-                    let info = {}
-                    let post_data = info['items'] = {}
-                    post_data['title'] = this.input_title
-                    post_data['content'] = this.input_article
-                    post_data['summary'] = null
-                    post_data['categories'] = this.input_categories.split(',')
-                    post_data['tags'] = this.input_tags.split(',')
-                    
                     axios.post('http://127.0.0.1:5000/api/posts',info).then(response => {
+                        if(response['data']['status'] == 'success'){
+                            alert('上传成功')
+                            window.location.href = '/'
+                        }
                     })
                     .catch(e => {
                         this.error.push(e)

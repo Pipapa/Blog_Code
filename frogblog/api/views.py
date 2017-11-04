@@ -29,7 +29,7 @@ def postsList():
     if request.method == 'GET':
         parameter = {}
         parameter['items'] = []
-        articles = Article.query.all()
+        articles = Article.query.order_by(Article.updated.desc()).all()
         for article in articles:
             parameter['items'].append(article.get_item())
         # 返回json
@@ -65,8 +65,8 @@ def postsContent(id):
     # 修改资源
     elif request.method == 'PUT':
         # 未登录
-        if current_user.is_authenticated is False:
-            abort(403)
+        # if current_user.is_authenticated is False:
+        #     abort(403)
         parameter = request.get_json()
         items = parameter['items']
         article = Article.query.get_or_404(id)
