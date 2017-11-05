@@ -152,8 +152,10 @@
                     axios.put('http://127.0.0.1:5000/api/posts/'+this.$route.params.id,info).then(response =>{
                         if(response['data']['status'] == 'success'){
                             alert('更新成功')
-                            window.location.href = '/'
+                        }else{
+                            alert('授权失败')
                         }
+                        window.location.href = '/'
                     })  
                     .catch(e => {
                         this.error.push(e)
@@ -163,13 +165,30 @@
                     axios.post('http://127.0.0.1:5000/api/posts',info).then(response => {
                         if(response['data']['status'] == 'success'){
                             alert('上传成功')
-                            window.location.href = '/'
+                        }else{
+                            alert('授权失败')
                         }
+                        window.location.href = '/'
                     })
                     .catch(e => {
                         this.error.push(e)
                     })
                 }
+            }
+        }
+    })
+
+    vue.component('login',{
+        template:'',
+        data:function(){
+            return {
+                username : '',
+                password : '',
+            }
+        },
+        methods:{
+            login_user:function(){
+
             }
         }
     })
@@ -186,6 +205,10 @@
 
     const Edit = {
         template: '<editor></editor>'
+    }
+
+    const Login = {
+        template: '<login></login>'
     }
 
     const router = new VueRouter({
