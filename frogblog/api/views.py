@@ -1,4 +1,4 @@
-from flask import jsonify,url_for,request,abort,Blueprint,Response
+from flask import jsonify,url_for,request,abort,Blueprint,Response,g
 from flask_login import login_required,login_user,logout_user,current_user
 
 from frogblog import db,login_manager
@@ -6,6 +6,11 @@ from frogblog.models import User,Article,Category,Tag,Comment
 
 
 api = Blueprint('api',__name__,url_prefix='/api')
+
+@api.route('/test')
+def test():
+    print(g.user)
+    return 'suer'
 
 # 文章总览
 @api.route('/info')
@@ -94,21 +99,26 @@ def allCategories(key):
     for article in articles:
         parameter['items'].append(article.get_item())
     return jsonify(parameter)
-   
+
 # 用户资源
-@api.route('/users/<string:name>',methods=['PUT'])
-def allUsers(name):
-    if request.method == 'PUT':
-        if current_user.is_authenticated is True:
-            logout_user()
-            return jsonify({'status':'success'})
+@api.route("/users",methods=['POST','PUT','DELETE'])
+def allUsers():
+    if request.method == 'POST':
         items = request.get_json()
-        user = User.query.filter_by(username = items['username']).first()
-        if user and user.verify_password(items['password']):
-            login_user(user)
-            return jsonify({'status':'success'})
-        else:
-            abort(404)
+        username = items['username']
+        password = items['password']
+        email = items['email']
+        if username is None or password is None:
+            abort(403)
+        if User.query.filter_by(username = username).first() is not None:
+            abort(403)
+        user = User(username=username,email=email,password=password)
+        user.save()
+        g.user = user
+        return jsonify({'status':'success'})
+    if request.method == 'PUT':
+        return jsonify({'status':'success'})
+   
 
 @api.errorhandler(404)
 def statusFailed(error):
