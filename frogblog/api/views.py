@@ -1,4 +1,4 @@
-from flask import jsonify,url_for,request,abort,Blueprint,Response,g
+from flask import jsonify,url_for,request,abort,Blueprint,Response
 from flask_login import login_required,login_user,logout_user,current_user
 
 from frogblog import db,login_manager
@@ -6,11 +6,6 @@ from frogblog.models import User,Article,Category,Tag,Comment
 
 
 api = Blueprint('api',__name__,url_prefix='/api')
-
-@api.route('/test')
-def test():
-    print(g.user)
-    return 'suer'
 
 # 文章总览
 @api.route('/info')
@@ -101,8 +96,13 @@ def allCategories(key):
     return jsonify(parameter)
 
 # 用户资源
-@api.route("/users",methods=['POST','PUT','DELETE'])
+@api.route("/users",methods=['POST','PUT','DELETE','GET'])
 def allUsers():
+    if request.method == 'GET':
+        if current_user.is_authenticated is True:
+            return jsonify({'status':'login'})
+        else:
+            return jsonify({'status':'logout'})
     if request.method == 'POST':
         items = request.get_json()
         username = items['username']
@@ -114,12 +114,21 @@ def allUsers():
             abort(403)
         user = User(username=username,email=email,password=password)
         user.save()
-        g.user = user
         return jsonify({'status':'success'})
     if request.method == 'PUT':
-        return jsonify({'status':'success'})
-   
-
+        if current_user.is_authenticated is True:
+            logout_user()
+            return jsonify({'status':'logout'})
+        items = request.get_json()
+        username = items['username']
+        password = items['password']
+        user = User.query.filter_by(username = username).first()
+        if user is not None and user.verify_password(password):
+            login_user(user)
+            return jsonify({'status':'success'})
+        else:
+            abort(403)
+        
 @api.errorhandler(404)
 def statusFailed(error):
     return jsonify({'status':'failed'})
