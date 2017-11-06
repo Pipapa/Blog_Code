@@ -178,8 +178,11 @@
         }
     })
 
-    vue.component('login',{
-        template:'',
+    Vue.component('login',{
+        template:'<div>'+
+                 '<el-row :gutter="20"><el-col :span="6" :offset="6"><div class="grid-content bg-purple">'+
+                 '<el-input v-model="username" placeholder="请输入用户名" style="margin-bottom:10px;"></el-input>'+
+                 '<el-input v-model="password" placeholder="请输入密码" style="margin-bottom:10px;" type="password"></el-input><el-button @click="login_user">登录</el-button>'+'</div></el-col></el-row></div>',
         data:function(){
             return {
                 username : '',
@@ -188,7 +191,21 @@
         },
         methods:{
             login_user:function(){
-
+                let info = {}
+                info['username'] = this.username
+                info['password'] = this.password
+                axios.put('http://127.0.0.1:5000/api/users',info).then(response =>{
+                    console.log(response.data)
+                    if(response.data['status'] == 'success'){
+                        alert('登录成功')
+                        window.location.href = '/'
+                    }else{
+                        alert('登录失败')
+                    }
+                })
+                .catch(e => {
+                    this.error.push(e)
+                })
             }
         }
     })
@@ -218,6 +235,7 @@
             {path:'/posts/:id',component:Post},
             {path:'/editor/:id',component:Edit},
             {path:'/editor',component:Edit},
+            {path:'/login',component:Login},
         ]
     })
 
