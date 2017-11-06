@@ -210,10 +210,32 @@
         }
     })
 
+    Vue.component('admin',{
+        template: '<div><el-table style="width: 100%;text-align: center;color:#678F8D;" :data="posts">'+
+                    '<el-table-column prop="title"></el-table-column></el-table></div>',
+        data:function(){
+            return {
+                posts:[],
+            }
+        },
+        created:function(){
+            axios.get('http://127.0.0.1:5000/api/posts').then(response =>  {
+                this.posts = response.data['items']
+            })
+            .catch(e => {
+                this.error.push(e)
+            })
+
+        },
+        methods:{
+        
+        },
+    })
+
     const Index = {
         template: '<el-row :gutter="20"><el-col :span="12" :offset="6"><div class="grid-content bg-purple"><headbar title="Pipapa`s Blog" '+
                   'description="他强任他强，清风拂山岗；他横任他横，明月照大江"></headbar>'+
-                  '<posts><</posts></div></el-col></el-row>'
+                  '<posts></posts></div></el-col></el-row>'
     }
     const Post = {
         template: '<el-row :gutter="20"><el-col :span="12" :offset="6"><div class="grid-content bg-purple">'+
@@ -228,6 +250,12 @@
         template: '<login></login>'
     }
 
+    const Admin = {
+        template: '<el-row :gutter="20"><el-col :span="12" :offset="6"><div class="grid-content bg-purple"><headbar title="FrogBlog`s Admin">'+
+                  '</headbar>'+
+                  '<admin></admin></div></el-col></el-row>'
+    }
+
     const router = new VueRouter({
         mode: 'history',
         routes:[
@@ -236,6 +264,7 @@
             {path:'/editor/:id',component:Edit},
             {path:'/editor',component:Edit},
             {path:'/login',component:Login},
+            {path:'/admin',component:Admin},
         ]
     })
 
