@@ -6,21 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipapa`s Blog</title>
     <link rel="shortcut icon" href="/static/images/favicon.ico"/>
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-light.min.css" />
+    <link href="https://cdn.bootcss.com/element-ui/2.0.0-alpha.2/theme-chalk/index.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/github-markdown-css/2.8.0/github-markdown.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/highlight.js/9.12.0/styles/solarized-light.min.css" rel="stylesheet">
 </head>
 <body>
     <div id="app">
         <router-view></router-view>
     </div>
 </body>   
-<script src="https://unpkg.com/vue"></script>
-<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/vue-router/2.7.0/vue-router.min.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.16.2/axios.min.js"></script>
+<script src="https://cdn.bootcss.com/element-ui/2.0.0-alpha.2/index.js"></script>
+<script src="https://cdn.bootcss.com/marked/0.3.6/marked.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 <script> 
 
     hljs.initHighlightingOnLoad();
@@ -154,6 +154,7 @@
                             alert('更新成功')
                         }else{
                             alert('授权失败')
+                            window.location.href = '/login'
                         }
                         window.location.href = '/'
                     })  
@@ -167,6 +168,7 @@
                             alert('上传成功')
                         }else{
                             alert('授权失败')
+                            window.location.href = '/login'
                         }
                         window.location.href = '/'
                     })
@@ -201,6 +203,7 @@
                         window.location.href = '/'
                     }else{
                         alert('登录失败')
+                        window.location.href = '/login'
                     }
                 })
                 .catch(e => {
@@ -212,7 +215,10 @@
 
     Vue.component('admin',{
         template: '<div><el-table style="width: 100%;text-align: center;color:#678F8D;" :data="posts">'+
-                    '<el-table-column prop="title"></el-table-column></el-table></div>',
+                    '<el-table-column prop="title"></el-table-column><el-table-column>'+
+                    '<template slot-scope="scope"><el-button type="text" size="small" @click="handleClick_Edit(scope.row)">编辑</el-button>'
+                    +'<el-button type="text" size="small" @click="handleClick_Delete(scope.row)">删除</el-button></template>'+
+                    '</el-table-column></el-table></div>',
         data:function(){
             return {
                 posts:[],
@@ -228,6 +234,23 @@
 
         },
         methods:{
+            handleClick_Edit:function(row){
+                window.location.href = '/editor/' + row.id
+            },
+            handleClick_Delete:function(row){
+                axios.delete('http://127.0.0.1:5000/api/posts/'+row.id).then(response => {
+                    if(response['data']['status'] == 'success'){
+                        alert('删除成功')
+                        window.location.href = '/admin'
+                    }else{
+                        alert('授权失败')
+                        window.location.href = '/login'
+                    }
+                })
+                .catch(e => {
+                    this.error.push(e)
+                })
+            }
         
         },
     })
