@@ -3,9 +3,6 @@ from frogblog import create_app
 
 app = create_app(Config)
 
-from flask_cors import CORS
-CORS(app)
-
 def init_db():
     from frogblog.models import User,Category,Tag,Article,Category,db
     db.create_all(app=create_app(Config))

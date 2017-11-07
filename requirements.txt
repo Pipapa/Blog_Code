@@ -1,6 +1,4 @@
 flask
 flask-login
 flask-sqlalchemy
-flask-cors
 werkzeug
-jinja2
